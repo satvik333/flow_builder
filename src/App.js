@@ -1,23 +1,22 @@
-import logo from './logo.svg';
 import './App.css';
+import DnDFlow from './reactFlowPlayground';
+import './tailwind-config.js';
+import 'reactflow/dist/base.css';
+import ReactFlow, {
+  ReactFlowProvider,
+  addEdge,
+  useNodesState,
+  useEdgesState,
+  Controls,
+  useReactFlow
+} from 'reactflow';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <ReactFlowProvider>
+        <DnDFlow />
+      </ReactFlowProvider>
     </div>
   );
 }
