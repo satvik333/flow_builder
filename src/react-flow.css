@@ -71,7 +71,7 @@
     bottom: -10px;
   }
   
-  .react-flow .react-flow__node {
+  /* .react-flow .react-flow__node {
     height: 40px;
     width: 150px;
     justify-content: center;
@@ -79,7 +79,7 @@
     display: flex;
     border-width: 2px;
     font-weight: 700;
-  }
+  } */
   
   .react-flow .react-flow__edge path,
   .react-flow__connectionline path {

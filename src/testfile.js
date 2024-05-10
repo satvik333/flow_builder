@@ -1,65 +1,55 @@
-import React, { useState, useCallback } from 'react';
-import ReactFlow, {
-  ReactFlowProvider,
-  useNodesState,
-  useEdgesState,
-  addEdge,
-  useReactFlow,
-  Panel,
-} from 'reactflow';
-import 'reactflow/dist/style.css';
+import React, { useCallback } from 'react';
+import ReactFlow, { useNodesState, useEdgesState, addEdge, MiniMap, Controls } from 'reactflow';
 
-const flowKey = 'example-flow';
+import 'reactflow/dist/base.css';
 
-const getNodeId = () => `randomnode_${+new Date()}`;
+import './tailwind-config.js';
+import CustomNode from './CustomNode';
 
-const initialNodes = [
-  { id: '1', data: { label: 'Node 1' }, position: { x: 100, y: 100 } },
-  { id: '2', data: { label: 'Node 2' }, position: { x: 100, y: 200 } },
+const nodeTypes = {
+  custom: CustomNode,
+};
+
+const initNodes = [
+  {
+    id: '1',
+    type: 'custom',
+    data: { name: 'Jane Doe', job: 'CEO', emoji: '😎' },
+    position: { x: 0, y: 50 },
+  },
+  {
+    id: '2',
+    type: 'custom',
+    data: { name: 'Tyler Weary', job: 'Designer', emoji: '🤓' },
+
+    position: { x: -200, y: 200 },
+  },
+  {
+    id: '3',
+    type: 'custom',
+    data: { name: 'Kristi Price', job: 'Developer', emoji: '🤩' },
+    position: { x: 200, y: 200 },
+  },
 ];
 
-const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
+const initEdges = [
+  {
+    id: 'e1-2',
+    source: '1',
+    target: '2',
+  },
+  {
+    id: 'e1-3',
+    source: '1',
+    target: '3',
+  },
+];
 
-const SaveRestore = () => {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const [rfInstance, setRfInstance] = useState(null);
-  const { setViewport } = useReactFlow();
+const Flow = () => {
+  const [nodes, setNodes, onNodesChange] = useNodesState(initNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initEdges);
 
-  const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
-  const onSave = useCallback(() => {
-    if (rfInstance) {
-      const flow = rfInstance.toObject();
-      localStorage.setItem(flowKey, JSON.stringify(flow));
-    }
-  }, [rfInstance]);
-
-  const onRestore = useCallback(() => {
-    const restoreFlow = async () => {
-      const flow = JSON.parse(localStorage.getItem(flowKey));
-
-      if (flow) {
-        const { x = 0, y = 0, zoom = 1 } = flow.viewport;
-        setNodes(flow.nodes || []);
-        setEdges(flow.edges || []);
-        setViewport({ x, y, zoom });
-      }
-    };
-
-    restoreFlow();
-  }, [setNodes, setViewport]);
-
-  const onAdd = useCallback(() => {
-    const newNode = {
-      id: getNodeId(),
-      data: { label: 'Added node' },
-      position: {
-        x: Math.random() * window.innerWidth - 100,
-        y: Math.random() * window.innerHeight,
-      },
-    };
-    setNodes((nds) => nds.concat(newNode));
-  }, [setNodes]);
+  const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), []);
 
   return (
     <ReactFlow
@@ -68,19 +58,14 @@ const SaveRestore = () => {
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
       onConnect={onConnect}
-      onInit={setRfInstance}
+      nodeTypes={nodeTypes}
+      fitView
+      className="bg-teal-50"
     >
-      <Panel position="top-right">
-        <button onClick={onSave}>save</button>
-        <button onClick={onRestore}>restore</button>
-        <button onClick={onAdd}>add node</button>
-      </Panel>
+      <MiniMap />
+      <Controls />
     </ReactFlow>
   );
 };
 
-export default () => (
-  <ReactFlowProvider>
-    <SaveRestore />
-  </ReactFlowProvider>
-);
+export default Flow;

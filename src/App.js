@@ -1,6 +1,5 @@
 import './App.css';
 import DnDFlow from './reactFlowPlayground';
-import './tailwind-config.js';
 import 'reactflow/dist/base.css';
 import ReactFlow, {
   ReactFlowProvider,

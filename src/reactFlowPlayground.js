@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import ReactFlow, {
   ReactFlowProvider,
   addEdge,
@@ -15,7 +15,9 @@ import Sidebar from './Sidebar';
 
 import './react-flow.css';
 import 'reactflow/dist/base.css';
-import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import PlayCircleIcon from '@mui/icons-material/PlayCircle';
+import CustomNode from './CustomNode';
 
 
 const dagreGraph = new dagre.graphlib.Graph();
@@ -24,11 +26,15 @@ dagreGraph.setDefaultEdgeLabel(() => ({}));
 const nodeWidth = 172;
 const nodeHeight = 36;
 
+const nodeTypes = {
+  custom: CustomNode,
+};
+
 const initialNodes = [
   {
     id: '1',
-    type: 'input',
-    data: { label: 'Trigger', icon: <AccessTimeFilledIcon/> },
+    type: 'custom',
+    data: { label: 'Trigger', icon: <PlayCircleIcon/>, id: '1' },
     position: { x: 0, y: 0 },
   },
 ];
@@ -42,6 +48,8 @@ const DnDFlow = () => {
     const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
     const [reactFlowInstance, setReactFlowInstance] = useState(null);
+    const [nodeData, setNodeData] = useState(null);
+    const [editedLabel, setEditedLabel] = useState(null);
 
     const { screenToFlowPosition } = useReactFlow();
     const { setViewport } = useReactFlow();
@@ -78,9 +86,11 @@ const DnDFlow = () => {
         });
         const newNode = {
           id: getId(),
-          type,
           position,
-          data: { label: `${type} node` },
+          data: { label: `${type} node`, id: getId() },
+          type: 'custom',
+          icon: 'ArrowBack'
+
         };
   
         setNodes((nds) => nds.concat(newNode));
@@ -102,10 +112,9 @@ const DnDFlow = () => {
               x: event.clientX,
               y: event.clientY,
             }),
-            data: { label: `Node ${id}` },
+            data: { label: `Node ${id}`},
             origin: [0.5, 0.0],
           };
-  
           setNodes((nds) => nds.concat(newNode));
           setEdges((eds) =>
             eds.concat({ id, source: connectingNodeId.current, target: id }),
@@ -188,25 +197,44 @@ const DnDFlow = () => {
 
     const onElementClick = useCallback((element) => {
       if (element.nodes.length > 0) {
-        console.log("Clicked element:", element.nodes);
-        const clickedNodeId = element.nodes[0].id;
-    setNodes((prevNodes) => {
-      const updatedNodes = prevNodes.map((node) => {
-        if (node.id === clickedNodeId) {
-          return {
-            ...node,
-            data: {
-              ...node.data,
-              label: 'testtttttt', 
-            },
-          };
-        }
-        return node;
-      });
-      return updatedNodes;
-    });
+        setNodeData(element.nodes[0]);
+        setEditedLabel(element.nodes[0].data.label);
       }
   }, []);
+
+  const onInputChange = (event) => {
+    setEditedLabel(event.target.value);
+  };
+
+  useEffect(() => {
+    if (nodeData) {
+      const clickedNodeId = nodeData.id;
+      setNodes((prevNodes) => {
+        const updatedNodes = prevNodes.map((node) => {
+          if (node.id === clickedNodeId) {
+            return {
+              ...node,
+              data: {
+                ...node.data,
+                label: editedLabel,
+              },
+            };
+          }
+          return node;
+        });
+        return updatedNodes;
+      });
+    }
+  }, [editedLabel, nodeData]);  
+
+  function resetNodeData() {
+    setNodeData(null);
+    setEditedLabel(null);
+  }
+
+  const removeNode = (idToRemove) => {
+    setNodes((prevNodes) => prevNodes.filter(node => node.id !== idToRemove));
+  };
   
     return (
       <div className="dndflow" style={{ width: '100%', height: '100vh' }}>
@@ -228,6 +256,7 @@ const DnDFlow = () => {
               nodeOrigin={[0.5, 0]}
               style={{ width: '100%', height: '100%' }}
               onSelectionChange={onElementClick}
+              nodeTypes={nodeTypes}
             >
               <Controls />
               <Panel position="top-right">
@@ -238,7 +267,16 @@ const DnDFlow = () => {
               </Panel>
             </ReactFlow>
           </div>
-          <Sidebar />
+          {nodeData ? (
+            <aside>
+              <ArrowBackIcon style={{marginRight: "20px", marginTop: "10px", cursor: 'pointer'}} onClick={resetNodeData}/>
+              <input 
+                type="text"
+                value={editedLabel}
+                onChange={onInputChange}
+              />
+            </aside>
+          )  : <Sidebar/>}
         </ReactFlowProvider>
       </div>
     );
