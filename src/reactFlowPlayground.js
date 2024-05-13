@@ -10,6 +10,7 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import dagre from 'dagre';
+import AddCommentIcon from '@mui/icons-material/AddComment';
 
 import Sidebar from './Sidebar';
 
@@ -34,7 +35,7 @@ const initialNodes = [
   {
     id: '1',
     type: 'custom',
-    data: { label: 'Trigger', icon: <PlayCircleIcon/>, id: '1' },
+    data: { label: 'Trigger', icon: <PlayCircleIcon/>, id: '1', direction: 'TB' },
     position: { x: 0, y: 0 },
   },
 ];
@@ -87,10 +88,8 @@ const DnDFlow = () => {
         const newNode = {
           id: getId(),
           position,
-          data: { label: `${type} node`, id: getId() },
+          data: { label: `${type} node`, id: getId(), icon: <AddCommentIcon/> },
           type: 'custom',
-          icon: 'ArrowBack'
-
         };
   
         setNodes((nds) => nds.concat(newNode));
@@ -106,14 +105,17 @@ const DnDFlow = () => {
   
         if (targetIsPane) {
           const id = getId();
+        console.log('11111111111111',event)
+
           const newNode = {
             id,
             position: screenToFlowPosition({
-              x: event.clientX,
-              y: event.clientY,
+              x: event.clientX - 600,
+              y: event.clientY - 600,
             }),
-            data: { label: `Node ${id}`},
+            data: { label: `Node ${id}`, icon: <AddCommentIcon/>, id: id},
             origin: [0.5, 0.0],
+            type: 'custom'
           };
           setNodes((nds) => nds.concat(newNode));
           setEdges((eds) =>
@@ -147,7 +149,7 @@ const DnDFlow = () => {
           x: nodeWithPosition.x - nodeWidth / 2,
           y: nodeWithPosition.y - nodeHeight / 2,
         };
-    
+       
         return node;
       });
     
@@ -174,26 +176,17 @@ const DnDFlow = () => {
           edges,
           direction
         );
-  
-        setNodes([...layoutedNodes]);
+        let modifiedNodes = layoutedNodes.map((node) => {
+          return { ...node, data: { ...node.data, direction } };
+        });
+        console.log(modifiedNodes,'eeeeeee')
+        setNodes([...modifiedNodes]);
         setEdges([...layoutedEdges]);
       },
       [nodes, edges]
     );
 
     const getNodeId = () => `randomnode_${+new Date()}`;
-
-    const onAdd = useCallback(() => {
-      const newNode = {
-        id: getNodeId(),
-        data: { label: 'Added node' },
-        position: {
-          x: Math.random() * window.innerWidth - 100,
-          y: Math.random() * window.innerHeight,
-        },
-      };
-      setNodes((nds) => nds.concat(newNode));
-    }, [setNodes]);
 
     const onElementClick = useCallback((element) => {
       if (element.nodes.length > 0) {
@@ -259,24 +252,29 @@ const DnDFlow = () => {
               nodeTypes={nodeTypes}
             >
               <Controls />
-              <Panel position="top-right">
-                <button onClick={onSave}>save</button>
-                <button onClick={onAdd}>add node</button>
-                <button onClick={() => onLayout('TB')}>vertical layout</button>
-                <button onClick={() => onLayout('LR')}>horizontal layout</button>
-              </Panel>
             </ReactFlow>
           </div>
-          {nodeData ? (
-            <aside>
-              <ArrowBackIcon style={{marginRight: "20px", marginTop: "10px", cursor: 'pointer'}} onClick={resetNodeData}/>
-              <input 
-                type="text"
-                value={editedLabel}
-                onChange={onInputChange}
-              />
-            </aside>
-          )  : <Sidebar/>}
+          <div>
+            {nodeData ? (
+              <aside>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <ArrowBackIcon color="action" fontSize="large" style={{marginTop: "10px", cursor: 'pointer'}} onClick={resetNodeData}/>
+                  <h1 className='ml-4 mt-2 font-bold' style={{fontSize: '25px'}}>Properties</h1>
+                </div>
+                <input 
+                  className='mt-6 px-5 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 font-bold text-lg'
+                  type="text"
+                  value={editedLabel}
+                  onChange={onInputChange}
+                />
+              </aside>
+            )  : <Sidebar/>}
+            <Panel className="panel-container">
+              <button onClick={() => onLayout('TB')}>Vertical Layout</button>
+              <button onClick={() => onLayout('LR')}>Horizontal Layout</button>
+            </Panel>
+            <button onClick={onSave}>SAVE</button>
+          </div>
         </ReactFlowProvider>
       </div>
     );

@@ -1,5 +1,5 @@
 import React from 'react';
-import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
+import AddCommentIcon from '@mui/icons-material/AddComment';
 
 export default () => {
   const onDragStart = (event, nodeType) => {
@@ -9,15 +9,15 @@ export default () => {
 
   return (
     <aside>
-      <div className="description">You can drag these nodes to the pane on the left.</div>
+      <div className="description">Widget Library.</div>
       <div className="dndnode input" onDragStart={(event) => onDragStart(event, 'Extra Data')} draggable>
-        Extra Data Node
+        <AddCommentIcon fontSize="large" className='pr-2'/>  Extra Data Node
       </div>
       <div className="dndnode" onDragStart={(event) => onDragStart(event, 'Default')} draggable>
-        Default Node
+        <AddCommentIcon fontSize="large" className='pr-2'/> Default Data Node
       </div>
       <div className="dndnode output" onDragStart={(event) => onDragStart(event, 'End Of Flow')} draggable>
-        End Of Flow Node
+        <AddCommentIcon fontSize="large" className='pr-2'/> End Of Flow Node
       </div>
     </aside>
   );
