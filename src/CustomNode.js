@@ -2,11 +2,8 @@ import React, { memo } from 'react';
 import { Handle, Position } from 'reactflow';
 import CancelIcon from '@mui/icons-material/Cancel';
 
-function CustomNode({ data, removeNode }) {
+function CustomNode({ data }) {
 
-  const cancelNode = (id) => {
-
-  };
 
   return (
     <div className="relative">
@@ -19,7 +16,7 @@ function CustomNode({ data, removeNode }) {
             <div className="text-sm">{data?.label}</div>
           </div>
           <div>
-            <CancelIcon onClick={() => cancelNode(data.id)} fontSize="medium" className='pb-3' style={{color: 'red'}}/>
+            {data.label !== "Trigger" && <CancelIcon fontSize="medium" className='pb-3' style={{color: 'red'}}/>}
           </div>
         </div>
       </div>

@@ -54,7 +54,7 @@
   
     .dndflow aside {
       width: 380px;
-      height: 78%;
+      height: 72%;
     }
   }
 
@@ -82,6 +82,12 @@
     flex-grow: 1;
     height: 100%;
   }
+
+.settings {
+  margin-left: 80%;
+  cursor: pointer;
+  margin-bottom: 5%
+}
 
   
   

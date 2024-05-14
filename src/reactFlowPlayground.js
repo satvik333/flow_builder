@@ -19,6 +19,7 @@ import 'reactflow/dist/base.css';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import CustomNode from './CustomNode';
+import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
 
 
 const dagreGraph = new dagre.graphlib.Graph();
@@ -51,6 +52,7 @@ const DnDFlow = () => {
     const [reactFlowInstance, setReactFlowInstance] = useState(null);
     const [nodeData, setNodeData] = useState(null);
     const [editedLabel, setEditedLabel] = useState(null);
+    const [isSettings, setIsSettings] = useState(false);
     const [flowKey, setFlowKey] = useState('example-flow');
 
     const { screenToFlowPosition } = useReactFlow();
@@ -61,6 +63,28 @@ const DnDFlow = () => {
       (params) => setEdges((eds) => addEdge(params, eds)),
       [],
     );
+
+    useEffect(() => {
+      const handleClick = (event) => {
+        const clickedElement = event.target;
+  
+        if (clickedElement.tagName === 'path' && clickedElement.parentElement.tagName === 'svg') {
+          const nodeId = clickedElement.closest('.react-flow__node')?.dataset.id;
+          if (nodeId) {
+            removeNode(nodeId);
+          }
+        }
+      };
+  
+      document.addEventListener('click', handleClick);
+      return () => {
+        document.removeEventListener('click', handleClick);
+      };
+    }, [nodes]);
+
+    const removeNode = (idToRemove) => {
+      setNodes((prevNodes) => prevNodes.filter(node => node.id !== idToRemove));
+    };
   
     const onDragOver = useCallback((event) => {
       event.preventDefault();
@@ -105,7 +129,6 @@ const DnDFlow = () => {
   
         if (targetIsPane) {
           const id = getId();
-        console.log('11111111111111',event)
 
           const newNode = {
             id,
@@ -159,7 +182,6 @@ const DnDFlow = () => {
       if (reactFlowInstance) {
         let flow = reactFlowInstance.toObject();
         flow.flowName = flowKey;
-        console.log(flow,'fffffffffffffffffffff')
         localStorage.setItem(flowKey, JSON.stringify(flow));
       }
     }, [reactFlowInstance]);
@@ -183,7 +205,6 @@ const DnDFlow = () => {
         let modifiedNodes = layoutedNodes.map((node) => {
           return { ...node, data: { ...node.data, direction } };
         });
-        console.log(modifiedNodes,'eeeeeee')
         setNodes([...modifiedNodes]);
         setEdges([...layoutedEdges]);
       },
@@ -252,9 +273,9 @@ const DnDFlow = () => {
     setFlowKey(event.target.value);
   };
 
-  const removeNode = (idToRemove) => {
-    setNodes((prevNodes) => prevNodes.filter(node => node.id !== idToRemove));
-  };
+  function enableSettings() {
+    setIsSettings(val => !val)
+  }
   
     return (
       <div className="dndflow" style={{ width: '100%', height: '100vh' }}>
@@ -282,20 +303,24 @@ const DnDFlow = () => {
             </ReactFlow>
           </div>
           <div>
-            {nodeData ? (
+            {nodeData && nodeData.data.label !== 'Trigger' ? (
               <aside>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <ArrowBackIcon color="action" fontSize="large" style={{marginTop: "10px", cursor: 'pointer'}} onClick={resetNodeData}/>
                   <h1 className='ml-4 mt-2 font-bold' style={{fontSize: '25px'}}>Properties</h1>
                 </div>
-                <input 
-                  className='mt-6 px-5 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 font-bold text-lg'
-                  type="text"
+                <textarea
+                  className='mt-6 px-7 py-7 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 font-bold text-lg'
                   value={editedLabel}
                   onChange={onInputChange}
                 />
               </aside>
             )  : <Sidebar/>}
+            <SettingsSuggestIcon fontSize="large" className="settings" onClick={enableSettings}/>
+            {isSettings && <div className="pl-1 pr-2 flex justify-between mb-4">
+              <button className="px-10 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={() => onLayout('TB')}>Vertical Layout</button>
+              <button className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={() => onLayout('LR')}>Horizontal Layout</button>
+            </div>}
             <h1 className='font-bold text-lg'>Flow Title:</h1>
             <input 
               className='mt-2 mb-6 px-8 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 font-bold text-lg'
@@ -303,11 +328,7 @@ const DnDFlow = () => {
               value={flowKey}
               onChange={onFlowChange}
             />
-           <div className="pl-1 pr-2 flex justify-between">
-              <button className="px-10 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={() => onLayout('TB')}>Vertical Layout</button>
-              <button className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={() => onLayout('LR')}>Horizontal Layout</button>
-            </div>
-            <div className="pl-10 pr-10 flex justify-between mt-4">
+            <div className="pl-10 pr-10 flex justify-between mt-2 mb-2">
               <button className="px-10 py-2 bg-red-500 text-white rounded-md hover:bg-red-600" onClick={onClear}>CLEAR</button>
               <button className="px-10 py-2 bg-green-500 text-white rounded-md hover:bg-green-600" onClick={onSave}>SAVE</button>
             </div>
