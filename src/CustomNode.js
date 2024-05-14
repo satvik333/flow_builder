@@ -5,8 +5,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 function CustomNode({ data, removeNode }) {
 
   const cancelNode = (id) => {
-   // removeNode(id);
-   console.log(id);
+
   };
 
   return (

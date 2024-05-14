@@ -144,9 +144,6 @@ const DnDFlow = () => {
         const nodeWithPosition = dagreGraph.node(node.id);
         node.targetPosition = isHorizontal ? 'left' : 'top';
         node.sourcePosition = isHorizontal ? 'right' : 'bottom';
-
-        console.log(nodeWithPosition,'pppppppppppppppppp')
-    
         node.position = {
           x: nodeWithPosition.x,
           y: nodeWithPosition.y,
@@ -200,7 +197,22 @@ const DnDFlow = () => {
         setNodeData(element.nodes[0]);
         setEditedLabel(element.nodes[0].data.label);
       }
+      const nodeElement = document.querySelector(`[data-id="${element.nodes[0]?.id}"] .px-6.py-2.shadow-md.rounded-md.bg-white.border-2.border-stone-400.relative`);
+      if (nodeElement) {
+        nodeElement.style.borderColor = "blue";
+      }
   }, []);
+
+  useEffect(() => {
+    nodes.forEach(node => {
+      if (node?.id !== nodeData?.id){
+        const nodeElement = document.querySelector(`[data-id="${node?.id}"] .px-6.py-2.shadow-md.rounded-md.bg-white.border-2.border-stone-400.relative`);
+        if (nodeElement) {
+          nodeElement.style.borderColor = "";
+        }
+      }
+    })
+  }, [nodeData])
 
   const onInputChange = (event) => {
     setEditedLabel(event.target.value);
@@ -228,6 +240,10 @@ const DnDFlow = () => {
   }, [editedLabel, nodeData]);  
 
   function resetNodeData() {
+    const nodeElement = document.querySelector(`[data-id="${nodeData.id}"] .px-6.py-2.shadow-md.rounded-md.bg-white.border-2.border-stone-400.relative`);
+    if (nodeElement) {
+      nodeElement.style.borderColor = "";
+    }
     setNodeData(null);
     setEditedLabel(null);
   }
