@@ -51,11 +51,11 @@ const DnDFlow = () => {
     const [reactFlowInstance, setReactFlowInstance] = useState(null);
     const [nodeData, setNodeData] = useState(null);
     const [editedLabel, setEditedLabel] = useState(null);
+    const [flowKey, setFlowKey] = useState('example-flow');
 
     const { screenToFlowPosition } = useReactFlow();
     const { setViewport } = useReactFlow();
 
-    const flowKey = 'example-flow';
   
     const onConnect = useCallback(
       (params) => setEdges((eds) => addEdge(params, eds)),
@@ -110,8 +110,8 @@ const DnDFlow = () => {
           const newNode = {
             id,
             position: screenToFlowPosition({
-              x: event.clientX - 600,
-              y: event.clientY - 600,
+              x: event.clientX - 550,
+              y: event.clientY - 550,
             }),
             data: { label: `Node ${id}`, icon: <AddCommentIcon/>, id: id},
             origin: [0.5, 0.0],
@@ -144,10 +144,12 @@ const DnDFlow = () => {
         const nodeWithPosition = dagreGraph.node(node.id);
         node.targetPosition = isHorizontal ? 'left' : 'top';
         node.sourcePosition = isHorizontal ? 'right' : 'bottom';
+
+        console.log(nodeWithPosition,'pppppppppppppppppp')
     
         node.position = {
-          x: nodeWithPosition.x - nodeWidth / 2,
-          y: nodeWithPosition.y - nodeHeight / 2,
+          x: nodeWithPosition.x,
+          y: nodeWithPosition.y,
         };
        
         return node;
@@ -158,11 +160,16 @@ const DnDFlow = () => {
 
     const onSave = useCallback(() => {
       if (reactFlowInstance) {
-        const flow = reactFlowInstance.toObject();
+        let flow = reactFlowInstance.toObject();
+        flow.flowName = flowKey;
         console.log(flow,'fffffffffffffffffffff')
         localStorage.setItem(flowKey, JSON.stringify(flow));
       }
     }, [reactFlowInstance]);
+
+    function onClear() {
+      setNodes(initialNodes);
+    }
 
     const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
       initialNodes,
@@ -225,6 +232,10 @@ const DnDFlow = () => {
     setEditedLabel(null);
   }
 
+  const onFlowChange = (event) => {
+    setFlowKey(event.target.value);
+  };
+
   const removeNode = (idToRemove) => {
     setNodes((prevNodes) => prevNodes.filter(node => node.id !== idToRemove));
   };
@@ -245,7 +256,7 @@ const DnDFlow = () => {
               onConnectStart={onConnectStart}
               onConnectEnd={onConnectEnd}
               fitView
-              fitViewOptions={{ padding: 2 }}
+              fitViewOptions={{ padding: 5 }}
               nodeOrigin={[0.5, 0]}
               style={{ width: '100%', height: '100%' }}
               onSelectionChange={onElementClick}
@@ -269,11 +280,21 @@ const DnDFlow = () => {
                 />
               </aside>
             )  : <Sidebar/>}
-            <Panel className="panel-container">
-              <button onClick={() => onLayout('TB')}>Vertical Layout</button>
-              <button onClick={() => onLayout('LR')}>Horizontal Layout</button>
-            </Panel>
-            <button onClick={onSave}>SAVE</button>
+            <h1 className='font-bold text-lg'>Flow Title:</h1>
+            <input 
+              className='mt-2 mb-6 px-8 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 font-bold text-lg'
+              type="text"
+              value={flowKey}
+              onChange={onFlowChange}
+            />
+           <div className="pl-1 pr-2 flex justify-between">
+              <button className="px-10 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={() => onLayout('TB')}>Vertical Layout</button>
+              <button className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={() => onLayout('LR')}>Horizontal Layout</button>
+            </div>
+            <div className="pl-10 pr-10 flex justify-between mt-4">
+              <button className="px-10 py-2 bg-red-500 text-white rounded-md hover:bg-red-600" onClick={onClear}>CLEAR</button>
+              <button className="px-10 py-2 bg-green-500 text-white rounded-md hover:bg-green-600" onClick={onSave}>SAVE</button>
+            </div>
           </div>
         </ReactFlowProvider>
       </div>

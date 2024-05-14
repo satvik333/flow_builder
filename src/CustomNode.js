@@ -3,7 +3,6 @@ import { Handle, Position } from 'reactflow';
 import CancelIcon from '@mui/icons-material/Cancel';
 
 function CustomNode({ data, removeNode }) {
-  console.log(data,'dddddddddd')
 
   const cancelNode = (id) => {
    // removeNode(id);
