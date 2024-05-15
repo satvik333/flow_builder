@@ -9,7 +9,7 @@ function CustomNode({ data }) {
     <div className="relative">
       <div className="px-6 py-2 shadow-md rounded-md bg-white border-2 border-stone-400 relative">
         <div className="flex items-center">
-          <div style={{color: "green"}} className="rounded-full w-6 h-6 flex justify-center items-center">
+          <div style={{color: "#7B3F00"}} className="rounded-full w-6 h-6 flex justify-center items-center">
             {data?.icon}
           </div>
           <div className="ml-1">

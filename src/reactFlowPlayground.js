@@ -83,6 +83,7 @@ const DnDFlow = () => {
     }, [nodes]);
 
     const removeNode = (idToRemove) => {
+      setNodeData(null);
       setNodes((prevNodes) => prevNodes.filter(node => node.id !== idToRemove));
     };
   
