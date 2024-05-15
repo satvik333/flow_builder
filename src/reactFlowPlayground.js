@@ -20,6 +20,10 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import CustomNode from './CustomNode';
 import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import CKEditorInspector from '@ckeditor/ckeditor5-inspector';
+import { convert } from 'html-to-text';
 
 
 const dagreGraph = new dagre.graphlib.Graph();
@@ -53,7 +57,15 @@ const DnDFlow = () => {
     const [nodeData, setNodeData] = useState(null);
     const [editedLabel, setEditedLabel] = useState(null);
     const [isSettings, setIsSettings] = useState(false);
-    const [flowKey, setFlowKey] = useState('example-flow');
+    const [flowKey, setFlowKey] = useState(() => {
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = String(today.getMonth() + 1).padStart(2, '0');
+      const day = String(today.getDate()).padStart(2, '0');
+      return `flow_${year}-${month}-${day}`;
+    });
+    const [isDarkMode, setIsDarkMode] = useState(false);
+    const [dataLabel, setDataLabel] = useState(null);
 
     const { screenToFlowPosition } = useReactFlow();
     const { setViewport } = useReactFlow();
@@ -236,9 +248,16 @@ const DnDFlow = () => {
     })
   }, [nodeData])
 
-  const onInputChange = (event) => {
-    setEditedLabel(event.target.value);
+  const onInputChange = (data) => {
+    setDataLabel(data)
   };
+
+  function onUpdate() {
+    const plainText = convert(dataLabel, {
+      wordwrap: 130
+    });
+    setEditedLabel(plainText);
+  }
 
   useEffect(() => {
     if (nodeData) {
@@ -310,18 +329,30 @@ const DnDFlow = () => {
                   <ArrowBackIcon color="action" fontSize="large" style={{marginTop: "10px", cursor: 'pointer'}} onClick={resetNodeData}/>
                   <h1 className='ml-4 mt-2 font-bold' style={{fontSize: '25px'}}>Properties</h1>
                 </div>
-                <textarea
-                  className='mt-6 px-7 py-7 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 font-bold text-lg'
-                  value={editedLabel}
-                  onChange={onInputChange}
+                <CKEditor
+                  editor={ClassicEditor}
+                  data={editedLabel}
+                  onChange={(event, editor) => {
+                    const data = editor.getData();
+                    onInputChange(data);
+                  }}
                 />
+                <button className="px-10 mt-2 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={onUpdate}>Update</button>
               </aside>
             )  : <Sidebar/>}
             <SettingsSuggestIcon fontSize="large" className="settings" onClick={enableSettings}/>
-            {isSettings && <div className="pl-1 pr-2 flex justify-between mb-4">
-              <button className="px-10 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={() => onLayout('TB')}>Vertical Layout</button>
-              <button className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={() => onLayout('LR')}>Horizontal Layout</button>
-            </div>}
+            {isSettings && 
+              <>
+                <div className="pl-1 pr-2 flex justify-between mb-4">
+                  <button className="px-10 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={() => onLayout('TB')}>Vertical Layout</button>
+                  <button className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={() => onLayout('LR')}>Horizontal Layout</button>
+                </div>
+                <div className="pl-1 pr-2 flex justify-between mb-4">
+                  <button style={{width: '51%'}} className="py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={() => setIsDarkMode(val => !val)}>Dark Mode</button>
+                  <button style={{width: '48%'}} className="py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={() => setIsDarkMode(val => !val)}>Light Mode</button>
+                </div>
+              </>
+            }
             <h1 className='font-bold text-lg'>Flow Title:</h1>
             <input 
               className='mt-2 mb-6 px-8 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 font-bold text-lg'
