@@ -22,7 +22,6 @@ import CustomNode from './CustomNode';
 import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import CKEditorInspector from '@ckeditor/ckeditor5-inspector';
 import { convert } from 'html-to-text';
 
 
@@ -55,7 +54,7 @@ const DnDFlow = () => {
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
     const [reactFlowInstance, setReactFlowInstance] = useState(null);
     const [nodeData, setNodeData] = useState(null);
-    const [editedLabel, setEditedLabel] = useState(null);
+    const [editedMessage, setEditedMessage] = useState(null);
     const [isSettings, setIsSettings] = useState(false);
     const [flowKey, setFlowKey] = useState(() => {
       const today = new Date();
@@ -65,6 +64,8 @@ const DnDFlow = () => {
       return `flow_${year}-${month}-${day}`;
     });
     const [isDarkMode, setIsDarkMode] = useState(false);
+    const [actionName, setActionName] = useState('Action Name');
+    const [actionType, setActionType] = useState('Action Type');
     const [dataLabel, setDataLabel] = useState(null);
 
     const { screenToFlowPosition } = useReactFlow();
@@ -125,7 +126,7 @@ const DnDFlow = () => {
         const newNode = {
           id: getId(),
           position,
-          data: { label: `${type} node`, id: getId(), icon: <AddCommentIcon/> },
+          data: { label: `${type} node`, id: getId(), icon: <AddCommentIcon/>, actionName: actionName, actionType: actionType, message: 'Add Message' },
           type: 'custom',
         };
   
@@ -149,7 +150,7 @@ const DnDFlow = () => {
               x: event.clientX - 550,
               y: event.clientY - 550,
             }),
-            data: { label: `Node ${id}`, icon: <AddCommentIcon/>, id: id},
+            data: { label: `Node ${id}`, icon: <AddCommentIcon/>, id: id, actionName: actionName, actionType: actionType, message: 'Add Message'},
             origin: [0.5, 0.0],
             type: 'custom'
           };
@@ -229,12 +230,14 @@ const DnDFlow = () => {
     const onElementClick = useCallback((element) => {
       if (element.nodes.length > 0) {
         setNodeData(element.nodes[0]);
-        setEditedLabel(element.nodes[0].data.label);
+        setEditedMessage(element.nodes[0].data.message);
       }
       const nodeElement = document.querySelector(`[data-id="${element.nodes[0]?.id}"] .px-6.py-2.shadow-md.rounded-md.bg-white.border-2.border-stone-400.relative`);
       if (nodeElement) {
         nodeElement.style.borderColor = "blue";
       }
+      setActionName('Action Name');
+      setActionType('Action Type')
   }, []);
 
   useEffect(() => {
@@ -256,7 +259,7 @@ const DnDFlow = () => {
     const plainText = convert(dataLabel, {
       wordwrap: 130
     });
-    setEditedLabel(plainText);
+    setEditedMessage(plainText);
   }
 
   useEffect(() => {
@@ -269,7 +272,7 @@ const DnDFlow = () => {
               ...node,
               data: {
                 ...node.data,
-                label: editedLabel,
+                message: editedMessage,
               },
             };
           }
@@ -278,7 +281,7 @@ const DnDFlow = () => {
         return updatedNodes;
       });
     }
-  }, [editedLabel, nodeData]);  
+  }, [editedMessage, nodeData]);  
 
   function resetNodeData() {
     const nodeElement = document.querySelector(`[data-id="${nodeData.id}"] .px-6.py-2.shadow-md.rounded-md.bg-white.border-2.border-stone-400.relative`);
@@ -286,7 +289,7 @@ const DnDFlow = () => {
       nodeElement.style.borderColor = "";
     }
     setNodeData(null);
-    setEditedLabel(null);
+    setEditedMessage(null);
   }
 
   const onFlowChange = (event) => {
@@ -295,6 +298,14 @@ const DnDFlow = () => {
 
   function enableSettings() {
     setIsSettings(val => !val)
+  }
+
+  function onActionNameChange(event) {
+    setActionName(event.target.value);
+  }
+
+  function onActionTypeChange(event) {
+    setActionType(event.target.value);
   }
   
     return (
@@ -329,15 +340,34 @@ const DnDFlow = () => {
                   <ArrowBackIcon color="action" fontSize="large" style={{marginTop: "10px", cursor: 'pointer'}} onClick={resetNodeData}/>
                   <h1 className='ml-4 mt-2 font-bold' style={{fontSize: '25px'}}>Properties</h1>
                 </div>
-                <CKEditor
-                  editor={ClassicEditor}
-                  data={editedLabel}
-                  onChange={(event, editor) => {
-                    const data = editor.getData();
-                    onInputChange(data);
-                  }}
+                <h1 className='font-bold mt-4' style={{fontSize: '15px'}}>Action Name:</h1>
+                <input 
+                  className='mt-2 mb-6 px-11 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg'
+                  type="text"
+                  value={actionName}
+                  onChange={onActionNameChange}
                 />
-                <button className="px-10 mt-2 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={onUpdate}>Update</button>
+                <h1 className='font-bold mt-2' style={{fontSize: '15px'}}>Action Type:</h1>
+                <input 
+                  className='mt-2 mb-12 px-11 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg'
+                  type="text"
+                  value={actionType}
+                  onChange={onActionTypeChange}
+                />
+                { nodeData.data.label !== 'End Of Flow node' &&
+                  <>
+                    <h1 className='font-bold mb-1' style={{fontSize: '15px'}}>Message Body:</h1>
+                    <CKEditor
+                      editor={ClassicEditor}
+                      data={editedMessage}
+                      onChange={(event, editor) => {
+                      const data = editor.getData();
+                        onInputChange(data);
+                      }}
+                    />
+                    <button className="px-10 mt-2 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={onUpdate}>Update</button>
+                  </>
+                }
               </aside>
             )  : <Sidebar/>}
             <SettingsSuggestIcon fontSize="large" className="settings" onClick={enableSettings}/>

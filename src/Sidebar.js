@@ -1,5 +1,8 @@
 import React from 'react';
 import AddCommentIcon from '@mui/icons-material/AddComment';
+import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
+import ListIcon from '@mui/icons-material/List';
+import PauseIcon from '@mui/icons-material/Pause';
 
 export default () => {
   const onDragStart = (event, nodeType) => {
@@ -10,14 +13,14 @@ export default () => {
   return (
     <aside>
       <div className="description">Widget Library.</div>
-      <div className="dndnode input" onDragStart={(event) => onDragStart(event, 'Extra Data')} draggable>
-        <AddCommentIcon fontSize="large" className='pr-2'/>  Extra Data Node
+      <div className="dndnode input" onDragStart={(event) => onDragStart(event, 'Send Message')} draggable>
+        <ChatBubbleIcon fontSize="large" className='pr-2'/> Send Message
       </div>
-      <div className="dndnode" onDragStart={(event) => onDragStart(event, 'Default')} draggable>
-        <AddCommentIcon fontSize="large" className='pr-2'/> Default Data Node
+      <div className="dndnode" onDragStart={(event) => onDragStart(event, 'Select Options')} draggable>
+        <ListIcon fontSize="large" className='pr-2'/> Select Messages
       </div>
       <div className="dndnode output" onDragStart={(event) => onDragStart(event, 'End Of Flow')} draggable>
-        <AddCommentIcon fontSize="large" className='pr-2'/> End Of Flow Node
+        <PauseIcon fontSize="large" className='pr-2'/> End Of Flow
       </div>
     </aside>
   );
