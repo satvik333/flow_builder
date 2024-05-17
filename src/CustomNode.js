@@ -1,11 +1,9 @@
 import React, { memo } from 'react';
 import { Handle, Position } from 'reactflow';
 import CancelIcon from '@mui/icons-material/Cancel';
-// import Typography from '@mui/material/Typography';
-// import InputBase from '@mui/material/InputBase';
 
 function CustomNode({ data }) {
-  console.log(data.noOfNodes, 'datatatatatat');
+  // console.log(data,'adtatatatat')
   return (
     <div className="relative">
       <div className="px-3 py-2 shadow-md rounded-md bg-white border-2 border-stone-400 relative">
@@ -29,7 +27,9 @@ function CustomNode({ data }) {
           </>
         }
       </div>
-      {data.direction === 'LR' && !data.label.includes('Trigger') && <Handle type="target" position={Position.Left} className="bg-purple-600" />}
+      {data.direction === 'LR' && !data.label.includes('Trigger') && (
+        <Handle type="target" position={Position.Left} className="bg-purple-600" />
+      )}
       {data.direction !== 'LR' && !data.label.includes('Trigger') && (
         <Handle
           type="target"
@@ -40,21 +40,31 @@ function CustomNode({ data }) {
       {data.direction === 'LR' && !data.label.includes('End Of Flow node') && (
         <Handle type="source" position={Position.Right} className="bg-purple-600" />
       )}
-      {data.direction !== 'LR' && !data.label.includes('End Of Flow node') &&
-        [...Array(4).fill('1')].map((index) => (
+      {data.direction !== 'LR' && !data.label.includes('End Of Flow node') && !data.label.includes('Select Options') && (
+        <Handle type="source" position={Position.Bottom} className="bg-purple-600" style={{
+          marginBottom: "7px",
+          width: '15px', 
+          height: '10px',
+        }} />
+      )}
+      {data.direction !== 'LR' && data.label.includes('Select Options') && (
+        [...Array(4)].map((_, index) => (
           <Handle
-            key={index} 
+            key={index}
             type="source"
+            className='bg-purple-600'
             position={Position.Bottom}
+            id={`source-${index}`}
             style={{
               marginBottom: "7px",
-              width: `1%`,
+              width: '10px', 
               height: '10px',
-              ...(data.label.includes('Select Options node') ? { left: `${10 + (index * 0)}%` } : {}),
+              left: `${10 + (index * 20)}%`, 
+              cursor: 'grab',
             }}
           />
         ))
-      }
+      )}
     </div>
   );
 }

@@ -143,30 +143,36 @@ const DnDFlow = () => {
     const onConnectEnd = useCallback(
       (event) => {
         if (!connectingNodeId.current) return;
-  
+    
         const targetIsPane = event.target.classList.contains('react-flow__pane');
-  
+    
         if (targetIsPane) {
-          const id = getId();
-
+          const targetNodeId = getId(); 
+          const targetPosition = screenToFlowPosition({
+            x: event.clientX - 550,
+            y: event.clientY - 550,
+          });
+    
           const newNode = {
-            id,
-            position: screenToFlowPosition({
-              x: event.clientX - 550,
-              y: event.clientY - 550,
-            }),
-            data: { label: `Node ${id}`, icon: <AddCommentIcon/>, id: id, actionName: actionName, actionType: actionType, message: 'Add Message', noOfNodes: noOfNodes},
+            id: targetNodeId,
+            position: targetPosition,
+            data: { label: `Node ${targetNodeId}`, icon: <AddCommentIcon/>, id: targetNodeId, actionName: actionName, actionType: actionType, message: 'Add Message', noOfNodes: noOfNodes},
             origin: [0.5, 0.0],
             type: 'custom'
           };
-          setNodes((nds) => nds.concat(newNode));
-          setEdges((eds) =>
-            eds.concat({ id, source: connectingNodeId.current, target: id }),
-          );
+    
+          setNodes((prevNodes) => [...prevNodes, newNode]);
+    
+          const sourceNode = nodes.find(node => node.id === connectingNodeId.current);
+        console.log(sourceNode,'evevevevevevev')
+          
+          if (sourceNode) {
+            setEdges((prevEdges) => [...prevEdges, { id: getId(), source: sourceNode.id, target: targetNodeId }]);
+          }
         }
       },
-      [screenToFlowPosition],
-    );
+      [screenToFlowPosition, nodes, actionName, actionType, noOfNodes]
+    );    
 
     const getLayoutedElements = (nodes, edges, direction = 'TB') => {
       const isHorizontal = direction === 'LR';
@@ -238,7 +244,11 @@ const DnDFlow = () => {
         setNodeData(element.nodes[0]);
         setEditedMessage(element.nodes[0].data.message);
       }
-      const nodeElement = document.querySelector(`[data-id="${element.nodes[0]?.id}"] .px-6.py-2.shadow-md.rounded-md.bg-white.border-2.border-stone-400.relative`);
+      const nodeId = element.nodes[0]?.data.id;
+      const lastNumber = nodeId?.match(/\d+$/)[0];
+      const previousNodeId = `dndnode_${parseInt(lastNumber) - 1}`;
+      const nodeElement = document.querySelector(`[data-id="${previousNodeId}"] .shadow-md.rounded-md.bg-white.border-2.border-stone-400.relative`);
+
       if (nodeElement) {
         nodeElement.style.borderColor = "blue";
       }
@@ -249,7 +259,9 @@ const DnDFlow = () => {
   useEffect(() => {
     nodes.forEach(node => {
       if (node?.id !== nodeData?.id){
-        const nodeElement = document.querySelector(`[data-id="${node?.id}"] .px-6.py-2.shadow-md.rounded-md.bg-white.border-2.border-stone-400.relative`);
+        const lastNumber = node?.id?.match(/\d+$/)[0];
+        const previousNodeId = `dndnode_${parseInt(lastNumber)}`;
+        const nodeElement = document.querySelector(`[data-id="${previousNodeId}"] .shadow-md.rounded-md.bg-white.border-2.border-stone-400.relative`);
         if (nodeElement) {
           nodeElement.style.borderColor = "";
         }
@@ -292,7 +304,9 @@ const DnDFlow = () => {
   }, [editedMessage, nodeData, noOfNodes]);  
 
   function resetNodeData() {
-    const nodeElement = document.querySelector(`[data-id="${nodeData.id}"] .px-6.py-2.shadow-md.rounded-md.bg-white.border-2.border-stone-400.relative`);
+    const lastNumber = nodeData?.id?.match(/\d+$/)[0];
+    const previousNodeId = `dndnode_${parseInt(lastNumber)}`;
+    const nodeElement = document.querySelector(`[data-id="${previousNodeId}"] .shadow-md.rounded-md.bg-white.border-2.border-stone-400.relative`);
     if (nodeElement) {
       nodeElement.style.borderColor = "";
     }
