@@ -28,6 +28,7 @@ import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { convert } from 'html-to-text';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 
 const dagreGraph = new dagre.graphlib.Graph();
@@ -116,6 +117,7 @@ const DnDFlow = () => {
   
     const onDrop = useCallback(
       (event) => {
+
         event.preventDefault();
   
         const type = event.dataTransfer.getData('application/reactflow');
@@ -142,32 +144,47 @@ const DnDFlow = () => {
 
     const onConnectEnd = useCallback(
       (event) => {
-        if (!connectingNodeId.current) return;
-    
-        const targetIsPane = event.target.classList.contains('react-flow__pane');
-    
-        if (targetIsPane) {
-          const targetNodeId = getId(); 
-          const targetPosition = screenToFlowPosition({
-            x: event.clientX - 550,
-            y: event.clientY - 550,
-          });
-    
-          const newNode = {
-            id: targetNodeId,
-            position: targetPosition,
-            data: { label: `Node ${targetNodeId}`, icon: <AddCommentIcon/>, id: targetNodeId, actionName: actionName, actionType: actionType, message: 'Add Message', noOfNodes: noOfNodes},
-            origin: [0.5, 0.0],
-            type: 'custom'
-          };
-    
-          setNodes((prevNodes) => [...prevNodes, newNode]);
-    
-          const sourceNode = nodes.find(node => node.id === connectingNodeId.current);
-          
-          if (sourceNode) {
-            setEdges((prevEdges) => [...prevEdges, { id: getId(), source: sourceNode.id, target: targetNodeId }]);
+      let cntr = 0;
+      for(let i =0;i<noOfNodes;i++) {
+
+          //if (!connectingNodeId.current) return;
+      
+          const targetIsPane = event.target.classList.contains('react-flow__pane');
+
+          if (targetIsPane) {
+            const targetNodeId = getId(); 
+            let targetPosition;
+
+            if (nodeData?.data?.label === 'Select Options node') {
+              targetPosition = screenToFlowPosition({
+                x: event.clientX - 500 + cntr,
+                y: event.clientY - 500 + cntr,
+              });
+            }
+            else {
+              targetPosition = screenToFlowPosition({
+                x: event.clientX - 500 + cntr,
+                y: event.clientY - 500 + cntr,
+              });
+            }
+      
+            const newNode = {
+              id: targetNodeId,
+              position: targetPosition,
+              data: { label: `Node ${targetNodeId}`, icon: <AddCommentIcon/>, id: targetNodeId, actionName: actionName, actionType: actionType, message: 'Add Message', noOfNodes: noOfNodes},
+              origin: [0.5, 0.0],
+              type: 'custom'
+            };
+      
+            setNodes((prevNodes) => [...prevNodes, newNode]);
+      
+            const sourceNode = nodes.find(node => node.id === connectingNodeId.current);
+
+            if (sourceNode) {
+              setEdges((prevEdges) => [...prevEdges, { id: getId(), source: sourceNode.id, target: targetNodeId }]);
+            }
           }
+          cntr+=50;
         }
       },
       [screenToFlowPosition, nodes, actionName, actionType, noOfNodes]
@@ -338,6 +355,14 @@ const DnDFlow = () => {
     setNoOfNodes(Number(event.target.value));
   }
 
+  const handleIconClick = (event) => {
+    connectingNodeId.current = nodeData.id;
+    onConnectEnd({
+      ...event,
+      target: { classList: { contains: () => true } }
+    });
+  };
+
   // const handleListUpdate = (index) => (event) => {
   //   const updatedMessages = messages.map((msg, i) => (i === index ? event.target.value : msg));
   //   setMessages(updatedMessages);
@@ -446,14 +471,17 @@ const DnDFlow = () => {
                         //   <InputBase multiline className="cursor-text" placeholder="Add a message" value={newMsg} onChange={evt => messages.length < 8 && setNewMsg(evt.target.value)} onKeyDown={handleNextList} />
                         // </div>
                         <>
-                          <h1 className='font-bold mt-6 flex items-start' style={{fontSize: '15px'}}>Enter the Number of Nodes:</h1>
-                          <input 
-                            style={{ textAlign: 'left', paddingLeft: '1rem' }}
-                            className='w-full mt-2 mb-6 px-20 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg'
-                            type="text"
-                            value={noOfNodes}
-                            onChange={onNoOfNodeChange}
-                          />
+                          <h1 className='font-bold mt-6' style={{ fontSize: '15px' }}>Enter the Number of Nodes:</h1>
+                          <div className="flex items-center mt-2 mb-6">
+                            <input 
+                              style={{ textAlign: 'left', paddingLeft: '1rem', width: "100%"}}
+                              className='py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg'
+                              type="text"
+                              value={noOfNodes}
+                              onChange={onNoOfNodeChange}
+                            />
+                            <ArrowForwardIcon fontSize="large" className="ml-2" onClick={handleIconClick}/>
+                          </div>
                         </>
                       }
                     </div>
