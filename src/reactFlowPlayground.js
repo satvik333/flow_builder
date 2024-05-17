@@ -62,7 +62,7 @@ const DnDFlow = () => {
     const [editedMessage, setEditedMessage] = useState(null);
     const [isSettings, setIsSettings] = useState(false);
     const [flowKey, setFlowKey] = useState(() => {
-      const today = new Date();
+      const today = Date.now();
       return `flow_${today}`;
     });
     const [isDarkMode, setIsDarkMode] = useState(false);
@@ -164,7 +164,6 @@ const DnDFlow = () => {
           setNodes((prevNodes) => [...prevNodes, newNode]);
     
           const sourceNode = nodes.find(node => node.id === connectingNodeId.current);
-        console.log(sourceNode,'evevevevevevev')
           
           if (sourceNode) {
             setEdges((prevEdges) => [...prevEdges, { id: getId(), source: sourceNode.id, target: targetNodeId }]);
@@ -247,7 +246,11 @@ const DnDFlow = () => {
       const nodeId = element.nodes[0]?.data.id;
       const lastNumber = nodeId?.match(/\d+$/)[0];
       const previousNodeId = `dndnode_${parseInt(lastNumber) - 1}`;
-      const nodeElement = document.querySelector(`[data-id="${previousNodeId}"] .shadow-md.rounded-md.bg-white.border-2.border-stone-400.relative`);
+      let nodeElement = document.querySelector(`[data-id="${previousNodeId}"] .shadow-md.rounded-md.bg-white.border-2.border-stone-400.relative`);
+
+      if (!nodeElement) {
+       nodeElement = document.querySelector(`[data-id="${nodeId}"] .shadow-md.rounded-md.bg-white.border-2.border-stone-400.relative`);
+      }
 
       if (nodeElement) {
         nodeElement.style.borderColor = "blue";
@@ -292,7 +295,7 @@ const DnDFlow = () => {
                 ...node.data,
                 message: editedMessage,
                 noOfNodes: noOfNodes
-               // messages: messages
+                // messages: messages
               },
             };
           }
@@ -332,7 +335,7 @@ const DnDFlow = () => {
   }
 
   function onNoOfNodeChange(event) {
-    setNoOfNodes(event.target.value);
+    setNoOfNodes(Number(event.target.value));
   }
 
   // const handleListUpdate = (index) => (event) => {

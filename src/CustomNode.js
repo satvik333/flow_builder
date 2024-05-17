@@ -3,7 +3,7 @@ import { Handle, Position } from 'reactflow';
 import CancelIcon from '@mui/icons-material/Cancel';
 
 function CustomNode({ data }) {
-  // console.log(data,'adtatatatat')
+  // console.log(data,'datatatat')
   return (
     <div className="relative">
       <div className="px-3 py-2 shadow-md rounded-md bg-white border-2 border-stone-400 relative">
@@ -18,7 +18,7 @@ function CustomNode({ data }) {
             </div>
           </div>
         </div>
-        {(data.label === 'Send Message node' || data.label === 'Select Options node') &&
+        {(data.label === 'Send Message node' || data.label === 'Select Options node' || /^Node dndnode_\d+$/.test(data.label)) &&
           <>
             <hr className='mt-1' />
             <div className="ml-1 mt-1">
@@ -40,15 +40,20 @@ function CustomNode({ data }) {
       {data.direction === 'LR' && !data.label.includes('End Of Flow node') && (
         <Handle type="source" position={Position.Right} className="bg-purple-600" />
       )}
-      {data.direction !== 'LR' && !data.label.includes('End Of Flow node') && !data.label.includes('Select Options') && (
-        <Handle type="source" position={Position.Bottom} className="bg-purple-600" style={{
-          marginBottom: "7px",
-          width: '15px', 
-          height: '10px',
-        }} />
+      {data.direction !== 'LR' && !data.label.includes('End Of Flow node') && (
+        <Handle 
+          type="source" 
+          position={Position.Bottom} 
+          className="bg-purple-600" 
+          style={{
+            marginBottom: "7px",
+            width: '15px', 
+            height: '10px',
+          }} 
+        />
       )}
-      {data.direction !== 'LR' && data.label.includes('Select Options') && (
-        [...Array(4)].map((_, index) => (
+      {/* {data.direction !== 'LR' && data.label.includes('Select Options') && (
+        [...Array(data.noOfNodes)].map((_, index) => (
           <Handle
             key={index}
             type="source"
@@ -64,7 +69,7 @@ function CustomNode({ data }) {
             }}
           />
         ))
-      )}
+      )} */}
     </div>
   );
 }
