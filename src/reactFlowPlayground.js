@@ -11,8 +11,13 @@ import ReactFlow, {
 import 'reactflow/dist/style.css';
 import dagre from 'dagre';
 import AddCommentIcon from '@mui/icons-material/AddComment';
+// import Typography from '@mui/material/Typography';
+// import InputBase from '@mui/material/InputBase';
+// import CancelIcon from '@mui/icons-material/Cancel';
+
 
 import Sidebar from './Sidebar';
+import Modal from './modal';
 
 import './react-flow.css';
 import 'reactflow/dist/base.css';
@@ -58,15 +63,15 @@ const DnDFlow = () => {
     const [isSettings, setIsSettings] = useState(false);
     const [flowKey, setFlowKey] = useState(() => {
       const today = new Date();
-      const year = today.getFullYear();
-      const month = String(today.getMonth() + 1).padStart(2, '0');
-      const day = String(today.getDate()).padStart(2, '0');
-      return `flow_${year}-${month}-${day}`;
+      return `flow_${today}`;
     });
     const [isDarkMode, setIsDarkMode] = useState(false);
     const [actionName, setActionName] = useState('Action Name');
     const [actionType, setActionType] = useState('Action Type');
     const [dataLabel, setDataLabel] = useState(null);
+    // const [messages, setMessages] = useState([]);
+    // const [newMsg, setNewMsg] = useState("");
+    const [noOfNodes, setNoOfNodes] = useState(1);
 
     const { screenToFlowPosition } = useReactFlow();
     const { setViewport } = useReactFlow();
@@ -126,7 +131,7 @@ const DnDFlow = () => {
         const newNode = {
           id: getId(),
           position,
-          data: { label: `${type} node`, id: getId(), icon: <AddCommentIcon/>, actionName: actionName, actionType: actionType, message: 'Add Message' },
+          data: { label: `${type} node`, id: getId(), icon: <AddCommentIcon/>, actionName: actionName, actionType: actionType, message: 'Add Message', noOfNodes: noOfNodes },
           type: 'custom',
         };
   
@@ -150,7 +155,7 @@ const DnDFlow = () => {
               x: event.clientX - 550,
               y: event.clientY - 550,
             }),
-            data: { label: `Node ${id}`, icon: <AddCommentIcon/>, id: id, actionName: actionName, actionType: actionType, message: 'Add Message'},
+            data: { label: `Node ${id}`, icon: <AddCommentIcon/>, id: id, actionName: actionName, actionType: actionType, message: 'Add Message', noOfNodes: noOfNodes},
             origin: [0.5, 0.0],
             type: 'custom'
           };
@@ -202,6 +207,7 @@ const DnDFlow = () => {
 
     function onClear() {
       setNodes(initialNodes);
+      setNodeData(null);
     }
 
     const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
@@ -273,6 +279,8 @@ const DnDFlow = () => {
               data: {
                 ...node.data,
                 message: editedMessage,
+                noOfNodes: noOfNodes
+               // messages: messages
               },
             };
           }
@@ -281,7 +289,7 @@ const DnDFlow = () => {
         return updatedNodes;
       });
     }
-  }, [editedMessage, nodeData]);  
+  }, [editedMessage, nodeData, noOfNodes]);  
 
   function resetNodeData() {
     const nodeElement = document.querySelector(`[data-id="${nodeData.id}"] .px-6.py-2.shadow-md.rounded-md.bg-white.border-2.border-stone-400.relative`);
@@ -290,6 +298,7 @@ const DnDFlow = () => {
     }
     setNodeData(null);
     setEditedMessage(null);
+    // setMessages([]);
   }
 
   const onFlowChange = (event) => {
@@ -307,6 +316,32 @@ const DnDFlow = () => {
   function onActionTypeChange(event) {
     setActionType(event.target.value);
   }
+
+  function onNoOfNodeChange(event) {
+    setNoOfNodes(event.target.value);
+  }
+
+  // const handleListUpdate = (index) => (event) => {
+  //   const updatedMessages = messages.map((msg, i) => (i === index ? event.target.value : msg));
+  //   setMessages(updatedMessages);
+  // };
+
+  // const handleRemoveListItem = (index) => () => {
+  //   const updatedMessages = messages.filter((_, i) => i !== index);
+  //   setMessages(updatedMessages);
+  // };
+
+
+  // function handleNextList(evt) {
+  //   if (evt.keyCode === 13 && messages.length < 8) {
+  //     const updatedMessages = [...messages, evt.target.value]; 
+  //     setMessages(updatedMessages);
+  //     setTimeout(() => {
+  //       setNewMsg("");
+  //     }, 1)
+  //   }
+  // }
+
   
     return (
       <div className="dndflow" style={{ width: '100%', height: '100vh' }}>
@@ -340,52 +375,96 @@ const DnDFlow = () => {
                   <ArrowBackIcon color="action" fontSize="large" style={{marginTop: "10px", cursor: 'pointer'}} onClick={resetNodeData}/>
                   <h1 className='ml-4 mt-2 font-bold' style={{fontSize: '25px'}}>Properties</h1>
                 </div>
-                <h1 className='font-bold mt-4' style={{fontSize: '15px'}}>Action Name:</h1>
+                <h1 className='font-bold mt-4 flex items-start' style={{fontSize: '15px'}}>Action Name:</h1>
                 <input 
-                  className='mt-2 mb-6 px-11 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg'
+                  style={{ textAlign: 'left', paddingLeft: '1rem' }}
+                  className='w-full mt-2 mb-6 px-20 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg'
                   type="text"
                   value={actionName}
                   onChange={onActionNameChange}
                 />
-                <h1 className='font-bold mt-2' style={{fontSize: '15px'}}>Action Type:</h1>
+                <h1 className='font-bold mt-2 flex items-start' style={{fontSize: '15px'}}>Action Type:</h1>
                 <input 
-                  className='mt-2 mb-12 px-11 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg'
+                  style={{ textAlign: 'left', paddingLeft: '1rem' }}
+                  className='w-full mt-2 mb-6 px-20 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg'
                   type="text"
                   value={actionType}
                   onChange={onActionTypeChange}
                 />
                 { nodeData.data.label !== 'End Of Flow node' &&
                   <>
-                    <h1 className='font-bold mb-1' style={{fontSize: '15px'}}>Message Body:</h1>
-                    <CKEditor
-                      editor={ClassicEditor}
-                      data={editedMessage}
-                      onChange={(event, editor) => {
-                      const data = editor.getData();
-                        onInputChange(data);
-                      }}
-                    />
-                    <button className="px-10 mt-2 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={onUpdate}>Update</button>
+                    <h1 className='font-bold mb-1 flex items-start' style={{fontSize: '15px'}}>Message Body:</h1>
+                    <div style={{ height: '500px', width: '100%', fontSize: '18px' }}>
+                      <CKEditor
+                        editor={ClassicEditor}
+                        data={editedMessage}
+                        onChange={(event, editor) => {
+                        const data = editor.getData();
+                          onInputChange(data);
+                        }}
+                        config={{
+                          toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
+                          fontSize: {
+                            options: [
+                              'tiny',
+                              'small',
+                              'default',
+                              'big',
+                              'huge'
+                            ]
+                          }
+                        }}
+                      />
+                      <button className="px-10 mt-2 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={onUpdate}>Update</button>
+                      { nodeData.data.label === 'Select Options node' &&
+                        // <div className="flex flex-col mt-4">
+                        //   <h1 className='font-bold mt-2' style={{fontSize: '15px'}}>Messages:</h1>
+                        //   {messages.map((_msg, _msgIndex) => (
+                        //     <div className="flex items-start" key={_msgIndex}>
+                        //       <Typography style={{marginTop: '1%', marginRight: '1%'}} className="text-16 font-600">{`${_msgIndex + 1}.`}</Typography>
+                        //       <InputBase multiline value={_msg} onChange={handleListUpdate(_msg, _msgIndex)} />
+                        //       <CancelIcon style={{color: 'red'}} className="flex"  size="small" onClick={handleRemoveListItem(_msgIndex)}/>
+                        //     </div>
+                        //   ))}
+                        //   <InputBase multiline className="cursor-text" placeholder="Add a message" value={newMsg} onChange={evt => messages.length < 8 && setNewMsg(evt.target.value)} onKeyDown={handleNextList} />
+                        // </div>
+                        <>
+                          <h1 className='font-bold mt-6 flex items-start' style={{fontSize: '15px'}}>Enter the Number of Nodes:</h1>
+                          <input 
+                            style={{ textAlign: 'left', paddingLeft: '1rem' }}
+                            className='w-full mt-2 mb-6 px-20 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg'
+                            type="text"
+                            value={noOfNodes}
+                            onChange={onNoOfNodeChange}
+                          />
+                        </>
+                      }
+                    </div>
                   </>
                 }
               </aside>
-            )  : <Sidebar/>}
-            <SettingsSuggestIcon fontSize="large" className="settings" onClick={enableSettings}/>
-            {isSettings && 
-              <>
-                <div className="pl-1 pr-2 flex justify-between mb-4">
-                  <button className="px-10 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={() => onLayout('TB')}>Vertical Layout</button>
-                  <button className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={() => onLayout('LR')}>Horizontal Layout</button>
-                </div>
-                <div className="pl-1 pr-2 flex justify-between mb-4">
-                  <button style={{width: '51%'}} className="py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={() => setIsDarkMode(val => !val)}>Dark Mode</button>
-                  <button style={{width: '48%'}} className="py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={() => setIsDarkMode(val => !val)}>Light Mode</button>
-                </div>
-              </>
+            )  : 
+            <>
+              <SettingsSuggestIcon fontSize="large" className="settings mt-2 mb-2" onClick={enableSettings}/>
+              {isSettings && 
+                <Modal isOpen={isSettings} onClose={() => setIsSettings(false)}>
+                  <div className="pl-1 pr-2 flex justify-between mb-4">
+                    <button style={{width: '205px'}} className="py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={() => onLayout('TB')}>Vertical Layout</button>
+                    <button style={{width: '195px'}} className="ml-2 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={() => onLayout('LR')}>Horizontal Layout</button>
+                  </div>
+                  <div className="pl-1 pr-2 flex justify-between mb-4">
+                    <button style={{width: '51%'}} className="py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={() => setIsDarkMode(val => !val)}>Dark Mode</button>
+                    <button style={{width: '48%'}} className="ml-2 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={() => setIsDarkMode(val => !val)}>Light Mode</button>
+                  </div>
+                </Modal>
+              }
+              <Sidebar/>
+            </>
             }
-            <h1 className='font-bold text-lg'>Flow Title:</h1>
+            <h1 style={{marginTop: '20%'}} className='flex items-start font-bold text-lg'>Flow Title:</h1>
             <input 
-              className='mt-2 mb-6 px-8 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 font-bold text-lg'
+              style={{ textAlign: 'left', paddingLeft: '1rem' }}
+              className='w-full mt-2 mb-6 px-20 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg'
               type="text"
               value={flowKey}
               onChange={onFlowChange}
