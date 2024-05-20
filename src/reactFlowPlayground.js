@@ -75,6 +75,7 @@ const DnDFlow = () => {
     // const [messages, setMessages] = useState([]);
     // const [newMsg, setNewMsg] = useState("");
     const [noOfNodes, setNoOfNodes] = useState(1);
+    const [collapsedNodes, setCollapsedNodes] = useState({});
 
     const { screenToFlowPosition } = useReactFlow();
     const { setViewport } = useReactFlow();
@@ -88,20 +89,64 @@ const DnDFlow = () => {
     useEffect(() => {
       const handleClick = (event) => {
         const clickedElement = event.target;
-  
-        if (clickedElement.tagName === 'path' && clickedElement.parentElement.tagName === 'svg') {
+        let attribute = clickedElement.getAttribute('data-testid');
+    
+        if (attribute === 'CancelIcon') {
           const nodeId = clickedElement.closest('.react-flow__node')?.dataset.id;
           if (nodeId) {
             removeNode(nodeId);
           }
+        } else if (attribute === 'KeyboardArrowDownIcon') {
+          const nodeId = clickedElement.closest('.react-flow__node')?.dataset.id;
+
+          const descendantNodes = getDescendantNodes(nodeId);
+          setCollapsedNodes((prev) => ({
+            ...prev,
+            [nodeId]: descendantNodes,
+          }));
+          setNodes((prevNodes) =>
+            prevNodes.filter((node) => !descendantNodes.some((dNode) => dNode.id === node.id))
+          );
+        } else if(attribute === 'KeyboardArrowUpIcon') {
+          // Revert the nodes back
+          const nodeId = clickedElement.closest('.react-flow__node')?.dataset.id;
+          setNodes((prevNodes) => [...prevNodes, ...collapsedNodes[nodeId]]);
+          const updatedCollapsedNodes = { ...collapsedNodes };
+          delete updatedCollapsedNodes[nodeId];
+          setCollapsedNodes(updatedCollapsedNodes);
         }
       };
-  
+ 
       document.addEventListener('click', handleClick);
       return () => {
         document.removeEventListener('click', handleClick);
       };
-    }, [nodes]);
+    }, [nodes]);    
+
+    const getDescendantNodes = (nodeId) => {
+      const visited = new Set();
+      const queue = [nodeId];
+      const descendants = [];
+  
+      while (queue.length) {
+        const currentNodeId = queue.shift();
+        if (!visited.has(currentNodeId)) {
+          visited.add(currentNodeId);
+          const children = edges
+            .filter((edge) => edge.source === currentNodeId)
+            .map((edge) => edge.target);
+  
+          queue.push(...children);
+          const currentNode = nodes.find((node) => node.id === currentNodeId);
+          if (currentNode) {
+            descendants.push(currentNode);
+          }
+        }
+      }
+      descendants.shift();
+
+      return descendants;
+    };
 
     const onLayout = useCallback(
       (direction) => {

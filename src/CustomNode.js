@@ -1,10 +1,10 @@
 import React, { memo } from 'react';
 import { Handle, Position } from 'reactflow';
 import CancelIcon from '@mui/icons-material/Cancel';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 function CustomNode({ data }) {
   console.log(data, '11111111');
-
   return (
     <div className="wrapper gradient relative">
       <div className="bg-black inner body shadow-md rounded-md border-2 border-stone-400 relative">
@@ -42,6 +42,11 @@ function CustomNode({ data }) {
               </div>
             </div>
           </>
+        )}
+        {!data.label.includes('End Of Flow node') && (
+          <div className="absolute bottom-0 right-0 pt-3">
+            <KeyboardArrowDownIcon style={{ cursor: 'pointer' }} />
+          </div>
         )}
       </div>
       {data.direction === 'LR' && !data.label.includes('Trigger') && (
