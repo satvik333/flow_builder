@@ -13,10 +13,10 @@ export default () => {
   return (
     <aside>
       <div className="description">Widget Library.</div>
-      <div className="dndnode input" onDragStart={(event) => onDragStart(event, 'Send Message')} draggable>
-        <ChatBubbleIcon fontSize="large" className='pr-2'/> Send Message
+      <div className="dndnode input" onDragStart={(event) => onDragStart(event, 'Message')} draggable>
+        <ChatBubbleIcon fontSize="large" className='pr-2'/> Message
       </div>
-      <div className="dndnode" onDragStart={(event) => onDragStart(event, 'Select Options')} draggable>
+      <div className="dndnode" onDragStart={(event) => onDragStart(event, 'Options')} draggable>
         <ListIcon fontSize="large" className='pr-2'/> Select Messages
       </div>
       <div className="dndnode output" onDragStart={(event) => onDragStart(event, 'End Of Flow')} draggable>

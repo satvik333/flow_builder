@@ -41,19 +41,21 @@ const nodeTypes = {
   custom: CustomNode,
 };
 
-const initialNodes = [
-  {
-    id: '1',
-    type: 'custom',
-    data: { label: 'Trigger', icon: <PlayCircleIcon/>, id: '1', direction: 'TB' },
-    position: { x: 0, y: 0 },
-  },
-];
 
 let id = 0;
 const getId = () => `dndnode_${id++}`;
 
 const DnDFlow = () => {
+
+    const initialNodes = [
+      {
+        id: '1',
+        type: 'custom',
+        data: { label: 'Trigger', icon: <PlayCircleIcon/>, id: '1', direction: 'TB' },
+        position: { x: 0, y: 0 },
+      },
+    ];
+  
     const reactFlowWrapper = useRef(null);
     const connectingNodeId = useRef(null);
     const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
@@ -66,7 +68,6 @@ const DnDFlow = () => {
       const today = Date.now();
       return `flow_${today}`;
     });
-    const [isDarkMode, setIsDarkMode] = useState(false);
     const [actionName, setActionName] = useState('Action Name');
     const [actionType, setActionType] = useState('Action Type');
     const [dataLabel, setDataLabel] = useState(null);
@@ -159,6 +160,7 @@ const DnDFlow = () => {
 
     const onConnectStart = useCallback((_, { nodeId }) => {
       connectingNodeId.current = nodeId;
+      setNoOfNodes(1)
     }, []);
   
     const onDrop = useCallback(
@@ -204,7 +206,7 @@ const DnDFlow = () => {
             const targetNodeId = getId(); 
             let targetPosition;
 
-            if (nodeData?.data?.label === 'Select Options node') {
+            if (nodeData?.data?.label === 'Options node') {
               targetPosition = screenToFlowPosition({
                 x: sourcePosition.x + cntr,
                 y: sourcePosition.y + 100 + cntr,
@@ -414,20 +416,42 @@ const DnDFlow = () => {
               onSelectionChange={onElementClick}
               nodeTypes={nodeTypes}
             >
-              <Controls />
+                  <Controls showInteractive={false} />
+                  <svg>
+                    <defs>
+                      <linearGradient id="edge-gradient">
+                        <stop offset="0%" stopColor="#ae53ba" />
+                        <stop offset="100%" stopColor="#2a8af6" />
+                      </linearGradient>
+            
+                      <marker
+                        id="edge-circle"
+                        viewBox="-5 -5 10 10"
+                        refX="0"
+                        refY="0"
+                        markerUnits="strokeWidth"
+                        markerWidth="10"
+                        markerHeight="10"
+                        orient="auto"
+                      >
+                        <circle stroke="#2a8af6" strokeOpacity="0.75" r="2" cx="0" cy="0" />
+                      </marker>
+                    </defs>
+                  </svg>
+                
             </ReactFlow>
           </div>
           <div>
             {nodeData && nodeData.data.label !== 'Trigger' ? (
               <aside>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <ArrowBackIcon color="action" fontSize="large" style={{marginTop: "10px", cursor: 'pointer'}} onClick={resetNodeData}/>
+                  <ArrowBackIcon fontSize="large" style={{marginTop: "10px", cursor: 'pointer', color: 'whitesmoke'}} onClick={resetNodeData}/>
                   <h1 className='ml-4 mt-2 font-bold' style={{fontSize: '25px'}}>Properties</h1>
                 </div>
                 <h1 className='font-bold mt-4 flex items-start' style={{fontSize: '15px'}}>Action Name:</h1>
                 <input 
                   style={{ textAlign: 'left', paddingLeft: '1rem' }}
-                  className='w-full mt-2 mb-6 px-20 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg'
+                  className='input-field w-full mt-2 mb-6 px-20 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg'
                   type="text"
                   value={actionName}
                   onChange={onActionNameChange}
@@ -435,7 +459,7 @@ const DnDFlow = () => {
                 <h1 className='font-bold mt-2 flex items-start' style={{fontSize: '15px'}}>Action Type:</h1>
                 <input 
                   style={{ textAlign: 'left', paddingLeft: '1rem' }}
-                  className='w-full mt-2 mb-6 px-20 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg'
+                  className='input-field w-full mt-2 mb-6 px-20 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg'
                   type="text"
                   value={actionType}
                   onChange={onActionTypeChange}
@@ -444,28 +468,30 @@ const DnDFlow = () => {
                   <>
                     <h1 className='font-bold mb-1 flex items-start' style={{fontSize: '15px'}}>Message Body:</h1>
                     <div style={{ height: '500px', width: '100%', fontSize: '18px' }}>
-                      <CKEditor
-                        editor={ClassicEditor}
-                        data={editedMessage}
-                        onChange={(event, editor) => {
-                        const data = editor.getData();
-                          onInputChange(data);
-                        }}
-                        config={{
-                          toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
-                          fontSize: {
-                            options: [
-                              'tiny',
-                              'small',
-                              'default',
-                              'big',
-                              'huge'
-                            ]
-                          }
-                        }}
-                      />
+                      <div className='ckeditor-dark-mode'>
+                        <CKEditor
+                          editor={ClassicEditor}
+                          data={editedMessage}
+                          onChange={(event, editor) => {
+                          const data = editor.getData();
+                            onInputChange(data);
+                          }}
+                          config={{
+                            toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
+                            fontSize: {
+                              options: [
+                                'tiny',
+                                'small',
+                                'default',
+                                'big',
+                                'huge'
+                              ]
+                            }
+                          }}
+                        />
+                      </div>
                       <button className="px-10 mt-2 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={onUpdate}>Update</button>
-                      { nodeData.data.label === 'Select Options node' &&
+                      { nodeData.data.label === 'Options node' &&
                         // <div className="flex flex-col mt-4">
                         //   <h1 className='font-bold mt-2' style={{fontSize: '15px'}}>Messages:</h1>
                         //   {messages.map((_msg, _msgIndex) => (
@@ -478,11 +504,11 @@ const DnDFlow = () => {
                         //   <InputBase multiline className="cursor-text" placeholder="Add a message" value={newMsg} onChange={evt => messages.length < 8 && setNewMsg(evt.target.value)} onKeyDown={handleNextList} />
                         // </div>
                         <>
-                          <h1 className='font-bold mt-6' style={{ fontSize: '15px' }}>Enter the Number of Nodes:</h1>
+                          <h1 className='font-bold mt-6 flex items-start' style={{ fontSize: '15px' }}>Enter the Number of Nodes:</h1>
                           <div className="flex items-center mt-2 mb-6">
                             <input 
                               style={{ textAlign: 'left', paddingLeft: '1rem', width: "100%"}}
-                              className='py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg'
+                              className='input-field py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg'
                               type="text"
                               value={noOfNodes}
                               onChange={onNoOfNodeChange}
@@ -504,10 +530,10 @@ const DnDFlow = () => {
                     <button style={{width: '205px'}} className="py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={() => onLayout('TB')}>Vertical Layout</button>
                     <button style={{width: '195px'}} className="ml-2 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={() => onLayout('LR')}>Horizontal Layout</button>
                   </div>
-                  <div className="pl-1 pr-2 flex justify-between mb-4">
+                  {/* <div className="pl-1 pr-2 flex justify-between mb-4">
                     <button style={{width: '51%'}} className="py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={() => setIsDarkMode(true)}>Dark Mode</button>
                     <button style={{width: '48%'}} className="ml-2 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={() => setIsDarkMode(false)}>Light Mode</button>
-                  </div>
+                  </div> */}
                 </Modal>
               }
               <Sidebar/>
@@ -516,7 +542,7 @@ const DnDFlow = () => {
             <h1 style={{marginTop: '20%'}} className='flex items-start font-bold text-lg'>Flow Title:</h1>
             <input 
               style={{ textAlign: 'left', paddingLeft: '1rem' }}
-              className='w-full mt-2 mb-6 px-20 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg'
+              className='input-field w-full mt-2 mb-6 px-20 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg'
               type="text"
               value={flowKey}
               onChange={onFlowChange}
