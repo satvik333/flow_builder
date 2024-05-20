@@ -372,27 +372,6 @@ const DnDFlow = () => {
     });
   };
 
-  // const handleListUpdate = (index) => (event) => {
-  //   const updatedMessages = messages.map((msg, i) => (i === index ? event.target.value : msg));
-  //   setMessages(updatedMessages);
-  // };
-
-  // const handleRemoveListItem = (index) => () => {
-  //   const updatedMessages = messages.filter((_, i) => i !== index);
-  //   setMessages(updatedMessages);
-  // };
-
-
-  // function handleNextList(evt) {
-  //   if (evt.keyCode === 13 && messages.length < 8) {
-  //     const updatedMessages = [...messages, evt.target.value]; 
-  //     setMessages(updatedMessages);
-  //     setTimeout(() => {
-  //       setNewMsg("");
-  //     }, 1)
-  //   }
-  // }
-
   
     return (
       <div className="dndflow" style={{ width: '100%', height: '100vh' }}>
@@ -417,29 +396,28 @@ const DnDFlow = () => {
               nodeTypes={nodeTypes}
               proOptions={{ hideAttribution: true }} 
             >
-                  <Controls showInteractive={false} />
-                  <svg>
-                    <defs>
-                      <linearGradient id="edge-gradient">
-                        <stop offset="0%" stopColor="#ae53ba" />
-                        <stop offset="100%" stopColor="#2a8af6" />
-                      </linearGradient>
+              <Controls showInteractive={false} />
+              <svg>
+                <defs>
+                  <linearGradient id="edge-gradient">
+                    <stop offset="0%" stopColor="#ae53ba" />
+                    <stop offset="100%" stopColor="#2a8af6" />
+                  </linearGradient>
             
-                      <marker
-                        id="edge-circle"
-                        viewBox="-5 -5 10 10"
-                        refX="0"
-                        refY="0"
-                        markerUnits="strokeWidth"
-                        markerWidth="10"
-                        markerHeight="10"
-                        orient="auto"
-                      >
-                        <circle stroke="#2a8af6" strokeOpacity="0.75" r="2" cx="0" cy="0" />
-                      </marker>
-                    </defs>
-                  </svg>
-                
+                  <marker
+                    id="edge-circle"
+                    viewBox="-5 -5 10 10"
+                    refX="0"
+                    refY="0"
+                    markerUnits="strokeWidth"
+                    markerWidth="10"
+                    markerHeight="10"
+                    orient="auto"
+                  >
+                    <circle stroke="#2a8af6" strokeOpacity="0.75" r="2" cx="0" cy="0" />
+                  </marker>
+                </defs>
+              </svg>
             </ReactFlow>
           </div>
           <div>
@@ -493,17 +471,6 @@ const DnDFlow = () => {
                       </div>
                       <button className="px-10 mt-2 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={onUpdate}>Update</button>
                       { nodeData.data.label === 'Options node' &&
-                        // <div className="flex flex-col mt-4">
-                        //   <h1 className='font-bold mt-2' style={{fontSize: '15px'}}>Messages:</h1>
-                        //   {messages.map((_msg, _msgIndex) => (
-                        //     <div className="flex items-start" key={_msgIndex}>
-                        //       <Typography style={{marginTop: '1%', marginRight: '1%'}} className="text-16 font-600">{`${_msgIndex + 1}.`}</Typography>
-                        //       <InputBase multiline value={_msg} onChange={handleListUpdate(_msg, _msgIndex)} />
-                        //       <CancelIcon style={{color: 'red'}} className="flex"  size="small" onClick={handleRemoveListItem(_msgIndex)}/>
-                        //     </div>
-                        //   ))}
-                        //   <InputBase multiline className="cursor-text" placeholder="Add a message" value={newMsg} onChange={evt => messages.length < 8 && setNewMsg(evt.target.value)} onKeyDown={handleNextList} />
-                        // </div>
                         <>
                           <h1 className='font-bold mt-6 flex items-start' style={{ fontSize: '15px' }}>Enter the Number of Nodes:</h1>
                           <div className="flex items-center mt-2 mb-6">

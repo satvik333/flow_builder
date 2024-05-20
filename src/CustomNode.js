@@ -78,24 +78,6 @@ function CustomNode({ data }) {
           }}
         />
       )}
-      {/* {data.direction !== 'LR' && data.label.includes('Select Options') && (
-        [...Array(data.noOfNodes)].map((_, index) => (
-          <Handle
-            key={index}
-            type="source"
-            className='custom-handle'
-            position={Position.Bottom}
-            id={`source-${index}`}
-            style={{
-              marginBottom: "7px",
-              width: '10px', 
-              height: '10px',
-              left: `${10 + (index * 20)}%`, 
-              cursor: 'grab',
-            }}
-          />
-        ))
-      )} */}
     </div>
   );
 }
