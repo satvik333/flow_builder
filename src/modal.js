@@ -6,7 +6,7 @@ const Modal = ({ isOpen, onClose, children }) => {
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-start justify-end z-50">
       <div className="bg-white p-6 rounded-lg shadow-lg relative m-4">
-        <button className="absolute top-0 right-0 mr-4" style={{fontSize: '40px'}} onClick={onClose}>
+        <button className="absolute top-0 right-0 mr-4" style={{fontSize: '40px', color: 'black'}} onClick={onClose}>
           &times;
         </button>
         <div className='mb-10'></div>

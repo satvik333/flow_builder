@@ -415,6 +415,7 @@ const DnDFlow = () => {
               style={{ width: '100%', height: '100%' }}
               onSelectionChange={onElementClick}
               nodeTypes={nodeTypes}
+              proOptions={{ hideAttribution: true }} 
             >
                   <Controls showInteractive={false} />
                   <svg>
