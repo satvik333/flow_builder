@@ -45,11 +45,7 @@ function CustomNode({ data }) {
           type="source" 
           position={Position.Bottom} 
           className="bg-purple-600" 
-          style={{
-            marginBottom: "7px",
-            width: '15px', 
-            height: '10px',
-          }} 
+          style={{ marginBottom: "5px", left: `50%`, transform: `translateX(-50%)` }} 
         />
       )}
       {/* {data.direction !== 'LR' && data.label.includes('Select Options') && (

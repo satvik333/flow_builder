@@ -70,6 +70,7 @@ const DnDFlow = () => {
     const [actionName, setActionName] = useState('Action Name');
     const [actionType, setActionType] = useState('Action Type');
     const [dataLabel, setDataLabel] = useState(null);
+    const [axisVal, setAxisVal] = useState(0);
     // const [messages, setMessages] = useState([]);
     // const [newMsg, setNewMsg] = useState("");
     const [noOfNodes, setNoOfNodes] = useState(1);
@@ -100,6 +101,51 @@ const DnDFlow = () => {
         document.removeEventListener('click', handleClick);
       };
     }, [nodes]);
+
+    const onLayout = useCallback(
+      (direction) => {
+        const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
+          nodes,
+          edges,
+          direction
+        );
+        let modifiedNodes = layoutedNodes.map((node) => {
+          return { ...node, data: { ...node.data, direction } };
+        });
+        setNodes([...modifiedNodes]);
+        setEdges([...layoutedEdges]);
+      },
+      [nodes, edges]
+    );
+
+    const getLayoutedElements = (nodes, edges, direction = 'TB') => {
+      const isHorizontal = direction === 'LR';
+      dagreGraph.setGraph({ rankdir: direction });
+    
+      nodes.forEach((node) => {
+        dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
+      });
+    
+      edges?.forEach((edge) => {
+        dagreGraph.setEdge(edge.source, edge.target);
+      });
+    
+      dagre.layout(dagreGraph);
+    
+      nodes.forEach((node) => {
+        const nodeWithPosition = dagreGraph.node(node.id);
+        node.targetPosition = isHorizontal ? 'left' : 'top';
+        node.sourcePosition = isHorizontal ? 'right' : 'bottom';
+        node.position = {
+          x: nodeWithPosition.x,
+          y: nodeWithPosition.y,
+        };
+       
+        return node;
+      });
+    
+      return { nodes, edges };
+    };
 
     const removeNode = (idToRemove) => {
       setNodeData(null);
@@ -151,21 +197,25 @@ const DnDFlow = () => {
       
           const targetIsPane = event.target.classList.contains('react-flow__pane');
 
+          const sourceNode = nodes.find(node => node.id === connectingNodeId.current);
+          const sourcePosition = sourceNode.position;
+
           if (targetIsPane) {
             const targetNodeId = getId(); 
             let targetPosition;
 
             if (nodeData?.data?.label === 'Select Options node') {
               targetPosition = screenToFlowPosition({
-                x: event.clientX - 500 + cntr,
-                y: event.clientY - 500 + cntr,
+                x: sourcePosition.x + cntr,
+                y: sourcePosition.y + 100 + cntr,
               });
             }
             else {
               targetPosition = screenToFlowPosition({
-                x: event.clientX - 500 + cntr,
-                y: event.clientY - 500 + cntr,
+                x: sourcePosition.x + axisVal,
+                y: sourcePosition.y + 100 + axisVal,
               });
+              setAxisVal(prev => prev+50)
             }
       
             const newNode = {
@@ -184,40 +234,12 @@ const DnDFlow = () => {
               setEdges((prevEdges) => [...prevEdges, { id: getId(), source: sourceNode.id, target: targetNodeId }]);
             }
           }
-          cntr+=50;
+          cntr+=100;
         }
       },
       [screenToFlowPosition, nodes, actionName, actionType, noOfNodes]
     );    
 
-    const getLayoutedElements = (nodes, edges, direction = 'TB') => {
-      const isHorizontal = direction === 'LR';
-      dagreGraph.setGraph({ rankdir: direction });
-    
-      nodes.forEach((node) => {
-        dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
-      });
-    
-      edges?.forEach((edge) => {
-        dagreGraph.setEdge(edge.source, edge.target);
-      });
-    
-      dagre.layout(dagreGraph);
-    
-      nodes.forEach((node) => {
-        const nodeWithPosition = dagreGraph.node(node.id);
-        node.targetPosition = isHorizontal ? 'left' : 'top';
-        node.sourcePosition = isHorizontal ? 'right' : 'bottom';
-        node.position = {
-          x: nodeWithPosition.x,
-          y: nodeWithPosition.y,
-        };
-       
-        return node;
-      });
-    
-      return { nodes, edges };
-    };
 
     const onSave = useCallback(() => {
       if (reactFlowInstance) {
@@ -237,21 +259,6 @@ const DnDFlow = () => {
       // initialEdges
     );
 
-    const onLayout = useCallback(
-      (direction) => {
-        const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
-          nodes,
-          edges,
-          direction
-        );
-        let modifiedNodes = layoutedNodes.map((node) => {
-          return { ...node, data: { ...node.data, direction } };
-        });
-        setNodes([...modifiedNodes]);
-        setEdges([...layoutedEdges]);
-      },
-      [nodes, edges]
-    );
 
     const getNodeId = () => `randomnode_${+new Date()}`;
 
