@@ -3,7 +3,7 @@ import { Handle, Position } from 'reactflow';
 import CancelIcon from '@mui/icons-material/Cancel';
 
 function CustomNode({ data }) {
-  // console.log(data,'datatatat')
+  // console.log(data,'11111111')
   return (
     <div className="relative">
       <div className="px-3 py-2 shadow-md rounded-md bg-white border-2 border-stone-400 relative">
@@ -28,7 +28,7 @@ function CustomNode({ data }) {
         }
       </div>
       {data.direction === 'LR' && !data.label.includes('Trigger') && (
-        <Handle type="target" position={Position.Left} className="bg-purple-600" />
+        <Handle type="target" style={{width: '10px', height: '20px'}} position={Position.Left} className="bg-purple-600" />
       )}
       {data.direction !== 'LR' && !data.label.includes('Trigger') && (
         <Handle
@@ -38,7 +38,7 @@ function CustomNode({ data }) {
         />
       )}
       {data.direction === 'LR' && !data.label.includes('End Of Flow node') && (
-        <Handle type="source" position={Position.Right} className="bg-purple-600" />
+        <Handle type="source" position={Position.Right} style={{width: '10px', height: '20px'}} className="bg-purple-600" />
       )}
       {data.direction !== 'LR' && !data.label.includes('End Of Flow node') && (
         <Handle 

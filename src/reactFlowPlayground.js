@@ -505,8 +505,8 @@ const DnDFlow = () => {
                     <button style={{width: '195px'}} className="ml-2 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={() => onLayout('LR')}>Horizontal Layout</button>
                   </div>
                   <div className="pl-1 pr-2 flex justify-between mb-4">
-                    <button style={{width: '51%'}} className="py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={() => setIsDarkMode(val => !val)}>Dark Mode</button>
-                    <button style={{width: '48%'}} className="ml-2 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={() => setIsDarkMode(val => !val)}>Light Mode</button>
+                    <button style={{width: '51%'}} className="py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={() => setIsDarkMode(true)}>Dark Mode</button>
+                    <button style={{width: '48%'}} className="ml-2 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={() => setIsDarkMode(false)}>Light Mode</button>
                   </div>
                 </Modal>
               }
