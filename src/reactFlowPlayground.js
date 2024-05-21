@@ -239,7 +239,7 @@ const DnDFlow = () => {
         const newNode = {
           id: getId(),
           position,
-          data: { label: `${type} node`, id: getId(), icon: <AddCommentIcon/>, actionName: actionName, actionType: actionType, message: 'Add Message', noOfNodes: noOfNodes },
+          data: { label: `${type} node`, id: getId(), icon: <AddCommentIcon/>, actionName: actionName, actionType: actionType, message: 'Text', noOfNodes: noOfNodes },
           type: 'custom',
         };
   
@@ -281,7 +281,7 @@ const DnDFlow = () => {
             const newNode = {
               id: targetNodeId,
               position: targetPosition,
-              data: { label: `Node ${targetNodeId}`, icon: <AddCommentIcon/>, id: targetNodeId, actionName: actionName, actionType: actionType, message: 'Add Message', noOfNodes: noOfNodes},
+              data: { label: `Node ${targetNodeId}`, icon: <AddCommentIcon/>, id: targetNodeId, actionName: actionName, actionType: actionType, message: 'Text', noOfNodes: noOfNodes},
               origin: [0.5, 0.0],
               type: 'custom'
             };
@@ -478,7 +478,7 @@ const DnDFlow = () => {
               </svg>
             </ReactFlow>
           </div>
-          <div>
+          <div className='flow-sec'>
             {nodeData && nodeData.data.label !== 'Trigger' ? (
               <aside>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -565,17 +565,19 @@ const DnDFlow = () => {
               <Sidebar/>
             </>
             }
-            <h1 style={{marginTop: '20%'}} className='flex items-start font-bold text-lg'>Flow Title:</h1>
-            <input 
-              style={{ textAlign: 'left', paddingLeft: '1rem' }}
-              className='input-field w-full mt-2 mb-6 px-20 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg'
-              type="text"
-              value={flowKey}
-              onChange={onFlowChange}
-            />
-            <div className="pl-10 pr-10 flex justify-between mt-2 mb-2">
-              <button className="px-10 py-2 bg-red-500 text-white rounded-md hover:bg-red-600" onClick={onClear}>CLEAR</button>
-              <button className="px-10 py-2 bg-green-500 text-white rounded-md hover:bg-green-600" onClick={onSave}>SAVE</button>
+            <div>
+              <h1 style={{marginTop: '20%'}} className='pl-2 flex items-start font-bold text-lg'>Flow Title:</h1>
+              <input 
+                style={{ textAlign: 'left', paddingLeft: '1rem', width: '95%' }}
+                className='pl-2 input-field mt-2 mb-6 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg'
+                type="text"
+                value={flowKey}
+                onChange={onFlowChange}
+              />
+              <div className="pl-10 pr-10 flex justify-between mt-2 mb-2">
+                <button className="px-10 py-2 bg-red-500 text-white rounded-md hover:bg-red-600" onClick={onClear}>CLEAR</button>
+                <button className="px-10 py-2 bg-green-500 text-white rounded-md hover:bg-green-600" onClick={onSave}>SAVE</button>
+              </div>
             </div>
           </div>
         </ReactFlowProvider>
