@@ -2,9 +2,9 @@ import React, { memo } from 'react';
 import { Handle, Position } from 'reactflow';
 import CancelIcon from '@mui/icons-material/Cancel';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 function CustomNode({ data }) {
-  console.log(data, '11111111');
   return (
     <div className="wrapper gradient relative">
       <div className="bg-black inner body shadow-md rounded-md border-2 border-stone-400 relative">
@@ -25,6 +25,7 @@ function CustomNode({ data }) {
               fontSize="medium"
               className="pb-3"
               style={{ color: '#f56565', cursor: 'pointer' }}
+              data-testid="CancelIcon"
             />
           </div>
         )}
@@ -45,7 +46,18 @@ function CustomNode({ data }) {
         )}
         {!data.label.includes('End Of Flow node') && (
           <div className="absolute bottom-0 right-0 pt-3">
-            <KeyboardArrowDownIcon style={{ cursor: 'pointer' }} />
+            {!data.collapsed && (
+              <KeyboardArrowDownIcon
+                style={{ cursor: 'pointer' }}
+                data-testid="KeyboardArrowDownIcon"
+              />
+            )}
+            {data.collapsed && (
+              <KeyboardArrowUpIcon
+                style={{ cursor: 'pointer' }}
+                data-testid="KeyboardArrowUpIcon"
+              />
+            )}
           </div>
         )}
       </div>

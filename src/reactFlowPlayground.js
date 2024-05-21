@@ -98,7 +98,12 @@ const DnDFlow = () => {
           }
         } else if (attribute === 'KeyboardArrowDownIcon') {
           const nodeId = clickedElement.closest('.react-flow__node')?.dataset.id;
-
+    
+          // Update the node to set collapsed to true
+          setNodes((prevNodes) => prevNodes.map((node) => 
+            node.id === nodeId ? { ...node, data: { ...node.data, collapsed: true } } : node
+          ));
+    
           const descendantNodes = getDescendantNodes(nodeId);
           setCollapsedNodes((prev) => ({
             ...prev,
@@ -107,10 +112,18 @@ const DnDFlow = () => {
           setNodes((prevNodes) =>
             prevNodes.filter((node) => !descendantNodes.some((dNode) => dNode.id === node.id))
           );
-        } else if(attribute === 'KeyboardArrowUpIcon') {
+        } else if (attribute === 'KeyboardArrowUpIcon') {
           // Revert the nodes back
           const nodeId = clickedElement.closest('.react-flow__node')?.dataset.id;
-          setNodes((prevNodes) => [...prevNodes, ...collapsedNodes[nodeId]]);
+    
+          // Update the node to set collapsed to false
+          setNodes((prevNodes) => [
+            ...prevNodes,
+            ...collapsedNodes[nodeId],
+          ].map((node) => 
+            node.id === nodeId ? { ...node, data: { ...node.data, collapsed: false } } : node
+          ));
+    
           const updatedCollapsedNodes = { ...collapsedNodes };
           delete updatedCollapsedNodes[nodeId];
           setCollapsedNodes(updatedCollapsedNodes);
@@ -121,7 +134,7 @@ const DnDFlow = () => {
       return () => {
         document.removeEventListener('click', handleClick);
       };
-    }, [nodes]);    
+    }, [nodes, collapsedNodes, setNodes, setCollapsedNodes]);    
 
     const getDescendantNodes = (nodeId) => {
       const visited = new Set();
