@@ -11,14 +11,8 @@ import ReactFlow, {
 import 'reactflow/dist/style.css';
 import dagre from 'dagre';
 import AddCommentIcon from '@mui/icons-material/AddComment';
-// import Typography from '@mui/material/Typography';
-// import InputBase from '@mui/material/InputBase';
-// import CancelIcon from '@mui/icons-material/Cancel';
-
-
 import Sidebar from './Sidebar';
 import Modal from './modal';
-
 import './react-flow.css';
 import 'reactflow/dist/base.css';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -72,8 +66,6 @@ const DnDFlow = () => {
     const [actionType, setActionType] = useState('Action Type');
     const [dataLabel, setDataLabel] = useState(null);
     const [axisVal, setAxisVal] = useState(0);
-    // const [messages, setMessages] = useState([]);
-    // const [newMsg, setNewMsg] = useState("");
     const [noOfNodes, setNoOfNodes] = useState(1);
     const [collapsedNodes, setCollapsedNodes] = useState({});
 
@@ -218,9 +210,6 @@ const DnDFlow = () => {
       setNodes((prevNodes) => {
         const filteredNodes = prevNodes.filter(node => node.id !== idToRemove);
 
-        console.log(sourceNodeId,'///////////',descendantNodes.length)
-
-
         if (sourceNodeId && (descendantNodes.length === 0 || descendantNodes.length === 1)) {
           return filteredNodes.map(node =>
             node.id === sourceNodeId ? { ...node, data: { ...node.data, hasChild: false } } : node
@@ -230,9 +219,7 @@ const DnDFlow = () => {
         return filteredNodes;
       });
     };
-    
-    
-  
+ 
     const onDragOver = useCallback((event) => {
       event.preventDefault();
       event.dataTransfer.dropEffect = 'move';
@@ -332,9 +319,10 @@ const DnDFlow = () => {
       if (reactFlowInstance) {
         let flow = reactFlowInstance.toObject();
         flow.flowName = flowKey;
-        localStorage.setItem(flowKey, JSON.stringify(flow));
+        console.log(flow.nodes,'ffffffffffffffff',flow.edges)
+        //localStorage.setItem(flowKey, JSON.stringify(flow));
       }
-    }, [reactFlowInstance]);
+    }, [reactFlowInstance]);     
 
     function onClear() {
       setNodes(initialNodes);
