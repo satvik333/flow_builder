@@ -51,7 +51,7 @@ const DnDFlow = () => {
       {
         id: '1',
         type: 'custom',
-        data: { label: 'Trigger', icon: <PlayCircleIcon/>, id: '1', direction: 'TB' },
+        data: { label: 'Trigger', icon: <PlayCircleIcon/>, id: '1', direction: 'TB', hasChild: false },
         position: { x: 0, y: 0 },
       },
     ];
@@ -208,8 +208,30 @@ const DnDFlow = () => {
 
     const removeNode = (idToRemove) => {
       setNodeData(null);
-      setNodes((prevNodes) => prevNodes.filter(node => node.id !== idToRemove));
+    
+      const sourceNodeId = edges
+        .filter(edge => edge.target === idToRemove)
+        .map(edge => edge.source)[0]; // Assuming there's only one source node for the given target
+    
+      const descendantNodes = sourceNodeId ? getDescendantNodes(sourceNodeId) : [];
+    
+      setNodes((prevNodes) => {
+        const filteredNodes = prevNodes.filter(node => node.id !== idToRemove);
+
+        console.log(sourceNodeId,'///////////',descendantNodes.length)
+
+
+        if (sourceNodeId && (descendantNodes.length === 0 || descendantNodes.length === 1)) {
+          return filteredNodes.map(node =>
+            node.id === sourceNodeId ? { ...node, data: { ...node.data, hasChild: false } } : node
+          );
+        }
+    
+        return filteredNodes;
+      });
     };
+    
+    
   
     const onDragOver = useCallback((event) => {
       event.preventDefault();
@@ -239,7 +261,7 @@ const DnDFlow = () => {
         const newNode = {
           id: getId(),
           position,
-          data: { label: `${type} node`, id: getId(), icon: <AddCommentIcon/>, actionName: actionName, actionType: actionType, message: 'Text', noOfNodes: noOfNodes },
+          data: { label: `${type} node`, id: getId(), icon: <AddCommentIcon/>, actionName: actionName, actionType: actionType, message: 'Text', noOfNodes: noOfNodes, hasChild: false },
           type: 'custom',
         };
   
@@ -258,6 +280,11 @@ const DnDFlow = () => {
           const targetIsPane = event.target.classList.contains('react-flow__pane');
 
           const sourceNode = nodes.find(node => node.id === connectingNodeId.current);
+
+          setNodes((prevNodes) => prevNodes.map((node) => 
+            node.id === sourceNode.id ? { ...node, data: { ...node.data, hasChild: true } } : node
+          ));
+
           const sourcePosition = sourceNode.position;
 
           if (targetIsPane) {
@@ -281,7 +308,7 @@ const DnDFlow = () => {
             const newNode = {
               id: targetNodeId,
               position: targetPosition,
-              data: { label: `Node ${targetNodeId}`, icon: <AddCommentIcon/>, id: targetNodeId, actionName: actionName, actionType: actionType, message: 'Text', noOfNodes: noOfNodes},
+              data: { label: `Node ${targetNodeId}`, icon: <AddCommentIcon/>, id: targetNodeId, actionName: actionName, actionType: actionType, message: 'Text', noOfNodes: noOfNodes, hasChild: false},
               origin: [0.5, 0.0],
               type: 'custom'
             };
