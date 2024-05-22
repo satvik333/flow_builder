@@ -65,7 +65,6 @@ const DnDFlow = () => {
     const [actionName, setActionName] = useState('Action Name');
     const [actionType, setActionType] = useState('Action Type');
     const [dataLabel, setDataLabel] = useState(null);
-    const [axisVal, setAxisVal] = useState(0);
     const [noOfNodes, setNoOfNodes] = useState(1);
     const [collapsedNodes, setCollapsedNodes] = useState({});
 
@@ -294,11 +293,12 @@ const DnDFlow = () => {
               });
             }
             else {
+            console.log(event.clientX,'ccccccccccccccccc',sourcePosition.x)
+
               targetPosition = screenToFlowPosition({
-                x: sourcePosition.x + axisVal,
-                y: sourcePosition.y + 100 + axisVal,
+                x: (sourcePosition.x + event.clientX) / 2,
+                y: (sourcePosition.y + event.clientY) / 2,
               });
-              setAxisVal(prev => prev+50)
             }
       
             const newNode = {
