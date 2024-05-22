@@ -49,7 +49,7 @@ function CustomNode({ data }) {
             </div>
           </>
         )}
-        {!data.label.includes('End Of Flow node') && data.hasChild && (
+        {!data.label.includes('End Of Flow node') && !data.label.includes('Trigger') && data.hasChild && (
           <div className="absolute bottom-0 right-0 pt-6 pl-4">
             {!data.collapsed && (
               <KeyboardArrowDownIcon

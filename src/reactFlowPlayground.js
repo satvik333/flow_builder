@@ -6,7 +6,7 @@ import ReactFlow, {
   useEdgesState,
   Controls,
   useReactFlow,
-  Panel
+  Background
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import dagre from 'dagre';
@@ -23,6 +23,7 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { convert } from 'html-to-text';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import DownloadButton from './DownloadButton';
 
 
 const dagreGraph = new dagre.graphlib.Graph();
@@ -482,7 +483,10 @@ const DnDFlow = () => {
               onSelectionChange={onElementClick}
               nodeTypes={nodeTypes}
               proOptions={{ hideAttribution: true }} 
+              snapToGrid={true}
             >
+              <DownloadButton />
+              <Background />
               <Controls showInteractive={false} />
               <svg>
                 <defs>
