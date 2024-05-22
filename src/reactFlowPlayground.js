@@ -267,61 +267,66 @@ const DnDFlow = () => {
 
     const onConnectEnd = useCallback(
       (event) => {
-      let cntr = 0;
-      for(let i =0;i<noOfNodes;i++) {
-
+        let cntr = 0;
+        for(let i = 0; i < noOfNodes; i++) {
+    
           //if (!connectingNodeId.current) return;
-      
+    
           const targetIsPane = event.target.classList.contains('react-flow__pane');
-
+    
           const sourceNode = nodes.find(node => node.id === connectingNodeId.current);
-
+    
           setNodes((prevNodes) => prevNodes.map((node) => 
             node.id === sourceNode.id ? { ...node, data: { ...node.data, hasChild: true } } : node
           ));
-
+    
           const sourcePosition = sourceNode.position;
-
+    
           if (targetIsPane) {
             const targetNodeId = getId(); 
             let targetPosition;
-
+    
             if (nodeData?.data?.label === 'Options node') {
               targetPosition = screenToFlowPosition({
                 x: sourcePosition.x + cntr,
                 y: sourcePosition.y + 250 + cntr,
               });
+            } else {
+    
+              const { top, left } = reactFlowWrapper.current.getBoundingClientRect();
+              
+              if (reactFlowInstance) {
+                targetPosition = reactFlowInstance.project({
+                  x: event.clientX - left,
+                  y: event.clientY - top,
+                });
+              } else {
+                console.error('reactFlowInstance is null');
+                return;
+              }
             }
-            else {
-            console.log(event.clientX,'ccccccccccccccccc',sourcePosition.x)
-
-              targetPosition = screenToFlowPosition({
-                x: (sourcePosition.x + event.clientX) / 2,
-                y: (sourcePosition.y + event.clientY) / 2,
-              });
-            }
-      
+    
             const newNode = {
               id: targetNodeId,
               position: targetPosition,
-              data: { label: `Node ${targetNodeId}`, icon: <AddCommentIcon/>, id: targetNodeId, actionName: actionName, actionType: actionType, message: 'Text', noOfNodes: noOfNodes, hasChild: false},
+              data: { label: `Node ${targetNodeId}`, icon: <AddCommentIcon/>, id: targetNodeId, actionName: actionName, actionType: actionType, message: 'Text', noOfNodes: noOfNodes, hasChild: false },
               origin: [0.5, 0.0],
               type: 'custom'
             };
-      
+    
             setNodes((prevNodes) => [...prevNodes, newNode]);
-      
+    
             const sourceNode = nodes.find(node => node.id === connectingNodeId.current);
-
+    
             if (sourceNode) {
               setEdges((prevEdges) => [...prevEdges, { id: getId(), source: sourceNode.id, target: targetNodeId }]);
             }
           }
-          cntr+=100;
+          cntr += 100;
         }
       },
-      [screenToFlowPosition, nodes, actionName, actionType, noOfNodes]
-    );    
+      [screenToFlowPosition, nodes, actionName, actionType, noOfNodes, reactFlowInstance]
+    );       
 
 
     const onSave = useCallback(() => {
