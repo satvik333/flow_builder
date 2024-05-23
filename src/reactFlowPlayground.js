@@ -24,6 +24,7 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { convert } from 'html-to-text';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import DownloadButton from './DownloadButton';
+import { saveFlow, getFlowsByClient, updateFlow } from './services/flowService'
 
 
 const dagreGraph = new dagre.graphlib.Graph();
@@ -68,6 +69,9 @@ const DnDFlow = () => {
     const [dataLabel, setDataLabel] = useState(null);
     const [noOfNodes, setNoOfNodes] = useState(1);
     const [collapsedNodes, setCollapsedNodes] = useState({});
+    const [allFlows, setAllFlows] = useState(null);
+    const [selectedOption, setSelectedOption] = useState('');
+
 
     const { screenToFlowPosition } = useReactFlow();
     const { setViewport } = useReactFlow();
@@ -77,6 +81,20 @@ const DnDFlow = () => {
       (params) => setEdges((eds) => addEdge(params, eds)),
       [],
     );
+
+    useEffect(() => {
+      const fetchFlows = async () => {
+        let clientId = '1234';
+        try {
+          const flows = await getFlowsByClient(clientId);
+          setAllFlows(flows);
+        } catch (error) {
+          console.error('Error fetching flows:', error);
+        }
+      };
+  
+      fetchFlows();
+    }, []);
 
     useEffect(() => {
       const handleClick = (event) => {
@@ -91,7 +109,6 @@ const DnDFlow = () => {
         } else if (attribute === 'KeyboardArrowDownIcon') {
           const nodeId = clickedElement.closest('.react-flow__node')?.dataset.id;
     
-          // Update the node to set collapsed to true
           setNodes((prevNodes) => prevNodes.map((node) => 
             node.id === nodeId ? { ...node, data: { ...node.data, collapsed: true } } : node
           ));
@@ -105,10 +122,8 @@ const DnDFlow = () => {
             prevNodes.filter((node) => !descendantNodes.some((dNode) => dNode.id === node.id))
           );
         } else if (attribute === 'KeyboardArrowUpIcon') {
-          // Revert the nodes back
           const nodeId = clickedElement.closest('.react-flow__node')?.dataset.id;
     
-          // Update the node to set collapsed to false
           setNodes((prevNodes) => [
             ...prevNodes,
             ...collapsedNodes[nodeId],
@@ -334,10 +349,19 @@ const DnDFlow = () => {
       if (reactFlowInstance) {
         let flow = reactFlowInstance.toObject();
         flow.flowName = flowKey;
-        console.log(flow.nodes,'ffffffffffffffff',flow.edges)
-        //localStorage.setItem(flowKey, JSON.stringify(flow));
+        flow.clientId = '1234'
+        saveFlow(flow);
       }
     }, [reactFlowInstance]);     
+
+    const onUpdateFlow = useCallback(() => {
+      if (reactFlowInstance) {
+        let flow = reactFlowInstance.toObject();
+        flow.flowName = flowKey;
+        flow.clientId = '1234'
+        updateFlow(flow);
+      }
+    }, [reactFlowInstance]); 
 
     function onClear() {
       setNodes(initialNodes);
@@ -458,6 +482,21 @@ const DnDFlow = () => {
       ...event,
       target: { classList: { contains: () => true } }
     });
+  };
+
+  const handleChange = (event) => {
+    const value = event.target.value;
+    setSelectedOption(value);
+    allFlows?.map((flow) => {
+      if (flow.flow_name === value) {
+        const data = JSON.parse(flow.flow_json);
+        const nodes = data.nodes;
+        const edges = data.edges;
+
+        setNodes(nodes);
+        setEdges(edges);
+      }
+    })
   };
 
   
@@ -596,22 +635,36 @@ const DnDFlow = () => {
                 </Modal>
               }
               <Sidebar/>
-            </>
-            }
-            <div>
-              <h1 style={{marginTop: '20%'}} className='pl-2 flex items-start font-bold text-lg'>Flow Title:</h1>
-              <input 
-                style={{ textAlign: 'left', paddingLeft: '1rem', width: '95%' }}
-                className='pl-2 input-field mt-2 mb-6 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg'
-                type="text"
-                value={flowKey}
-                onChange={onFlowChange}
-              />
-              <div className="pl-10 pr-10 flex justify-between mt-2 mb-2">
-                <button className="px-10 py-2 bg-red-500 text-white rounded-md hover:bg-red-600" onClick={onClear}>CLEAR</button>
-                <button className="px-10 py-2 bg-green-500 text-white rounded-md hover:bg-green-600" onClick={onSave}>SAVE</button>
+              <div>
+                <h1 className='pl-2 flex items-start font-bold text-lg'>Select Flows:</h1>
+                <select className='pl-2 input-field mt-2 mb-6 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg' 
+                  value={selectedOption} 
+                  onChange={handleChange}
+                  style={{width: '95%'}}
+                  >
+                  <option style={{color: 'white'}}  value="" disabled>Select a Flow</option>
+                  {allFlows?.map((option, index) => (
+                    <option  style={{color: 'white'}} key={index} value={option.flow_name}>
+                      {option.flow_name}
+                    </option>
+                  ))}
+                </select>
+                <h1 className='pl-2 flex items-start font-bold text-lg'>Flow Title:</h1>
+                <input 
+                  style={{ textAlign: 'left', paddingLeft: '1rem', width: '95%' }}
+                  className='pl-2 input-field mt-2 mb-6 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg'
+                  type="text"
+                  value={flowKey}
+                  onChange={onFlowChange}
+                />
+                <div className="pl-10 pr-10 flex justify-between mt-2 mb-2">
+                  <button className="px-10 py-2 bg-red-500 text-white rounded-md hover:bg-red-600" onClick={onClear}>CLEAR</button>
+                  {selectedOption.length == 0 && <button className="px-10 py-2 bg-green-500 text-white rounded-md hover:bg-green-600" onClick={onSave}>SAVE</button>}
+                  {selectedOption.length !== 0 && <button className="px-10 py-2 bg-green-500 text-white rounded-md hover:bg-green-600" onClick={onUpdateFlow}>Update</button>}
+                </div>
               </div>
-            </div>
+              </>
+            }
           </div>
         </ReactFlowProvider>
       </div>
