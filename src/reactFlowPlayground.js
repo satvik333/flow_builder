@@ -39,7 +39,7 @@ const nodeTypes = {
 
 
 let id = 0;
-const getId = () => `dndnode_${id++}`;
+const getId = () => `dndnode_${Date.now()}`;
 
 const DnDFlow = () => {
 
@@ -71,6 +71,8 @@ const DnDFlow = () => {
     const [collapsedNodes, setCollapsedNodes] = useState({});
     const [allFlows, setAllFlows] = useState(null);
     const [selectedOption, setSelectedOption] = useState('');
+    const [selectedId, setSelectedId] = useState(null);
+
 
 
     const { screenToFlowPosition } = useReactFlow();
@@ -350,18 +352,23 @@ const DnDFlow = () => {
         let flow = reactFlowInstance.toObject();
         flow.flowName = flowKey;
         flow.clientId = '1234'
+        
         saveFlow(flow);
       }
+      alert('Successfully Saved');
     }, [reactFlowInstance]);     
 
     const onUpdateFlow = useCallback(() => {
       if (reactFlowInstance) {
         let flow = reactFlowInstance.toObject();
         flow.flowName = flowKey;
-        flow.clientId = '1234'
+        flow.clientId = '1234';
+        flow.id = selectedId;
+        
         updateFlow(flow);
       }
-    }, [reactFlowInstance]); 
+      alert('Successfully Updated');
+    }, [reactFlowInstance, selectedId]);
 
     function onClear() {
       setNodes(initialNodes);
@@ -393,8 +400,9 @@ const DnDFlow = () => {
       if (nodeElement) {
         nodeElement.style.borderColor = "blue";
       }
-      setActionName('Action Name');
-      setActionType('Action Type')
+      
+      setActionName(element.nodes[0]?.data.actionName);
+      setActionType(element.nodes[0]?.data.actionType);
   }, []);
 
   useEffect(() => {
@@ -432,7 +440,9 @@ const DnDFlow = () => {
               data: {
                 ...node.data,
                 message: editedMessage,
-                noOfNodes: noOfNodes
+                noOfNodes: noOfNodes,
+                actionName: actionName,
+                actionType: actionType
                 // messages: messages
               },
             };
@@ -442,7 +452,7 @@ const DnDFlow = () => {
         return updatedNodes;
       });
     }
-  }, [editedMessage, nodeData, noOfNodes]);  
+  }, [editedMessage, nodeData, noOfNodes, actionName, actionType]);  
 
   function resetNodeData() {
     const lastNumber = nodeData?.id?.match(/\d+$/)[0];
@@ -487,12 +497,13 @@ const DnDFlow = () => {
   const handleChange = (event) => {
     const value = event.target.value;
     setSelectedOption(value);
-    allFlows?.map((flow) => {
+    allFlows?.forEach((flow) => {
       if (flow.flow_name === value) {
+        setSelectedId(flow.id); 
         const data = JSON.parse(flow.flow_json);
         const nodes = data.nodes;
         const edges = data.edges;
-
+  
         setNodes(nodes);
         setEdges(edges);
       }
