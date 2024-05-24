@@ -497,6 +497,7 @@ const DnDFlow = () => {
   const handleChange = (event) => {
     const value = event.target.value;
     setSelectedOption(value);
+    setFlowKey(value);
     allFlows?.forEach((flow) => {
       if (flow.flow_name === value) {
         setSelectedId(flow.id); 
@@ -587,7 +588,7 @@ const DnDFlow = () => {
                 { nodeData.data.label !== 'End Of Flow node' &&
                   <>
                     <h1 className='font-bold mb-1 flex items-start' style={{fontSize: '15px'}}>Message Body:</h1>
-                    <div style={{ height: '500px', width: '100%', fontSize: '18px' }}>
+                    <div style={{ width: '100%', fontSize: '18px' }}>
                       <div className='ckeditor-dark-mode'>
                         <CKEditor
                           editor={ClassicEditor}
@@ -629,6 +630,19 @@ const DnDFlow = () => {
                     </div>
                   </>
                 }
+                <h1 className='mt-6 pl-2 flex items-start font-bold text-lg'>Select Flows:</h1>
+                <select className='pl-2 input-field mb-6 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg' 
+                  value={selectedOption} 
+                  onChange={handleChange}
+                  style={{width: '99%'}}
+                  >
+                  <option style={{color: 'white'}}  value="" disabled>Select a Flow</option>
+                  {allFlows?.map((option, index) => (
+                    <option  style={{color: 'white'}} key={index} value={option.flow_name}>
+                      {option.flow_name}
+                    </option>
+                  ))}
+                </select>
               </aside>
             )  : 
             <>
@@ -647,19 +661,6 @@ const DnDFlow = () => {
               }
               <Sidebar/>
               <div>
-                <h1 className='pl-2 flex items-start font-bold text-lg'>Select Flows:</h1>
-                <select className='pl-2 input-field mt-2 mb-6 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg' 
-                  value={selectedOption} 
-                  onChange={handleChange}
-                  style={{width: '95%'}}
-                  >
-                  <option style={{color: 'white'}}  value="" disabled>Select a Flow</option>
-                  {allFlows?.map((option, index) => (
-                    <option  style={{color: 'white'}} key={index} value={option.flow_name}>
-                      {option.flow_name}
-                    </option>
-                  ))}
-                </select>
                 <h1 className='pl-2 flex items-start font-bold text-lg'>Flow Title:</h1>
                 <input 
                   style={{ textAlign: 'left', paddingLeft: '1rem', width: '95%' }}
