@@ -362,10 +362,12 @@ const DnDFlow = () => {
         flow.flowName = flowKey;
         flow.clientId = '1234'
 
+        //flow = convertFlowToDecisionTreeFlow(flow);
+
         saveFlow(flow);
       }
       alert('Successfully Saved');
-    }, [reactFlowInstance]);     
+    }, [reactFlowInstance]);  
 
     const onUpdateFlow = useCallback(() => {
       if (reactFlowInstance) {
@@ -529,53 +531,6 @@ const DnDFlow = () => {
     return (
       <div className="dndflow" style={{ width: '100%', height: '100vh' }}>
         <ReactFlowProvider>
-          <div className="reactflow-wrapper" ref={reactFlowWrapper} style={{ width: '100%', height: '100%' }}>
-            <ReactFlow
-              nodes={nodes}
-              edges={edges}
-              onNodesChange={onNodesChange}
-              onEdgesChange={onEdgesChange}
-              onConnect={onConnect}
-              onInit={setReactFlowInstance}
-              onDrop={onDrop}
-              onDragOver={onDragOver}
-              onConnectStart={onConnectStart}
-              onConnectEnd={onConnectEnd}
-              fitView
-              fitViewOptions={{ padding: 5 }}
-              nodeOrigin={[0.5, 0]}
-              style={{ width: '100%', height: '100%' }}
-              onSelectionChange={onElementClick}
-              nodeTypes={nodeTypes}
-              proOptions={{ hideAttribution: true }} 
-              snapToGrid={true}
-            >
-              <DownloadButton />
-              <Background />
-              <Controls showInteractive={false} />
-              <svg>
-                <defs>
-                  <linearGradient id="edge-gradient">
-                    <stop offset="0%" stopColor="#ae53ba" />
-                    <stop offset="100%" stopColor="#2a8af6" />
-                  </linearGradient>
-            
-                  <marker
-                    id="edge-circle"
-                    viewBox="-5 -5 10 10"
-                    refX="0"
-                    refY="0"
-                    markerUnits="strokeWidth"
-                    markerWidth="10"
-                    markerHeight="10"
-                    orient="auto"
-                  >
-                    <circle stroke="#2a8af6" strokeOpacity="0.75" r="2" cx="0" cy="0" />
-                  </marker>
-                </defs>
-              </svg>
-            </ReactFlow>
-          </div>
           <div className='flow-sec'>
             {nodeData && nodeData.data.label !== 'Trigger' ? (
               <aside>
@@ -706,6 +661,53 @@ const DnDFlow = () => {
               </div>
               </>
             }
+          </div>
+          <div className="reactflow-wrapper" ref={reactFlowWrapper} style={{ width: '100%', height: '100%' }}>
+            <ReactFlow
+              nodes={nodes}
+              edges={edges}
+              onNodesChange={onNodesChange}
+              onEdgesChange={onEdgesChange}
+              onConnect={onConnect}
+              onInit={setReactFlowInstance}
+              onDrop={onDrop}
+              onDragOver={onDragOver}
+              onConnectStart={onConnectStart}
+              onConnectEnd={onConnectEnd}
+              fitView
+              fitViewOptions={{ padding: 5 }}
+              nodeOrigin={[0.5, 0]}
+              style={{ width: '100%', height: '100%' }}
+              onSelectionChange={onElementClick}
+              nodeTypes={nodeTypes}
+              proOptions={{ hideAttribution: true }} 
+              snapToGrid={true}
+            >
+              <DownloadButton />
+              <Background />
+              <Controls showInteractive={false} />
+              <svg>
+                <defs>
+                  <linearGradient id="edge-gradient">
+                    <stop offset="0%" stopColor="#ae53ba" />
+                    <stop offset="100%" stopColor="#2a8af6" />
+                  </linearGradient>
+            
+                  <marker
+                    id="edge-circle"
+                    viewBox="-5 -5 10 10"
+                    refX="0"
+                    refY="0"
+                    markerUnits="strokeWidth"
+                    markerWidth="10"
+                    markerHeight="10"
+                    orient="auto"
+                  >
+                    <circle stroke="#2a8af6" strokeOpacity="0.75" r="2" cx="0" cy="0" />
+                  </marker>
+                </defs>
+              </svg>
+            </ReactFlow>
           </div>
         </ReactFlowProvider>
       </div>
