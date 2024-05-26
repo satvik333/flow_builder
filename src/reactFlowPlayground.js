@@ -91,7 +91,7 @@ const DnDFlow = () => {
         let clientId = '1234';
         try {
           const flows = await getFlowsByClient(clientId);
-          setAllFlows(flows);
+          setAllFlows(flows.result);
         } catch (error) {
           console.error('Error fetching flows:', error);
         }
@@ -644,19 +644,21 @@ const DnDFlow = () => {
                     </div>
                   </>
                 }
-                <h1 className='mt-6 pl-2 flex items-start font-bold text-lg'>Select API:</h1>
-                <select className='pl-2 input-field mb-6 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg' 
-                  value={selectedApi} 
-                  onChange={handleApiChange}
-                  style={{width: '99%'}}
-                  >
-                  <option style={{color: 'white'}}  value="" disabled>Select an API</option>
-                  {allApis?.map((api, index) => (
-                    <option  style={{color: 'white'}} key={index} value={api.api_endpoint}>
-                      {api.api_endpoint}
-                    </option>
-                  ))}
-                </select>
+                {allApis?.length > 0 && <>
+                  <h1 className='mt-6 pl-2 flex items-start font-bold text-lg'>Select API:</h1>
+                  <select className='pl-2 input-field mb-6 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg' 
+                    value={selectedApi} 
+                    onChange={handleApiChange}
+                    style={{width: '99%'}}
+                    >
+                    <option style={{color: 'white'}}  value="" disabled>Select an API</option>
+                    {allApis?.map((api, index) => (
+                      <option  style={{color: 'white'}} key={index} value={api.api_endpoint}>
+                        {api.api_endpoint}
+                      </option>
+                    ))}
+                  </select>
+                </>}
                 <h1 className='mt-6 pl-2 flex items-start font-bold text-lg'>Select Flows:</h1>
                 <select className='pl-2 input-field mb-6 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg' 
                   value={selectedOption} 
