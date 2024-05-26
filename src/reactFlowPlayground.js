@@ -24,7 +24,7 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { convert } from 'html-to-text';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import DownloadButton from './DownloadButton';
-import { saveFlow, getFlowsByClient, updateFlow } from './services/flowService'
+import { saveFlow, getFlowsByClient, updateFlow, getAllApis } from './services/flowService'
 
 
 const dagreGraph = new dagre.graphlib.Graph();
@@ -71,7 +71,9 @@ const DnDFlow = () => {
     const [collapsedNodes, setCollapsedNodes] = useState({});
     const [allFlows, setAllFlows] = useState(null);
     const [selectedOption, setSelectedOption] = useState('');
+    const [selectedApi, setSelectedApi] = useState('');
     const [selectedId, setSelectedId] = useState(null);
+    const [allApis, setAllApis] = useState(null);
 
 
 
@@ -257,7 +259,7 @@ const DnDFlow = () => {
     }, []);
   
     const onDrop = useCallback(
-      (event) => {
+      async (event) => {
 
         event.preventDefault();
   
@@ -266,17 +268,24 @@ const DnDFlow = () => {
         if (typeof type === 'undefined' || !type) {
           return;
         }
-  
+
         const position = reactFlowInstance.screenToFlowPosition({
           x: event.clientX,
           y: event.clientY,
         });
-        const newNode = {
+
+        let newNode = {
           id: getId(),
           position,
           data: { label: `${type} node`, id: getId(), icon: <AddCommentIcon/>, actionName: actionName, actionType: actionType, message: 'Text', noOfNodes: noOfNodes, hasChild: false },
           type: 'custom',
         };
+
+        if (type === 'Api Caller') {
+          newNode.data.apiCaller = true;
+          let apis = await getAllApis();
+          setAllApis(apis.result);
+        }
   
         setNodes((nds) => nds.concat(newNode));
       },
@@ -352,7 +361,7 @@ const DnDFlow = () => {
         let flow = reactFlowInstance.toObject();
         flow.flowName = flowKey;
         flow.clientId = '1234'
-        
+
         saveFlow(flow);
       }
       alert('Successfully Saved');
@@ -401,8 +410,8 @@ const DnDFlow = () => {
         nodeElement.style.borderColor = "blue";
       }
       
-      setActionName(element.nodes[0]?.data.actionName);
-      setActionType(element.nodes[0]?.data.actionType);
+      setActionName(element.nodes[0]?.data.actionName || 'Action Name');
+      setActionType(element.nodes[0]?.data.actionType || 'Action Type');
   }, []);
 
   useEffect(() => {
@@ -442,7 +451,8 @@ const DnDFlow = () => {
                 message: editedMessage,
                 noOfNodes: noOfNodes,
                 actionName: actionName,
-                actionType: actionType
+                actionType: actionType,
+                selectedApi: selectedApi
                 // messages: messages
               },
             };
@@ -452,7 +462,7 @@ const DnDFlow = () => {
         return updatedNodes;
       });
     }
-  }, [editedMessage, nodeData, noOfNodes, actionName, actionType]);  
+  }, [editedMessage, nodeData, noOfNodes, actionName, actionType, selectedApi]);  
 
   function resetNodeData() {
     const lastNumber = nodeData?.id?.match(/\d+$/)[0];
@@ -510,6 +520,10 @@ const DnDFlow = () => {
       }
     })
   };
+
+  function handleApiChange(event) {
+    setSelectedApi(event.target.value);
+  } 
 
   
     return (
@@ -630,6 +644,19 @@ const DnDFlow = () => {
                     </div>
                   </>
                 }
+                <h1 className='mt-6 pl-2 flex items-start font-bold text-lg'>Select API:</h1>
+                <select className='pl-2 input-field mb-6 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg' 
+                  value={selectedApi} 
+                  onChange={handleApiChange}
+                  style={{width: '99%'}}
+                  >
+                  <option style={{color: 'white'}}  value="" disabled>Select an API</option>
+                  {allApis?.map((api, index) => (
+                    <option  style={{color: 'white'}} key={index} value={api.api_endpoint}>
+                      {api.api_endpoint}
+                    </option>
+                  ))}
+                </select>
                 <h1 className='mt-6 pl-2 flex items-start font-bold text-lg'>Select Flows:</h1>
                 <select className='pl-2 input-field mb-6 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg' 
                   value={selectedOption} 

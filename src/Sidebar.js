@@ -3,6 +3,7 @@ import AddCommentIcon from '@mui/icons-material/AddComment';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import ListIcon from '@mui/icons-material/List';
 import PauseIcon from '@mui/icons-material/Pause';
+import ApiIcon from '@mui/icons-material/Api';
 
 export default () => {
   const onDragStart = (event, nodeType) => {
@@ -21,6 +22,9 @@ export default () => {
       </div>
       <div className="dndnode output" onDragStart={(event) => onDragStart(event, 'End Of Flow')} draggable>
         <PauseIcon fontSize="large" className='pr-2'/> End Of Flow
+      </div>
+      <div className="dndnode api" onDragStart={(event) => onDragStart(event, 'Api Caller')} draggable>
+        <ApiIcon fontSize="large" className='pr-2'/> Api Caller
       </div>
     </aside>
   );

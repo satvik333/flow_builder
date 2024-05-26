@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-let baseUrl = 'http://localhost:8080';
+let baseUrl = 'http://localhost:3300';
 
 async function saveFlow(flow) {
   try {
@@ -93,4 +93,14 @@ async function getFlowsByClient(clientId) {
   }
 }
 
-export { saveFlow, getFlowsByClient, updateFlow };
+async function getAllApis() {
+  try {
+    const response = await axios.get(`${baseUrl}/api-handler/get-all-apis`);
+    return response.data;
+  } catch (error) {
+    console.error("Error while fetching api's", error);
+    throw error;
+  }
+}
+
+export { saveFlow, getFlowsByClient, updateFlow, getAllApis };

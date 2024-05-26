@@ -41,6 +41,11 @@
     color: whitesmoke;
   }
 
+  .dndflow .dndnode.api {
+    border-color: greenyellow;
+    color: whitesmoke;
+  }
+
   .dndflow .dndnode {
     border-color: whitesmoke;
     color: whitesmoke;

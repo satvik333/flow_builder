@@ -36,6 +36,7 @@ function CustomNode({ data }) {
         )}
         {(data.label === 'Message node' ||
           data.label === 'Options node' ||
+          data.label === 'Api Caller node' ||
           /^Node dndnode_\d+$/.test(data.label)) && (
           <>
             <hr className="mt-2" style={{width: '110%'}}/>
