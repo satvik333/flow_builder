@@ -82,8 +82,27 @@ const DnDFlow = () => {
 
   
     const onConnect = useCallback(
-      (params) => setEdges((eds) => addEdge(params, eds)),
-      [],
+      (params) => {
+    
+        const sourceNode = nodes.find(node => node.id === connectingNodeId.current);
+        if (!sourceNode) {
+          return;
+        }
+
+        if (sourceNode.data.label !== 'Options node' && sourceNode.data.hasChild === true) return; 
+    
+        setNodes((prevNodes) =>
+          prevNodes.map((node) =>
+            node.id === sourceNode.id ? { ...node, data: { ...node.data, hasChild: true } } : node
+          )
+        );
+    
+        setEdges((eds) => {
+          const newEdges = addEdge(params, eds);
+          return newEdges;
+        });
+      },
+      [setEdges, nodes, connectingNodeId, setNodes]
     );
 
     useEffect(() => {
@@ -302,6 +321,8 @@ const DnDFlow = () => {
           const targetIsPane = event.target.classList.contains('react-flow__pane');
     
           const sourceNode = nodes.find(node => node.id === connectingNodeId.current);
+
+          if (sourceNode.data.label !== 'Options node' && sourceNode.data.hasChild === true) return; 
     
           setNodes((prevNodes) => prevNodes.map((node) => 
             node.id === sourceNode.id ? { ...node, data: { ...node.data, hasChild: true } } : node
@@ -362,12 +383,37 @@ const DnDFlow = () => {
         flow.flowName = flowKey;
         flow.clientId = '1234'
 
-        //flow = convertFlowToDecisionTreeFlow(flow);
+        flow = convertFlowToDecisionTreeFlow(flow);
 
         saveFlow(flow);
       }
       alert('Successfully Saved');
     }, [reactFlowInstance]);  
+
+    function convertFlowToDecisionTreeFlow(flowData) {
+  
+      let decisionTree = {};
+
+      let nodes = flowData?.nodes;
+
+      for (let i = 0; i < nodes?.length; i++) {
+        if (i !== 0) {
+          decisionTree[i] = {
+            message: nodes[i].data.message,
+            option: null,
+            answer: (i === nodes.length - 1) ? null : (i + 1).toString(), // Set answer to null for the last element
+            timeout: null, // by default 1
+            action: actionType, // listing & Notification
+          }
+        }
+      }      
+
+      
+      console.log(decisionTree,'ddddddddddd')
+      
+  
+     // return decisionTree
+  }
 
     const onUpdateFlow = useCallback(() => {
       if (reactFlowInstance) {
@@ -375,8 +421,10 @@ const DnDFlow = () => {
         flow.flowName = flowKey;
         flow.clientId = '1234';
         flow.id = selectedId;
+
+        convertFlowToDecisionTreeFlow(flow);
         
-        updateFlow(flow);
+       // updateFlow(flow);
       }
       alert('Successfully Updated');
     }, [reactFlowInstance, selectedId]);
