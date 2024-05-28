@@ -383,7 +383,7 @@ const DnDFlow = () => {
         flow.flowName = flowKey;
         flow.clientId = '1234'
 
-        flow = convertFlowToDecisionTreeFlow(flow);
+        //convertFlowToDecisionTreeFlow(flow);
 
         saveFlow(flow);
       }
@@ -391,27 +391,38 @@ const DnDFlow = () => {
     }, [reactFlowInstance]);  
 
     function convertFlowToDecisionTreeFlow(flowData) {
-  
       let decisionTree = {};
-
       let nodes = flowData?.nodes;
+
+      function getOptions(node) {
+        let indexes = [];
+        let ids = [];
+        
+        edges.forEach((edge) => {
+          if (node.id === edge.source) {
+            ids.push(edge.target); 
+          }
+        });
+      
+        indexes = ids.map((id) => {
+          return nodes.findIndex((node) => node.id === id);
+        }).filter(index => index !== -1); 
+      
+        return indexes.length === 0 ? null : indexes.join(',');
+      }
 
       for (let i = 0; i < nodes?.length; i++) {
         if (i !== 0) {
           decisionTree[i] = {
             message: nodes[i].data.message,
-            option: null,
-            answer: (i === nodes.length - 1) ? null : (i + 1).toString(), // Set answer to null for the last element
-            timeout: null, // by default 1
-            action: actionType, // listing & Notification
+            options: nodes[i].data.label === 'Options node' ? getOptions(nodes[i]) : null,
+            answer: nodes[i].data.label != 'Options node' ?  getOptions(nodes[i]) : null,
+            timeout: nodes[i].data.label === 'Options node' ? '1' : null, 
+            action: actionType, 
           }
         }
       }      
-
-      
       console.log(decisionTree,'ddddddddddd')
-      
-  
      // return decisionTree
   }
 
@@ -422,9 +433,9 @@ const DnDFlow = () => {
         flow.clientId = '1234';
         flow.id = selectedId;
 
-        convertFlowToDecisionTreeFlow(flow);
+        //convertFlowToDecisionTreeFlow(flow);
         
-       // updateFlow(flow);
+        updateFlow(flow);
       }
       alert('Successfully Updated');
     }, [reactFlowInstance, selectedId]);
