@@ -395,10 +395,10 @@ const DnDFlow = () => {
       let nodes = flowData?.nodes;
 
       function getOptions(node) {
-        let indexes = [];
+        let indexes = []; 
         let ids = [];
         
-        edges.forEach((edge) => {
+        flowData?.edges.forEach((edge) => {
           if (node.id === edge.source) {
             ids.push(edge.target); 
           }
