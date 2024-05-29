@@ -314,6 +314,7 @@ const DnDFlow = () => {
     const onConnectEnd = useCallback(
       (event) => {
         let cntr = 0;
+        let nodeIdCounter = 1;
         for(let i = 0; i < noOfNodes; i++) {
     
           //if (!connectingNodeId.current) return;
@@ -331,7 +332,7 @@ const DnDFlow = () => {
           const sourcePosition = sourceNode.position;
     
           if (targetIsPane) {
-            const targetNodeId = getId(); 
+            let targetNodeId = getId() + nodeIdCounter++; 
             let targetPosition;
     
             if (nodeData?.data?.label === 'Options node') {
@@ -357,7 +358,7 @@ const DnDFlow = () => {
             const newNode = {
               id: targetNodeId,
               position: targetPosition,
-              data: { label: `Node ${targetNodeId}`, icon: <AddCommentIcon/>, id: targetNodeId, actionName: actionName, actionType: actionType, message: 'Text', noOfNodes: noOfNodes, hasChild: false },
+              data: { label: `Message node`, icon: <AddCommentIcon/>, id: targetNodeId, actionName: actionName, actionType: actionType, message: 'Text', noOfNodes: noOfNodes, hasChild: false },
               origin: [0.5, 0.0],
               type: 'custom'
             };
@@ -658,7 +659,7 @@ const DnDFlow = () => {
                     </div>
                   </>
                 }
-                {allApis?.length > 0 && <>
+                {nodeData.data.label === 'Api Caller node' && <>
                   <h1 className='mt-6 pl-2 flex items-start font-bold text-lg'>Select API:</h1>
                   <select className='pl-2 input-field mb-6 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg' 
                     value={selectedApi} 

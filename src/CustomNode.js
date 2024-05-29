@@ -1,8 +1,8 @@
 import React, { memo } from 'react';
 import { Handle, Position } from 'reactflow';
 import CancelIcon from '@mui/icons-material/Cancel';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 
 function CustomNode({ data }) {
 
@@ -11,7 +11,7 @@ function CustomNode({ data }) {
     : data.message;
 
   return (
-    <div style={{width: '260px'}} className="flex items-center wrapper gradient relative">
+    <div style={{width: '280px'}} className="flex items-center wrapper gradient relative">
       <div className="flex items-center bg-black inner body shadow-md rounded-md border-2 border-stone-400 relative">
         <div className="flex items-center">
           <div
@@ -23,17 +23,17 @@ function CustomNode({ data }) {
           <div>
             <div style={{ fontSize: '14px' }}>{data?.label}</div>
           </div>
+          {data.label !== 'Trigger' && (
+            <div className="absolute pr-3 right-0 p-1">
+              <CancelIcon
+                fontSize="large" 
+                className="pb-2"
+                style={{ color: '#f56565', cursor: 'pointer' }}
+                data-testid="CancelIcon"
+              />
+            </div>
+          )}
         </div>
-        {data.label !== 'Trigger' && (
-          <div className="absolute top-0 right-0 p-1">
-            <CancelIcon
-              fontSize="large" 
-              className="pb-3"
-              style={{ color: '#f56565', cursor: 'pointer' }}
-              data-testid="CancelIcon"
-            />
-          </div>
-        )}
         {(data.label === 'Message node' ||
           data.label === 'Options node' ||
           data.label === 'Api Caller node' ||
@@ -50,17 +50,17 @@ function CustomNode({ data }) {
             </div>
           </>
         )}
-        {!data.label.includes('End Of Flow node') && !data.label.includes('Trigger') && data.hasChild && (
+        {data.label === 'Options node' && data.hasChild && (
           <div className="absolute bottom-0 right-0 pt-6 pl-4">
             {!data.collapsed && (
-              <KeyboardArrowDownIcon
+              <ArrowDropDownIcon
                 fontSize="large" 
                 style={{ cursor: 'pointer' }}
                 data-testid="KeyboardArrowDownIcon"
               />
             )}
             {data.collapsed && (
-              <KeyboardArrowUpIcon
+              <ArrowDropUpIcon
                 fontSize="large" 
                 style={{ cursor: 'pointer' }}
                 data-testid="KeyboardArrowUpIcon"
