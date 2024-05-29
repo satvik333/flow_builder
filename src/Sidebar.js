@@ -20,11 +20,11 @@ export default () => {
       <div className="dndnode" onDragStart={(event) => onDragStart(event, 'Options')} draggable>
         <ListIcon fontSize="large" className='pr-2'/> Select Messages
       </div>
-      <div className="dndnode output" onDragStart={(event) => onDragStart(event, 'End Of Flow')} draggable>
-        <PauseIcon fontSize="large" className='pr-2'/> End Of Flow
-      </div>
       <div className="dndnode api" onDragStart={(event) => onDragStart(event, 'Api Caller')} draggable>
         <ApiIcon fontSize="large" className='pr-2'/> Api Caller
+      </div>
+      <div className="dndnode output" onDragStart={(event) => onDragStart(event, 'End Of Flow')} draggable>
+        <PauseIcon fontSize="large" className='pr-2'/> End Of Flow
       </div>
     </aside>
   );

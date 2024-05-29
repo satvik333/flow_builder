@@ -51,10 +51,6 @@
     color: whitesmoke;
   }
 
-  .settings {
-    color: whitesmoke;
-  }
-
   .input-field {
     background-color: black;
   }
@@ -117,6 +113,7 @@
 .settings {
   margin-left: 80%;
   cursor: pointer;
+  color: whitesmoke;
 }
 
 .ck .ck-reset .ck-editor .ck-rounded-corners {
