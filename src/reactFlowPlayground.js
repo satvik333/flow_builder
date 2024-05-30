@@ -77,11 +77,12 @@ const DnDFlow = () => {
   const [dataLabel, setDataLabel] = useState(null);
   const [noOfNodes, setNoOfNodes] = useState(1);
   const [collapsedNodes, setCollapsedNodes] = useState({});
-  const [allFlows, setAllFlows] = useState(null);
+  const [allFlows, setAllFlows] = useState([{ flow_name: 'none' }]);
   const [selectedOption, setSelectedOption] = useState("");
   const [selectedApi, setSelectedApi] = useState("");
   const [selectedId, setSelectedId] = useState(null);
   const [allApis, setAllApis] = useState(null);
+  const [currentFlow, setCurrentFlow] = useState(null);
 
   const { screenToFlowPosition } = useReactFlow();
   const { setViewport } = useReactFlow();
@@ -122,7 +123,7 @@ const DnDFlow = () => {
       let clientId = "1234";
       try {
         const flows = await getFlowsByClient(clientId);
-        setAllFlows(flows.result);
+        setAllFlows(prev => [...prev, ...flows.result]);
       } catch (error) {
         console.error("Error fetching flows:", error);
       }
@@ -195,7 +196,7 @@ const DnDFlow = () => {
       if (!visited.has(currentNodeId)) {
         visited.add(currentNodeId);
         const children = edges
-          .filter((edge) => edge.source === currentNodeId)
+          .filter((edge) => edge?.source === currentNodeId)
           .map((edge) => edge.target);
 
         queue.push(...children);
@@ -265,8 +266,8 @@ const DnDFlow = () => {
     setNodeData(null);
 
     const sourceNodeId = edges
-      .filter((edge) => edge.target === idToRemove)
-      .map((edge) => edge.source)[0]; // Assuming there's only one source node for the given target
+      .filter((edge) => edge?.target === idToRemove)
+      .map((edge) => edge?.source)[0]; 
 
     const descendantNodes = sourceNodeId
       ? getDescendantNodes(sourceNodeId)
@@ -646,6 +647,11 @@ const DnDFlow = () => {
 
   const handleChange = (event) => {
     const value = event.target.value;
+    if (value === 'none') {
+      setNodes(currentFlow.nodes);
+      return;
+    }
+
     setSelectedOption(value);
     setFlowKey(value);
     allFlows?.forEach((flow) => {
@@ -653,14 +659,37 @@ const DnDFlow = () => {
         setSelectedId(flow.id);
         const data = JSON.parse(flow.flow_json);
         const nodes = data.nodes;
-        const edges = data.edges;
+        let newEdges = data.edges;
 
-        setNodes(nodes);
-        setEdges(edges);
+        newEdges = newEdges.map((edge) => {
+          if (edge.source !== '1') {
+            return edge;
+          }
+        })
+
+        const uniqueById = (items) => {
+          const seen = new Set();
+          return items.filter(item => {
+            const duplicate = seen.has(item?.id);
+            seen.add(item?.id);
+            return !duplicate;
+          });
+        };
+
+        let lastCurrentNode = currentFlow.nodes[currentFlow.nodes.length - 1];
+
+        newEdges.push({source: lastCurrentNode.id, target: nodes[1].id, id: Date.now()});
+
+        setNodes(uniqueById([...currentFlow.nodes, ...nodes]));
+        setEdges(uniqueById([...currentFlow.edges, ...newEdges]));
       }
     });
   };
 
+  useEffect(() => {
+    if (!selectedOption) setCurrentFlow({nodes: nodes, edges: edges});
+  }, [nodes])
+  
   function handleApiChange(event) {
     setSelectedApi(event.target.value);
   }
@@ -687,7 +716,7 @@ const DnDFlow = () => {
                 </h1>
               </div>
               <h1
-                className="font-bold mb-1 flex items-start"
+                className="font-bold mb-1 mt-4 flex items-start"
                 style={{ fontSize: "15px" }}
               >
                 Message Body:
@@ -724,7 +753,7 @@ const DnDFlow = () => {
                 Update
               </button>
               <h1
-                className="font-bold mt-4 flex items-start"
+                className="font-bold mt-6 flex items-start"
                 style={{ fontSize: "15px" }}
               >
                 Action Name:
@@ -809,28 +838,32 @@ const DnDFlow = () => {
                   </select>
                 </>
               )}
-              <h1 className="mt-6 pl-2 flex items-start font-bold text-lg">
-                Select Flows:
-              </h1>
-              <select
-                className="pl-2 input-field mb-6 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg"
-                value={selectedOption}
-                onChange={handleChange}
-                style={{ width: "99%" }}
-              >
-                <option style={{ color: "white" }} value="" disabled>
-                  Select a Flow
-                </option>
-                {allFlows?.map((option, index) => (
-                  <option
-                    style={{ color: "white" }}
-                    key={index}
-                    value={option.flow_name}
+              { nodeData.data.label !== "Api Caller node" &&
+                <>
+                  <h1 className="mt-6 pl-2 flex items-start font-bold text-lg">
+                    Select Flows:
+                  </h1>
+                  <select
+                    className="pl-2 input-field mb-6 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg"
+                    value={selectedOption}
+                    onChange={handleChange}
+                    style={{ width: "99%" }}
                   >
-                    {option.flow_name}
-                  </option>
-                ))}
-              </select>
+                    <option style={{ color: "white" }} value="" disabled>
+                      Select a Flow
+                    </option>
+                    {allFlows?.map((option, index) => (
+                      <option
+                        style={{ color: "white" }}
+                        key={index}
+                        value={option.flow_name}
+                      >
+                        {option.flow_name}
+                      </option>
+                    ))}
+                  </select>
+                </>
+              }
             </aside>
           ) : (
             <>
