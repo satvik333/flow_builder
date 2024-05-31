@@ -270,3 +270,9 @@
   background: #ccc;
   margin: 10px 0;
 } 
+
+.large-radio {
+  width: 13px; 
+  height: 13px; 
+  transform: scale(1.5); 
+}

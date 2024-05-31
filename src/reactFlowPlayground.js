@@ -83,6 +83,7 @@ const DnDFlow = () => {
   const [selectedId, setSelectedId] = useState(null);
   const [allApis, setAllApis] = useState(null);
   const [currentFlow, setCurrentFlow] = useState(null);
+  const [selectedRadioOption, setSelectedRadioOption] = useState('');
 
   const { screenToFlowPosition } = useReactFlow();
   const { setViewport } = useReactFlow();
@@ -592,6 +593,7 @@ const DnDFlow = () => {
                 actionName: actionName,
                 actionType: actionType,
                 selectedApi: selectedApi,
+                optionType: selectedRadioOption
                 // messages: messages
               },
             };
@@ -601,7 +603,7 @@ const DnDFlow = () => {
         return updatedNodes;
       });
     }
-  }, [editedMessage, nodeData, noOfNodes, actionName, actionType, selectedApi]);
+  }, [editedMessage, nodeData, noOfNodes, actionName, actionType, selectedApi, selectedRadioOption]);
 
   function resetNodeData() {
     const lastNumber = nodeData?.id?.match(/\d+$/)[0];
@@ -695,6 +697,10 @@ const DnDFlow = () => {
     setSelectedApi(event.target.value);
   }
 
+  const handleRadioChange = (event) => {
+    setSelectedRadioOption(event.target.value);
+  };
+
   return (
     <div className="dndflow" style={{ width: "100%", height: "100vh" }}>
       <ReactFlowProvider>
@@ -785,6 +791,38 @@ const DnDFlow = () => {
                   <div style={{ width: "100%", fontSize: "18px" }}>
                     {nodeData.data.label === "Options node" && (
                       <>
+                        <h1
+                          className="font-bold mt-6 flex items-start"
+                          style={{ fontSize: "17px" }}
+                        >
+                          Type:
+                        </h1>
+                        <div className="mt-1" style={{marginRight: '70%'}}>
+                          <div>
+                            <input
+                              type="radio"
+                              id="option1"
+                              name="options"
+                              value='menu'
+                              checked={selectedRadioOption === 'menu'}
+                              onChange={handleRadioChange}
+                              className="large-radio"
+                            />
+                            <label className="ml-2" htmlFor="option1">Menu</label>
+                          </div>
+                          <div className="ml-4 mt-1">
+                            <input
+                              type="radio"
+                              id="option2"
+                              name="options"
+                              value="buttons"
+                              checked={selectedRadioOption === 'buttons'}
+                              onChange={handleRadioChange}
+                              className="large-radio"
+                            />
+                            <label className="ml-2" htmlFor="option2">Buttons</label>
+                          </div>
+                        </div>
                         <h1
                           className="font-bold mt-6 flex items-start"
                           style={{ fontSize: "15px" }}
