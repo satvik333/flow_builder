@@ -16,7 +16,7 @@ const Sidebar = () => {
       <div className="description pr-4">Widget Library.</div>
       <div className="dndnode input" onDragStart={(event) => onDragStart(event, 'Message')} draggable>
         <div>
-          <ChatBubbleIcon fontSize="large" className="icon" /><span style={{ marginLeft: '15%' }}>Send Message</span>
+          <ChatBubbleIcon fontSize="medium" className="icon" /><span style={{ marginLeft: '19%' }}>Send Message</span>
         </div>
         <div>
           <p>Send a message.</p>
@@ -24,7 +24,7 @@ const Sidebar = () => {
       </div>
       <div className="dndnode" onDragStart={(event) => onDragStart(event, 'Options')} draggable>
         <div>
-          <ListIcon fontSize="large" className="icon" /><span style={{ marginLeft: '12%' }}>Select Messages</span>
+          <ListIcon fontSize="medium" className="icon" /><span style={{ marginLeft: '15%' }}>Select Messages</span>
         </div>
         <div>
           <p>Select a list of options.</p>
@@ -32,7 +32,7 @@ const Sidebar = () => {
       </div>
       <div className="dndnode api" onDragStart={(event) => onDragStart(event, 'Api Caller')} draggable>
         <div>
-          <ApiIcon fontSize="large" className="icon" /><span style={{ marginLeft: '14%' }}>Request an API</span>
+          <ApiIcon fontSize="medium" className="icon" /><span style={{ marginLeft: '17%' }}>Request an API</span>
         </div>
         <div>
           <p>Perform an API request.</p>
@@ -40,7 +40,7 @@ const Sidebar = () => {
       </div>
       <div className="dndnode output" onDragStart={(event) => onDragStart(event, 'End Of Flow')} draggable>
         <div>
-          <PauseIcon fontSize="large" className="icon" /><span style={{ marginLeft: '19%' }}>End Of Flow</span>
+          <PauseIcon fontSize="medium" className="icon" /><span style={{ marginLeft: '22%' }}>End Of Flow</span>
         </div>
         <div>
           <p>End the current flow.</p>
