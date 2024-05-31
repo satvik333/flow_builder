@@ -700,7 +700,7 @@ const DnDFlow = () => {
         <div className="flow-sec">
           <SettingsSuggestIcon
             fontSize="large"
-            className="settings mt-2"
+            className="settings"
             onClick={enableSettings}
           />
           {nodeData && nodeData.data.label !== "Trigger" ? (
@@ -721,7 +721,7 @@ const DnDFlow = () => {
               >
                 Message Body:
               </h1>
-              <div className="ckeditor-dark-mode">
+              <div className="ckeditor-dark-mode mr-7">
                 <CKEditor
                   editor={ClassicEditor}
                   data={editedMessage}
@@ -760,7 +760,7 @@ const DnDFlow = () => {
               </h1>
               <input
                 style={{ textAlign: "left", paddingLeft: "1rem" }}
-                className="input-field w-full mt-2 mb-6 px-20 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg"
+                className="input-field  mt-2 mb-6 px-14 mr-8 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg"
                 type="text"
                 value={actionName}
                 onChange={onActionNameChange}
@@ -773,7 +773,7 @@ const DnDFlow = () => {
               </h1>
               <input
                 style={{ textAlign: "left", paddingLeft: "1rem" }}
-                className="input-field w-full mt-2 mb-6 px-20 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg"
+                className="input-field px-14 mr-8 mt-2 mb-6 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg"
                 type="text"
                 value={actionType}
                 onChange={onActionTypeChange}
@@ -794,7 +794,7 @@ const DnDFlow = () => {
                             style={{
                               textAlign: "left",
                               paddingLeft: "1rem",
-                              width: "100%",
+                              width: "80%",
                             }}
                             className="input-field py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg"
                             type="text"
@@ -818,10 +818,10 @@ const DnDFlow = () => {
                     Select API:
                   </h1>
                   <select
-                    className="pl-2 input-field mb-6 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg"
+                    className="pl-2 input-field mr-8 mb-6 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg"
                     value={selectedApi}
                     onChange={handleApiChange}
-                    style={{ width: "99%" }}
+                    style={{ width: "92%" }}
                   >
                     <option style={{ color: "white" }} value="" disabled>
                       Select an API
@@ -844,10 +844,10 @@ const DnDFlow = () => {
                     Select Flows:
                   </h1>
                   <select
-                    className="pl-2 input-field mb-6 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg"
+                    className="pl-2 input-field mr-8 mb-6 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg"
                     value={selectedOption}
                     onChange={handleChange}
-                    style={{ width: "99%" }}
+                    style={{ width: "92%" }}
                   >
                     <option style={{ color: "white" }} value="" disabled>
                       Select a Flow
@@ -893,14 +893,14 @@ const DnDFlow = () => {
               )}
               <Sidebar />
               <div>
-                <h1 className="pl-2 flex items-start font-bold text-lg">
+                <h1 className="flex items-start font-bold text-lg">
                   Flow Title:
                 </h1>
                 <input
                   style={{
                     textAlign: "left",
                     paddingLeft: "1rem",
-                    width: "95%",
+                    width: "100%",
                   }}
                   className="pl-2 input-field mt-2 mb-6 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg"
                   type="text"
@@ -916,7 +916,7 @@ const DnDFlow = () => {
                   </button>
                   {selectedOption.length == 0 && (
                     <button
-                      className="px-10 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+                      className="px-10 py-2 bg-green-500 ml-6 text-white rounded-md hover:bg-green-600"
                       onClick={onSave}
                     >
                       SAVE
@@ -924,7 +924,7 @@ const DnDFlow = () => {
                   )}
                   {selectedOption.length !== 0 && (
                     <button
-                      className="px-10 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+                      className="px-10 py-2 bg-green-500 ml-6 text-white rounded-md hover:bg-green-600"
                       onClick={onUpdateFlow}
                     >
                       Update

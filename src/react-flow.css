@@ -12,12 +12,6 @@
     font-size: 12px;
   }
   
-  .dndflow aside .description {
-    margin-bottom: 30px;
-    font-size: 30px;
-    color: whitesmoke;
-  }
-  
   .dndflow .dndnode {
     height: 80px;
     padding: 8px;
@@ -69,10 +63,6 @@
     margin-top: 10px;
   }
 
-  .flow-sec {
-    border-right: 2px solid rgb(246, 243, 243);
-    width: 25%;
-  }
   
   @media screen and (min-width: 768px) {
     .dndflow {
@@ -81,7 +71,8 @@
   
     .dndflow aside {
       width: 400px;
-      height: 65%;
+      margin-left: 10%;
+      height: 100%;
     }
   }
 
@@ -111,7 +102,7 @@
   }
 
 .settings {
-  margin-left: 80%;
+  margin-left: 90%;
   cursor: pointer;
   color: whitesmoke;
 }
