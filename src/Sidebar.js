@@ -3,6 +3,7 @@ import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import ListIcon from '@mui/icons-material/List';
 import PauseIcon from '@mui/icons-material/Pause';
 import ApiIcon from '@mui/icons-material/Api';
+import DynamicFormIcon from '@mui/icons-material/DynamicForm';
 import './sidebarCss.css';
 
 const Sidebar = () => {
@@ -36,6 +37,14 @@ const Sidebar = () => {
         </div>
         <div>
           <p>Perform an API request.</p>
+        </div>
+      </div>
+      <div className="dndnode form-node" onDragStart={(event) => onDragStart(event, 'Create Form')} draggable>
+        <div>
+          <DynamicFormIcon fontSize="medium" className="icon" /><span style={{ marginLeft: '22%' }}>Create Form</span>
+        </div>
+        <div>
+          <p>Create an input form.</p>
         </div>
       </div>
       <div className="dndnode output" onDragStart={(event) => onDragStart(event, 'End Of Flow')} draggable>

@@ -26,7 +26,7 @@
   }
   
   .dndflow .dndnode.input {
-    border-color: #0041d0;
+    border-color: greenyellow;
     color: whitesmoke;
   }
   
@@ -36,7 +36,12 @@
   }
 
   .dndflow .dndnode.api {
-    border-color: greenyellow;
+    border-color:#0041d0;
+    color: whitesmoke;
+  }
+
+  .dndflow .dndnode.form-node {
+    border-color: orangered;
     color: whitesmoke;
   }
 

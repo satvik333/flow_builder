@@ -723,43 +723,47 @@ const DnDFlow = () => {
                 </h1>
               </div>
               <hr className="divider" />
-              <h1
-                className="font-bold mb-1 mt-4 flex items-start"
-                style={{ fontSize: "15px" }}
-              >
-                Message Body:
-              </h1>
-              <div className="ckeditor-dark-mode mr-7">
-                <CKEditor
-                  editor={ClassicEditor}
-                  data={editedMessage}
-                  onChange={(event, editor) => {
-                    const data = editor.getData();
-                    onInputChange(data);
-                  }}
-                  config={{
-                    toolbar: [
-                      "heading",
-                      "|",
-                      "bold",
-                      "italic",
-                      "link",
-                      "bulletedList",
-                      "numberedList",
-                      "blockQuote",
-                    ],
-                    fontSize: {
-                      options: ["tiny", "small", "default", "big", "huge"],
-                    },
-                  }}
-                />
-              </div>
-              <button
-                className="px-10 mt-2 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-                onClick={onUpdate}
-              >
-                Update
-              </button>
+              { nodeData.data.label !== "Create Form node" &&
+                <>
+                  <h1
+                    className="font-bold mb-1 mt-4 flex items-start"
+                    style={{ fontSize: "15px" }}
+                  >
+                    Message Body:
+                  </h1>
+                  <div className="ckeditor-dark-mode mr-7">
+                    <CKEditor
+                      editor={ClassicEditor}
+                      data={editedMessage}
+                      onChange={(event, editor) => {
+                        const data = editor.getData();
+                        onInputChange(data);
+                      }}
+                      config={{
+                        toolbar: [
+                          "heading",
+                          "|",
+                          "bold",
+                          "italic",
+                          "link",
+                          "bulletedList",
+                          "numberedList",
+                          "blockQuote",
+                        ],
+                        fontSize: {
+                          options: ["tiny", "small", "default", "big", "huge"],
+                        },
+                      }}
+                    />
+                  </div>
+                  <button
+                    className="px-10 mt-2 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                    onClick={onUpdate}
+                  >
+                    Update
+                  </button>
+                </>
+              }
               <h1
                 className="font-bold mt-6 flex items-start"
                 style={{ fontSize: "15px" }}
