@@ -143,7 +143,20 @@ const DnDFlow = () => {
       const clickedElement = event.target;
       let attribute = clickedElement.getAttribute("data-testid");
 
-      if (attribute === "CancelIcon") {
+      if (clickedElement.tagName === 'path' && clickedElement.getAttribute('d') === 'M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2m5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12z') {
+        const parentElement = clickedElement.closest('[data-testid]');
+        if (parentElement) {
+          const attribute = parentElement.getAttribute("data-testid");
+          if (attribute === "CancelIcon") {
+            const nodeId = parentElement.closest(".react-flow__node")?.dataset.id;
+            if (nodeId) {
+              removeNode(nodeId);
+            }
+          }
+        }
+      }
+
+      if (attribute === "CancelIcon" ) {
         const nodeId = clickedElement.closest(".react-flow__node")?.dataset.id;
         if (nodeId) {
           removeNode(nodeId);
@@ -500,7 +513,7 @@ const DnDFlow = () => {
         };
       }
     }
-    console.log(decisionTree, "ddddddddddd");
+    console.log(decisionTree, "descion treeeee");
     // return decisionTree
   }
 

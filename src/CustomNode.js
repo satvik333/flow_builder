@@ -6,8 +6,6 @@ import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 
 function CustomNode({ data }) {
 
-  console.log(data,'datatatatatat')
-
   const truncatedMessage = data?.message?.length > 23
     ? `${data.message.slice(0, 23)}...`
     : data.message;
@@ -26,11 +24,11 @@ function CustomNode({ data }) {
             <div style={{ fontSize: '14px' }}>{data?.label}</div>
           </div>
           {data.label !== 'Trigger' && (
-            <div className="absolute pr-3 right-0 p-1">
+            <div className="absolute pr-3 right-0 p-1" data-testid="CancelIcon" style={{cursor: 'pointer'}}>
               <CancelIcon
                 fontSize="large" 
                 className="pb-2"
-                style={{ color: '#f56565', cursor: 'pointer' }}
+                style={{ color: '#f56565' }}
                 data-testid="CancelIcon"
               />
             </div>
