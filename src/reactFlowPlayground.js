@@ -8,6 +8,7 @@ import ReactFlow, {
   useReactFlow,
   Background,
 } from "reactflow";
+import CancelIcon from '@mui/icons-material/Cancel';
 import "reactflow/dist/style.css";
 import dagre from "dagre";
 import AddCommentIcon from "@mui/icons-material/AddComment";
@@ -84,6 +85,10 @@ const DnDFlow = () => {
   const [allApis, setAllApis] = useState(null);
   const [currentFlow, setCurrentFlow] = useState(null);
   const [selectedRadioOption, setSelectedRadioOption] = useState('');
+  const [formFields, setFormFields] = useState([
+    { title: `Input Field 1`, value: 'Enter Your Name' },
+    { title: `Input Field 2`, value: 'Enter Your Email' }
+  ]);
 
   const { screenToFlowPosition } = useReactFlow();
   const { setViewport } = useReactFlow();
@@ -451,9 +456,9 @@ const DnDFlow = () => {
       flow.flowName = flowKey;
       flow.clientId = "1234";
 
-      //convertFlowToDecisionTreeFlow(flow);
+      convertFlowToDecisionTreeFlow(flow);
 
-      saveFlow(flow);
+      //saveFlow(flow);
     }
     alert("Successfully Saved");
   }, [reactFlowInstance]);
@@ -485,14 +490,13 @@ const DnDFlow = () => {
       if (i !== 0) {
         decisionTree[i] = {
           message: nodes[i].data.message,
-          options:
-            nodes[i].data.label === "Options node"
-              ? getOptions(nodes[i])
-              : null,
-          answer:
-            nodes[i].data.label != "Options node" ? getOptions(nodes[i]) : null,
+          options: nodes[i].data.label === "Options node" ? getOptions(nodes[i]) : null,
+          answer: nodes[i].data.label != "Options node" ? getOptions(nodes[i]) : null,
           timeout: nodes[i].data.label === "Options node" ? "1" : null,
           action: actionType,
+          selectedApi: nodes[i].data.selectedApi || "",
+          optionType: nodes[i].data.selectedRadioOption || "",
+          formFields: nodes[i].data.label === "Create Form node" ? nodes[i].data.formFields : []
         };
       }
     }
@@ -593,7 +597,8 @@ const DnDFlow = () => {
                 actionName: actionName,
                 actionType: actionType,
                 selectedApi: selectedApi,
-                optionType: selectedRadioOption
+                optionType: selectedRadioOption,
+                formFields: formFields
                 // messages: messages
               },
             };
@@ -603,7 +608,7 @@ const DnDFlow = () => {
         return updatedNodes;
       });
     }
-  }, [editedMessage, nodeData, noOfNodes, actionName, actionType, selectedApi, selectedRadioOption]);
+  }, [editedMessage, nodeData, noOfNodes, actionName, actionType, selectedApi, selectedRadioOption, formFields]);
 
   function resetNodeData() {
     const lastNumber = nodeData?.id?.match(/\d+$/)[0];
@@ -701,6 +706,23 @@ const DnDFlow = () => {
     setSelectedRadioOption(event.target.value);
   };
 
+  const addField = () => {
+    setFormFields([
+      ...formFields,
+      { title: `Input Field ${formFields.length + 1}`, value: '' }
+    ]);
+  };
+
+  const handleFormChange = (index, event) => {
+    const newFields = [...formFields];
+    newFields[index].value = event.target.value;
+    setFormFields(newFields);
+  };
+
+  function removeInputField(index) {
+    setFormFields(formFields.filter((_, idx) => idx !== index));
+  }
+
   return (
     <div className="dndflow" style={{ width: "100%", height: "100vh" }}>
       <ReactFlowProvider>
@@ -710,6 +732,30 @@ const DnDFlow = () => {
             className="settings"
             onClick={enableSettings}
           />
+          {isSettings && (
+            <Modal isOpen={isSettings} onClose={() => setIsSettings(false)}>
+              <div className="pl-1 pr-2 flex justify-between mb-4">
+                <button
+                  style={{ width: "205px" }}
+                  className="py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                  onClick={() => onLayout("TB")}
+                >
+                  Vertical Layout
+                </button>
+                <button
+                  style={{ width: "195px" }}
+                  className="ml-2 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                  onClick={() => onLayout("LR")}
+                >
+                  Horizontal Layout
+                </button>
+              </div>
+              {/* <div className="pl-1 pr-2 flex justify-between mb-4">
+                <button style={{width: '51%'}} className="py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={() => setIsDarkMode(true)}>Dark Mode</button>
+                <button style={{width: '48%'}} className="ml-2 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={() => setIsDarkMode(false)}>Light Mode</button>
+              </div> */}
+            </Modal>
+          )}
           {nodeData && nodeData.data.label !== "Trigger" ? (
             <aside>
               <div style={{ display: "flex", alignItems: "center" }}>
@@ -790,6 +836,39 @@ const DnDFlow = () => {
                 value={actionType}
                 onChange={onActionTypeChange}
               />
+              { nodeData.data.label === "Create Form node" &&
+                <>
+                  <h1
+                    className="font-bold mt-2 mb-4 flex items-start"
+                    style={{ fontSize: "15px" }}
+                  >
+                    Form Input Fields :
+                  </h1>
+                  <div style={{ height: '280px', width: '93%',overflowY: 'auto', border: '1px solid #ccc', padding: '10px' }}>
+                    {formFields.map((field, index) => (
+                      <div key={index} style={{ marginBottom: '15px' }}>
+                        <h3 className="mr-8" style={{ display: 'block', marginBottom: '5px' }}>{field.title}</h3>
+                        <input
+                          className="input-field"
+                          type="text"
+                          value={field.value}
+                          onChange={(event) => handleFormChange(index, event)}
+                          style={{ padding: '5px', fontSize: '14px', borderRadius: "5px", border: '2px solid whitesmoke' }}
+                        />
+                        <CancelIcon
+                          fontSize="medium"
+                          className="ml-2"
+                          style={{ color: '#f56565', cursor: 'pointer' }}
+                          onClick={() => removeInputField(index)}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  <button className="mr-8" onClick={addField} style={{ marginTop: '20px', padding: '5px', fontSize: '14px', backgroundColor: "blue", borderRadius: "5px" }}>
+                    Add New Input Field
+                  </button>
+                </>
+              }
               {nodeData.data.label !== "End Of Flow node" && (
                 <>
                   <div style={{ width: "100%", fontSize: "18px" }}>
@@ -912,30 +991,6 @@ const DnDFlow = () => {
             </aside>
           ) : (
             <>
-              {isSettings && (
-                <Modal isOpen={isSettings} onClose={() => setIsSettings(false)}>
-                  <div className="pl-1 pr-2 flex justify-between mb-4">
-                    <button
-                      style={{ width: "205px" }}
-                      className="py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-                      onClick={() => onLayout("TB")}
-                    >
-                      Vertical Layout
-                    </button>
-                    <button
-                      style={{ width: "195px" }}
-                      className="ml-2 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-                      onClick={() => onLayout("LR")}
-                    >
-                      Horizontal Layout
-                    </button>
-                  </div>
-                  {/* <div className="pl-1 pr-2 flex justify-between mb-4">
-                    <button style={{width: '51%'}} className="py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={() => setIsDarkMode(true)}>Dark Mode</button>
-                    <button style={{width: '48%'}} className="ml-2 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onClick={() => setIsDarkMode(false)}>Light Mode</button>
-                  </div> */}
-                </Modal>
-              )}
               <Sidebar />
               <div>
                 <h1 className="flex items-start font-bold text-lg">

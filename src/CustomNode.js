@@ -6,6 +6,8 @@ import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 
 function CustomNode({ data }) {
 
+  console.log(data,'datatatatatat')
+
   const truncatedMessage = data?.message?.length > 23
     ? `${data.message.slice(0, 23)}...`
     : data.message;
@@ -50,6 +52,19 @@ function CustomNode({ data }) {
             </div>
           </>
         )}
+        {
+          data.label === 'Create Form node' && 
+          <>
+            <hr className="mt-2 mb-2" style={{width: '110%'}}/>
+            <ol>
+              {data?.formFields?.map((field, index) => (
+                <div key={index}>
+                  {field.value.length > 0 && <li className='flex flex-start'>{index+1} {field.value}</li>}
+                </div>
+              ))}
+            </ol>
+          </>
+        }
         {data.label === 'Options node' && data.hasChild && (
           <div className="absolute bottom-0 right-0 pt-6 pl-4">
             {!data.collapsed && (
