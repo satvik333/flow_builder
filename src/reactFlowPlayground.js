@@ -8,7 +8,7 @@ import ReactFlow, {
   useReactFlow,
   Background,
 } from "reactflow";
-import CancelIcon from '@mui/icons-material/Cancel';
+import DeleteIcon from '@mui/icons-material/Delete';
 import "reactflow/dist/style.css";
 import dagre from "dagre";
 import AddCommentIcon from "@mui/icons-material/AddComment";
@@ -86,8 +86,8 @@ const DnDFlow = () => {
   const [currentFlow, setCurrentFlow] = useState(null);
   const [selectedRadioOption, setSelectedRadioOption] = useState('');
   const [formFields, setFormFields] = useState([
-    { title: `Input Field 1`, value: 'Enter Your Name' },
-    { title: `Input Field 2`, value: 'Enter Your Email' }
+    { title: `Input Field 1`, value: 'Enter Your Name', required: false },
+    { title: `Input Field 2`, value: 'Enter Your Email', required: false }
   ]);
 
   const { screenToFlowPosition } = useReactFlow();
@@ -283,6 +283,10 @@ const DnDFlow = () => {
 
   const removeNode = (idToRemove) => {
     setNodeData(null);
+    setFormFields([
+      { title: `Input Field 1`, value: 'Enter Your Name', required: false },
+      { title: `Input Field 2`, value: 'Enter Your Email', required: false }
+    ]);
 
     const sourceNodeId = edges
       .filter((edge) => edge?.target === idToRemove)
@@ -534,6 +538,10 @@ const DnDFlow = () => {
   function onClear() {
     setNodes(initialNodes);
     setNodeData(null);
+    setFormFields([
+      { title: `Input Field 1`, value: 'Enter Your Name', required: false },
+      { title: `Input Field 2`, value: 'Enter Your Email', required: false }
+    ]);
   }
 
   const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
@@ -633,6 +641,10 @@ const DnDFlow = () => {
       nodeElement.style.borderColor = "";
     }
     setNodeData(null);
+    setFormFields([
+      { title: `Input Field 1`, value: 'Enter Your Name', required: false },
+      { title: `Input Field 2`, value: 'Enter Your Email', required: false }
+    ]);
     setEditedMessage(null);
     // setMessages([]);
   }
@@ -722,7 +734,7 @@ const DnDFlow = () => {
   const addField = () => {
     setFormFields([
       ...formFields,
-      { title: `Input Field ${formFields.length + 1}`, value: '' }
+      { title: `Input Field ${formFields.length + 1}`, value: '', required: false }
     ]);
   };
 
@@ -735,6 +747,17 @@ const DnDFlow = () => {
   function removeInputField(index) {
     setFormFields(formFields.filter((_, idx) => idx !== index));
   }
+
+  const handleCheckBox = (index) => {
+    setFormFields((prevFields) => 
+      prevFields.map((field, idx) => {
+        if (idx === index) {
+          return { ...field, required: !field.required };
+        }
+        return field;
+      })
+    );
+  };
 
   return (
     <div className="dndflow" style={{ width: "100%", height: "100vh" }}>
@@ -860,7 +883,7 @@ const DnDFlow = () => {
                   <div style={{ height: '280px', width: '93%',overflowY: 'auto', border: '1px solid #ccc', padding: '10px' }}>
                     {formFields.map((field, index) => (
                       <div key={index} style={{ marginBottom: '15px' }}>
-                        <h3 className="mr-8" style={{ display: 'block', marginBottom: '5px' }}>{field.title}</h3>
+                        <h3 className="mr-4" style={{ display: 'block', marginBottom: '5px' }}>{field.title}<span style={{marginLeft: '50%'}}>Required</span></h3>
                         <input
                           className="input-field"
                           type="text"
@@ -868,10 +891,17 @@ const DnDFlow = () => {
                           onChange={(event) => handleFormChange(index, event)}
                           style={{ padding: '5px', fontSize: '14px', borderRadius: "5px", border: '2px solid whitesmoke' }}
                         />
-                        <CancelIcon
+                        <input
+                          type="checkbox"
+                          checked={field.required}
+                          onChange={() => handleCheckBox(index)}
+                          className="ml-6 large-checkbox"
+                        />
+                        <DeleteIcon
                           fontSize="medium"
-                          className="ml-2"
-                          style={{ color: '#f56565', cursor: 'pointer' }}
+                          className="ml-1 mb-1"
+                          color="primary"
+                          style={{ cursor: 'pointer' }}
                           onClick={() => removeInputField(index)}
                         />
                       </div>
