@@ -900,8 +900,7 @@ const DnDFlow = () => {
                         <DeleteIcon
                           fontSize="medium"
                           className="ml-1 mb-1"
-                          color="primary"
-                          style={{ cursor: 'pointer' }}
+                          style={{ color: '#f56565', cursor: 'pointer' }}
                           onClick={() => removeInputField(index)}
                         />
                       </div>
