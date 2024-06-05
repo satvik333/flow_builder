@@ -80,7 +80,7 @@ const DnDFlow = () => {
   const [collapsedNodes, setCollapsedNodes] = useState({});
   const [allFlows, setAllFlows] = useState([{ flow_name: 'none' }]);
   const [selectedOption, setSelectedOption] = useState("");
-  const [selectedApi, setSelectedApi] = useState("");
+  const [selectedApi, setSelectedApi] = useState({api_name: ''});
   const [selectedId, setSelectedId] = useState(null);
   const [allApis, setAllApis] = useState(null);
   const [currentFlow, setCurrentFlow] = useState(null);
@@ -508,7 +508,7 @@ const DnDFlow = () => {
           answer: nodes[i].data.label != "Options node" ? getOptions(nodes[i]) : null,
           timeout: nodes[i].data.label === "Options node" ? "1" : null,
           action: actionType,
-          selectedApi: nodes[i].data.selectedApi || "",
+          selectedApi: nodes[i].data.selectedApi || '',
           optionType: nodes[i].data.selectedRadioOption || "",
           formFields: nodes[i].data.label === "Create Form node" ? nodes[i].data.formFields : []
         };
@@ -721,7 +721,10 @@ const DnDFlow = () => {
   }, [nodes])
   
   function handleApiChange(event) {
-    setSelectedApi(event.target.value);
+    const selectedApi = allApis.find((api) => api.id === Number(event.target.value));
+    if (selectedApi) {
+      setSelectedApi(selectedApi);
+    }
   }
 
   const handleRadioChange = (event) => {
@@ -997,20 +1000,20 @@ const DnDFlow = () => {
                   </h5>
                   <select
                     className="pl-2 mt-2 input-field mr-8 mb-6 py-2 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
-                    value={selectedApi}
+                    value={selectedApi.id || ''}
                     onChange={handleApiChange}
                     style={{ width: "92%", fontSize: '15px' }}
                   >
                     <option style={{ color: "white" }} value="" disabled>
                       Select an API
                     </option>
-                    {allApis?.map((api, index) => (
+                    {allApis?.map((api) => (
                       <option
                         style={{ color: "white" }}
-                        key={index}
-                        value={api.api_endpoint}
+                        key={api.id}
+                        value={api.id}
                       >
-                        {api.api_endpoint}
+                        {api.api_name}
                       </option>
                     ))}
                   </select>
