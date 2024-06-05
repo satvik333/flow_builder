@@ -877,33 +877,33 @@ const DnDFlow = () => {
                   >
                     Form Input Fields :
                   </h1>
-                  <div style={{ height: '45%', width: '93%',overflowY: 'auto', border: '1px solid #ccc', padding: '10px' }}>
-                    <button className="mb-2" onClick={addField} style={{ padding: '5px', fontSize: '14px', backgroundColor: "blue", borderRadius: "5px", marginLeft: '70%' }}>
+                  <div className="custom-scrollbar" style={{ height: '45%', width: '93%',overflowY: 'auto', border: '1px solid #ccc', padding: '10px' }}>
+                    <button className="mb-2" onClick={addField} style={{ padding: '5px', fontSize: '14px', backgroundColor: "blue", borderRadius: "5px", marginLeft: '75%' }}>
                       + Add New
                     </button>
                     {formFields.map((field, index) => (
                         <div key={index} style={{ marginBottom: '15px' }}>
-                        <h3 className="mr-4" style={{ display: 'block', marginBottom: '5px' }}>{field.title}:<span style={{marginLeft: '53%'}}>Required</span></h3>
-                        <label>{index+1}.</label>
-                        <input
-                          className="input-field ml-2"
-                          type="text"
-                          value={field.value}
-                          onChange={(event) => handleFormChange(index, event)}
-                          style={{ padding: '5px', fontSize: '14px', borderRadius: "5px", border: '2px solid whitesmoke' }}
-                        />
-                        <input
-                          type="checkbox"
-                          checked={field.required}
-                          onChange={() => handleCheckBox(index)}
-                          className="ml-6 large-checkbox"
-                        />
-                        <DeleteIcon
-                          fontSize="medium"
-                          className="ml-1 mb-1"
-                          style={{ color: '#f56565', cursor: 'pointer' }}
-                          onClick={() => removeInputField(index)}
-                        />
+                          <h3 className="mr-4" style={{ display: 'block', marginBottom: '5px' }}>{field.title}:<span style={{marginLeft: '53%'}}>Required</span></h3>
+                          <label>{index+1}.</label>
+                          <input
+                            className="input-field ml-2"
+                            type="text"
+                            value={field.value}
+                            onChange={(event) => handleFormChange(index, event)}
+                            style={{ padding: '5px', fontSize: '14px', borderRadius: "5px", border: '2px solid whitesmoke' }}
+                          />
+                          <input
+                            type="checkbox"
+                            checked={field.required}
+                            onChange={() => handleCheckBox(index)}
+                            className="ml-6 large-checkbox"
+                          />
+                          <DeleteIcon
+                            fontSize="medium"
+                            className="ml-1 mb-1"
+                            style={{ color: '#f56565', cursor: 'pointer' }}
+                            onClick={() => removeInputField(index)}
+                          />
                       </div>
                       ))}
                   </div>
