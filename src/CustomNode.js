@@ -5,7 +5,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 
 function CustomNode({ data }) {
-  console.log(data, 'datatatata');
+  // console.log(data, 'datatatata');
 
   const calculateWidth = () => {
     let baseWidth = 280; 
@@ -75,7 +75,7 @@ function CustomNode({ data }) {
           </>
         }
         {data.label === 'Options node' && data.hasChild && (
-          <div className="absolute bottom-0 right-0 pt-6 pl-4">
+          <div className="absolute bottom-0 right-0 mb-4 pl-4">
             {!data.collapsed && (
               <ArrowDropDownIcon
                 fontSize="large"

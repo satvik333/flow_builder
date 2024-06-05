@@ -23,7 +23,7 @@ import SettingsSuggestIcon from "@mui/icons-material/SettingsSuggest";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { convert } from "html-to-text";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import SendIcon from '@mui/icons-material/Send';
 import DownloadButton from "./DownloadButton";
 import {
   saveFlow,
@@ -84,7 +84,7 @@ const DnDFlow = () => {
   const [selectedId, setSelectedId] = useState(null);
   const [allApis, setAllApis] = useState(null);
   const [currentFlow, setCurrentFlow] = useState(null);
-  const [selectedRadioOption, setSelectedRadioOption] = useState('');
+  const [selectedRadioOption, setSelectedRadioOption] = useState('menu');
   const [formFields, setFormFields] = useState([]);
 
   const { screenToFlowPosition } = useReactFlow();
@@ -756,6 +756,20 @@ const DnDFlow = () => {
     );
   };
 
+  function countNodes(id) {
+    let counter = 0;
+    edges.forEach((edge) => {
+      if (edge.source === id) {
+        counter += 1;
+      }
+    });
+    setNoOfNodes(counter)
+  }
+
+  useEffect(() => {
+    if (nodeData?.data.label === 'Options node') countNodes(nodeData?.id);
+  }, [nodeData, edges])
+
   return (
     <div className="dndflow" style={{ width: "100%", height: "100vh" }}>
       <ReactFlowProvider>
@@ -920,8 +934,8 @@ const DnDFlow = () => {
                         >
                           Type:
                         </h1>
-                        <div className="mt-1" style={{marginRight: '70%'}}>
-                          <div>
+                        <div className="mt-2 flex" style={{marginRight: '70%'}}>
+                          <div className="flex">
                             <input
                               type="radio"
                               id="option1"
@@ -933,7 +947,7 @@ const DnDFlow = () => {
                             />
                             <label className="ml-2" htmlFor="option1">Menu</label>
                           </div>
-                          <div className="ml-4 mt-1">
+                          <div className="ml-8 flex">
                             <input
                               type="radio"
                               id="option2"
@@ -965,8 +979,8 @@ const DnDFlow = () => {
                             value={noOfNodes}
                             onChange={onNoOfNodeChange}
                           />
-                          <ArrowForwardIcon
-                            fontSize="large"
+                          <SendIcon
+                            fontSize="medium"
                             className="ml-2"
                             onClick={handleIconClick}
                           />
