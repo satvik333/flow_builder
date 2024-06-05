@@ -85,10 +85,7 @@ const DnDFlow = () => {
   const [allApis, setAllApis] = useState(null);
   const [currentFlow, setCurrentFlow] = useState(null);
   const [selectedRadioOption, setSelectedRadioOption] = useState('');
-  const [formFields, setFormFields] = useState([
-    { title: `Input Field 1`, value: 'Enter Your Name', required: false },
-    { title: `Input Field 2`, value: 'Enter Your Email', required: false }
-  ]);
+  const [formFields, setFormFields] = useState([]);
 
   const { screenToFlowPosition } = useReactFlow();
   const { setViewport } = useReactFlow();
@@ -880,12 +877,16 @@ const DnDFlow = () => {
                   >
                     Form Input Fields :
                   </h1>
-                  <div style={{ height: '280px', width: '93%',overflowY: 'auto', border: '1px solid #ccc', padding: '10px' }}>
+                  <div style={{ height: '45%', width: '93%',overflowY: 'auto', border: '1px solid #ccc', padding: '10px' }}>
+                    <button className="mb-2" onClick={addField} style={{ padding: '5px', fontSize: '14px', backgroundColor: "blue", borderRadius: "5px", marginLeft: '70%' }}>
+                      + Add New
+                    </button>
                     {formFields.map((field, index) => (
-                      <div key={index} style={{ marginBottom: '15px' }}>
-                        <h3 className="mr-4" style={{ display: 'block', marginBottom: '5px' }}>{field.title}<span style={{marginLeft: '50%'}}>Required</span></h3>
+                        <div key={index} style={{ marginBottom: '15px' }}>
+                        <h3 className="mr-4" style={{ display: 'block', marginBottom: '5px' }}>{field.title}:<span style={{marginLeft: '53%'}}>Required</span></h3>
+                        <label>{index+1}.</label>
                         <input
-                          className="input-field"
+                          className="input-field ml-2"
                           type="text"
                           value={field.value}
                           onChange={(event) => handleFormChange(index, event)}
@@ -904,11 +905,8 @@ const DnDFlow = () => {
                           onClick={() => removeInputField(index)}
                         />
                       </div>
-                    ))}
+                      ))}
                   </div>
-                  <button className="mr-8" onClick={addField} style={{ marginTop: '20px', padding: '5px', fontSize: '14px', backgroundColor: "blue", borderRadius: "5px" }}>
-                    Add New Input Field
-                  </button>
                 </>
               }
               {nodeData.data.label !== "End Of Flow node" && (
