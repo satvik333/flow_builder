@@ -3,6 +3,7 @@ import { Handle, Position } from 'reactflow';
 import CancelIcon from '@mui/icons-material/Cancel';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import Tooltip from '@mui/material/Tooltip';
 
 function CustomNode({ data }) {
   // console.log(data, 'datatatata');
@@ -76,20 +77,22 @@ function CustomNode({ data }) {
         }
         {data.label === 'Options node' && data.hasChild && (
           <div className="absolute bottom-0 right-0 mb-4 pl-4">
-            {!data.collapsed && (
-              <ArrowDropDownIcon
-                fontSize="large"
-                style={{ cursor: 'pointer' }}
-                data-testid="KeyboardArrowDownIcon"
-              />
-            )}
-            {data.collapsed && (
-              <ArrowDropUpIcon
-                fontSize="large"
-                style={{ cursor: 'pointer' }}
-                data-testid="KeyboardArrowUpIcon"
-              />
-            )}
+            <Tooltip title={data.collapsed ? "Maximize Subflow" : "Minimize Subflow"}>
+              {!data.collapsed && (
+                <ArrowDropDownIcon
+                  fontSize="large"
+                  style={{ cursor: 'pointer' }}
+                  data-testid="KeyboardArrowDownIcon"
+                />
+              )}
+              {data.collapsed && (
+                <ArrowDropUpIcon
+                  fontSize="large"
+                  style={{ cursor: 'pointer' }}
+                  data-testid="KeyboardArrowUpIcon"
+                />
+              )}
+            </Tooltip>
           </div>
         )}
       </div>
