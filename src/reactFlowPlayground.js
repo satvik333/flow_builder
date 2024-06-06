@@ -548,31 +548,46 @@ const DnDFlow = () => {
 
   const getNodeId = () => `randomnode_${+new Date()}`;
 
-  const onElementClick = useCallback((element) => {
+  const onElementClick = useCallback(async (element) => {
     if (element.nodes.length > 0) {
-      setNodeData(element.nodes[0]);
-      setEditedMessage(element.nodes[0].data.message);
-    }
-    const nodeId = element.nodes[0]?.data.id;
-    const lastNumber = nodeId?.match(/\d+$/)[0];
-    const previousNodeId = `dndnode_${parseInt(lastNumber) - 1}`;
-    let nodeElement = document.querySelector(
-      `[data-id="${previousNodeId}"] .shadow-md.rounded-md.bg-white.border-2.border-stone-400.relative`
-    );
-
-    if (!nodeElement) {
-      nodeElement = document.querySelector(
-        `[data-id="${nodeId}"] .shadow-md.rounded-md.bg-white.border-2.border-stone-400.relative`
+      const nodeData = element.nodes[0];
+      setNodeData(nodeData);
+      setEditedMessage(nodeData.data.message);
+  
+      const nodeId = nodeData.data.id;
+      const lastNumber = nodeId.match(/\d+$/)?.[0];
+      const previousNodeId = `dndnode_${parseInt(lastNumber) - 1}`;
+      let nodeElement = document.querySelector(
+        `[data-id="${previousNodeId}"] .shadow-md.rounded-md.bg-white.border-2.border-stone-400.relative`
       );
+  
+      if (!nodeElement) {
+        nodeElement = document.querySelector(
+          `[data-id="${nodeId}"] .shadow-md.rounded-md.bg-white.border-2.border-stone-400.relative`
+        );
+      }
+  
+      if (nodeElement) {
+        nodeElement.style.borderColor = "blue";
+      }
+  
+      setActionName(nodeData.data.actionName || "Action Name");
+      setActionType(nodeData.data.actionType || "Action Type");
+  
+      if (nodeData?.data.label === 'Options node') {
+        let apis = await getAllApis();
+        setAllApis(apis.result);
+        const selectedApi = apis.result.find((api) => api.id === nodeData.data?.selectedApi?.id);
+        if (selectedApi) {
+          setSelectedApi(selectedApi);
+        }
+      }
+  
+      if (nodeData?.data.label === 'Create Form node') {
+        setFormFields(nodeData.data.formFields);
+      }
     }
-
-    if (nodeElement) {
-      nodeElement.style.borderColor = "blue";
-    }
-
-    setActionName(element.nodes[0]?.data.actionName || "Action Name");
-    setActionType(element.nodes[0]?.data.actionType || "Action Type");
-  }, []);
+  }, [setNodeData, setEditedMessage, setActionName, setActionType, setSelectedApi, setAllApis, setFormFields]);
 
   useEffect(() => {
     nodes.forEach((node) => {
@@ -898,7 +913,7 @@ const DnDFlow = () => {
                     <button className="mb-2" onClick={addField} style={{ padding: '5px', fontSize: '14px', backgroundColor: "blue", borderRadius: "5px", marginLeft: '75%' }}>
                       + Add New
                     </button>
-                    {formFields.map((field, index) => (
+                    {formFields?.map((field, index) => (
                         <div key={index} style={{ marginBottom: '15px' }}>
                           <h3 className="mr-4" style={{ display: 'block', marginBottom: '5px' }}>{field.title}:<span style={{marginLeft: '53%'}}>Required</span></h3>
                           <label>{index+1}.</label>

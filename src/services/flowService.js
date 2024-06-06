@@ -23,6 +23,8 @@ async function saveFlow(flow) {
             hasChild: node.data.hasChild || false,
             collapsed: node.data.collapsed || false,
             direction: node.data.direction || 'TB',
+            selectedApi: node.data.selectedApi || "",
+            formFields: node.data.formFields || []
           },
         })),
         edges: flow.edges.map(edge => ({
@@ -64,6 +66,8 @@ async function updateFlow(flow) {
             hasChild: node.data.hasChild || false,
             collapsed: node.data.collapsed || false,
             direction: node.data.direction || 'TB',
+            selectedApi: node.data.selectedApi || "",
+            formFields: node.data.formFields || []
           },
         })),
         edges: flow.edges.map(edge => ({
