@@ -14,7 +14,7 @@ const Sidebar = () => {
 
   return (
     <aside>
-      <div className="description pr-4">Widget Library.</div>
+      <div className="description">Widget Library.</div>
       <div className="dndnode input" onDragStart={(event) => onDragStart(event, 'Message')} draggable>
         <div>
           <ChatBubbleIcon fontSize="medium" className="icon" /><span style={{ marginLeft: '19%' }}>Send Message</span>

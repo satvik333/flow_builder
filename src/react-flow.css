@@ -107,9 +107,16 @@
   }
 
 .settings {
-  margin-left: 90%;
   cursor: pointer;
   color: whitesmoke;
+}
+
+.setting-div {
+  width: 10px;
+  position: fixed;
+  top: 0;
+  width: fit-content;
+  margin-left: 17%;
 }
 
 .ck .ck-reset .ck-editor .ck-rounded-corners {

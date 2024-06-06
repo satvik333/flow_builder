@@ -43,6 +43,8 @@
     font-size: 30px;
     color: whitesmoke;
     text-align: center;
-    margin-right: 15%;
+    margin-left: 18%;
+    display: flex;
+    top: 0;
   }
   

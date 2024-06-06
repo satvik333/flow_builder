@@ -792,11 +792,13 @@ const DnDFlow = () => {
     <div className="dndflow" style={{ width: "100%", height: "100vh" }}>
       <ReactFlowProvider>
         <div className="flow-sec">
-          <SettingsSuggestIcon
-            fontSize="large"
-            className="settings"
-            onClick={enableSettings}
-          />
+          <div className="setting-div">
+            <SettingsSuggestIcon
+              fontSize="large"
+              className="settings mt-2"
+              onClick={enableSettings}
+            />
+          </div>
           {isSettings && (
             <Modal isOpen={isSettings} onClose={() => setIsSettings(false)}>
               <div className="pl-1 pr-2 flex justify-between mb-4">
