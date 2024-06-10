@@ -73,6 +73,7 @@ const DnDFlow = () => {
     const today = Date.now();
     return `flow_${today}`;
   });
+  const [formFields, setFormFields] = useState([]);
   const [actionName, setActionName] = useState("Action Name");
   const [actionType, setActionType] = useState("Action Type");
   const [dataLabel, setDataLabel] = useState(null);
@@ -85,7 +86,6 @@ const DnDFlow = () => {
   const [allApis, setAllApis] = useState(null);
   const [currentFlow, setCurrentFlow] = useState(null);
   const [selectedRadioOption, setSelectedRadioOption] = useState('menu');
-  const [formFields, setFormFields] = useState([]);
 
   const { screenToFlowPosition } = useReactFlow();
   const { setViewport } = useReactFlow();
@@ -280,10 +280,7 @@ const DnDFlow = () => {
 
   const removeNode = (idToRemove) => {
     setNodeData(null);
-    setFormFields([
-      { title: `Input Field 1`, value: 'Enter Your Name', required: false },
-      { title: `Input Field 2`, value: 'Enter Your Email', required: false }
-    ]);
+    setFormFields([]);
 
     const sourceNodeId = edges
       .filter((edge) => edge?.target === idToRemove)
@@ -536,10 +533,7 @@ const DnDFlow = () => {
   function onClear() {
     setNodes(initialNodes);
     setNodeData(null);
-    setFormFields([
-      { title: `Input Field 1`, value: 'Enter Your Name', required: false },
-      { title: `Input Field 2`, value: 'Enter Your Email', required: false }
-    ]);
+    setFormFields([]);
   }
 
   const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
@@ -654,10 +648,7 @@ const DnDFlow = () => {
       nodeElement.style.borderColor = "";
     }
     setNodeData(null);
-    setFormFields([
-      { title: `Input Field 1`, value: 'Enter Your Name', required: false },
-      { title: `Input Field 2`, value: 'Enter Your Email', required: false }
-    ]);
+    setFormFields([]);
     setEditedMessage(null);
     // setMessages([]);
   }
@@ -747,11 +738,29 @@ const DnDFlow = () => {
     setSelectedRadioOption(event.target.value);
   };
 
+
+  function countNodes(id) {
+    let counter = 0;
+    edges.forEach((edge) => {
+      if (edge.source === id) {
+        counter += 1;
+      }
+    });
+    setNoOfNodes(counter)
+  }
+
+  useEffect(() => {
+    if (nodeData?.data.label === 'Options node') countNodes(nodeData?.id);
+  }, [nodeData, edges])
+
   const addField = () => {
-    setFormFields([
-      ...formFields,
-      { title: `Input Field ${formFields.length + 1}`, value: '', required: false }
-    ]);
+    setFormFields((prevFormFields) => {
+        const arrayFormFields = Array.isArray(prevFormFields) ? prevFormFields : [];
+        return [
+            ...arrayFormFields,
+            { title: `Input Field ${arrayFormFields.length + 1}`, value: '', required: false }
+        ];
+    });
   };
 
   const handleFormChange = (index, event) => {
@@ -774,20 +783,6 @@ const DnDFlow = () => {
       })
     );
   };
-
-  function countNodes(id) {
-    let counter = 0;
-    edges.forEach((edge) => {
-      if (edge.source === id) {
-        counter += 1;
-      }
-    });
-    setNoOfNodes(counter)
-  }
-
-  useEffect(() => {
-    if (nodeData?.data.label === 'Options node') countNodes(nodeData?.id);
-  }, [nodeData, edges])
 
   return (
     <div className="dndflow" style={{ width: "100%", height: "100vh" }}>

@@ -63,7 +63,7 @@ function CustomNode({ data }) {
           </>
         )}
         {
-          data.label === 'Create Form node' &&
+          data.label === 'Create Form node' && data?.formFields?.length > 0 &&
           <>
             <hr className="mt-2 mb-2" style={{ width: '110%' }} />
             <ol>
