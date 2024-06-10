@@ -472,9 +472,10 @@ const DnDFlow = () => {
 
       convertFlowToDecisionTreeFlow(flow);
 
+      alert("Check Flow Name before Save");
+
       //saveFlow(flow);
     }
-    alert("Successfully Saved");
   }, [reactFlowInstance]);
 
   function convertFlowToDecisionTreeFlow(flowData) {
@@ -845,7 +846,7 @@ const DnDFlow = () => {
                     Message Body:
                   </h1>
                   <div className="ckeditor-dark-mode mr-7">
-                    <CKEditor
+                  <CKEditor
                       editor={ClassicEditor}
                       data={editedMessage}
                       onChange={(event, editor) => {
@@ -854,17 +855,21 @@ const DnDFlow = () => {
                       }}
                       config={{
                         toolbar: [
-                          "heading",
-                          "|",
-                          "bold",
-                          "italic",
-                          "link",
-                          "bulletedList",
-                          "numberedList",
-                          "blockQuote",
+                          'heading',
+                          '|',
+                          'bold',
+                          'italic',
+                          'link',
+                          'bulletedList',
+                          'numberedList',
+                          'blockQuote',
+                          'imageUpload',
                         ],
                         fontSize: {
-                          options: ["tiny", "small", "default", "big", "huge"],
+                          options: ['tiny', 'small', 'default', 'big', 'huge'],
+                        },
+                        ckfinder: {
+                          uploadUrl: 'http://localhost:8080/api-handler/upload-image',
                         },
                       }}
                     />
