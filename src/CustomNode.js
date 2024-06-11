@@ -11,7 +11,13 @@ function CustomNode({ data }) {
   const calculateWidth = () => {
     let baseWidth = 280; 
     if (data.label === 'Create Form node') {
-      baseWidth = 400; 
+      let maxVal = data?.formFields ? data?.formFields[0].value : 14;
+      for (let i=0;i<data?.formFields?.length;i++) {
+        if (data?.formFields[i].value > maxVal) {
+          maxVal = data?.formFields[i].value;
+        }
+      }
+      baseWidth = maxVal * 27; 
     }
     return baseWidth;
   };
@@ -63,13 +69,13 @@ function CustomNode({ data }) {
           </>
         )}
         {
-          data.label === 'Create Form node' && data?.formFields?.length > 0 &&
+          data.label === 'Create Form node' && data?.formFields?.some((val) => val?.value?.length > 0) &&
           <>
             <hr className="mt-2 mb-2" style={{ width: '110%' }} />
             <ol>
               {data?.formFields?.map((field, index) => (
                 <div key={index}>
-                  {field.value.length > 0 && <li className='flex flex-start'>{index + 1} {field.value} {field.required === true ? "(Required)" : "(Not Required)"}</li>}
+                  {field.value.length > 0 && <li className='flex flex-start'>{index + 1} {field.value.length > 19 ? `${field.value.slice(0, 19)}...` : field.value} {field.required === true ? "(Req)" : "(Not Req)"}</li>}
                 </div>
               ))}
             </ol>
