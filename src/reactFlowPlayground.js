@@ -87,6 +87,7 @@ const DnDFlow = () => {
   const [selectedRadioOption, setSelectedRadioOption] = useState('menu');
   const [selectedLayout, setSelectedLayout] = useState("");
   const [formFields, setFormFields] = useState([{ title: `Input Field 1`, value: '', required: false }]);
+  const [loading, setLoading] = useState(false);
 
   const { screenToFlowPosition } = useReactFlow();
   const { setViewport } = useReactFlow();
@@ -545,44 +546,50 @@ const DnDFlow = () => {
   const getNodeId = () => `randomnode_${+new Date()}`;
 
   const onElementClick = useCallback(async (element) => {
-    if (element.nodes.length > 0) {
-      const nodeData = element.nodes[0];
-      setNodeData(nodeData);
-      setEditedMessage(nodeData.data.message);
-  
-      const nodeId = nodeData.data.id;
-      const lastNumber = nodeId.match(/\d+$/)?.[0];
-      const previousNodeId = `dndnode_${parseInt(lastNumber) - 1}`;
-      let nodeElement = document.querySelector(
-        `[data-id="${previousNodeId}"] .shadow-md.rounded-md.bg-white.border-2.border-stone-400.relative`
-      );
-  
-      if (!nodeElement) {
-        nodeElement = document.querySelector(
-          `[data-id="${nodeId}"] .shadow-md.rounded-md.bg-white.border-2.border-stone-400.relative`
+    setLoading(true); 
+
+    setTimeout(async () => {
+      if (element.nodes.length > 0) {
+        const nodeData = element.nodes[0];
+        setNodeData(nodeData);
+        setEditedMessage(nodeData.data.message);
+    
+        const nodeId = nodeData.data.id;
+        const lastNumber = nodeId.match(/\d+$/)?.[0];
+        const previousNodeId = `dndnode_${parseInt(lastNumber) - 1}`;
+        let nodeElement = document.querySelector(
+          `[data-id="${previousNodeId}"] .shadow-md.rounded-md.bg-white.border-2.border-stone-400.relative`
         );
-      }
-  
-      if (nodeElement) {
-        nodeElement.style.borderColor = "blue";
-      }
-  
-      setActionName(nodeData.data.actionName || "");
-      setActionType(nodeData.data.actionType || "");
-  
-      if (nodeData?.data.label === 'Options node') {
-        let apis = await getAllApis();
-        setAllApis(apis.result);
-        const selectedApi = apis.result.find((api) => api.id === nodeData.data?.selectedApi?.id);
-        if (selectedApi) {
-          setSelectedApi(selectedApi);
+    
+        if (!nodeElement) {
+          nodeElement = document.querySelector(
+            `[data-id="${nodeId}"] .shadow-md.rounded-md.bg-white.border-2.border-stone-400.relative`
+          );
+        }
+    
+        if (nodeElement) {
+          nodeElement.style.borderColor = "blue";
+        }
+    
+        setActionName(nodeData.data.actionName || "");
+        setActionType(nodeData.data.actionType || "");
+    
+        if (nodeData?.data.label === 'Options node') {
+          let apis = await getAllApis();
+          setAllApis(apis.result);
+          const selectedApi = apis.result.find((api) => api.id === nodeData.data?.selectedApi?.id);
+          if (selectedApi) {
+            setSelectedApi(selectedApi);
+          }
+        }
+    
+        if (nodeData?.data.label === 'Create Form node') {
+          if (nodeData.data?.formFields?.length > 0) setFormFields(nodeData.data.formFields);
         }
       }
-  
-      if (nodeData?.data.label === 'Create Form node') {
-        if (nodeData.data?.formFields?.length > 0) setFormFields(nodeData.data.formFields);
-      }
-    }
+      
+      setLoading(false); 
+    }, 500);
   }, [setNodeData, setEditedMessage, setActionName, setActionType, setSelectedApi, setAllApis, setFormFields]);
 
   useEffect(() => {
@@ -796,7 +803,8 @@ const DnDFlow = () => {
     <div className="dndflow" style={{ width: "100%", height: "100vh" }}>
       <ReactFlowProvider>
         <div className="flow-sec">
-          {nodeData && nodeData.data.label !== "Trigger" ? (
+          {loading && <div style={{width: "20vw"}}><span class="loader"></span></div>}
+          {!loading && nodeData && nodeData.data.label !== "Trigger" ? (
             <aside>
               <div className="ml-1" style={{ display: "flex", alignItems: "center" }}>
                 <ArrowBackIcon
@@ -1045,6 +1053,7 @@ const DnDFlow = () => {
               }
             </aside>
           ) : (
+            !loading &&
             <>
               <Sidebar />
               <div>
