@@ -80,13 +80,13 @@ const DnDFlow = () => {
   const [collapsedNodes, setCollapsedNodes] = useState({});
   const [allFlows, setAllFlows] = useState([{ flow_name: 'none' }]);
   const [selectedOption, setSelectedOption] = useState("");
-  const [selectedApi, setSelectedApi] = useState({api_name: ''});
+  const [selectedApi, setSelectedApi] = useState({name: ''});
   const [selectedId, setSelectedId] = useState(null);
   const [allApis, setAllApis] = useState(null);
   const [currentFlow, setCurrentFlow] = useState(null);
   const [selectedRadioOption, setSelectedRadioOption] = useState('menu');
   const [selectedLayout, setSelectedLayout] = useState("");
-  const [formFields, setFormFields] = useState([{ title: `Input Field 1`, value: '', required: false }]);
+  const [formFields, setFormFields] = useState([{ title: `Input Field 1`, value: 'Enter Your Email', required: false }]);
   const [loading, setLoading] = useState(false);
 
   const { screenToFlowPosition } = useReactFlow();
@@ -282,7 +282,7 @@ const DnDFlow = () => {
 
   const removeNode = (idToRemove) => {
     setNodeData(null);
-    setFormFields([{ title: `Input Field 1`, value: '', required: false }]);
+    setFormFields([{ title: `Input Field 1`, value: 'Enter Your Email', required: false }]);
 
     const sourceNodeId = edges
       .filter((edge) => edge?.target === idToRemove)
@@ -535,7 +535,7 @@ const DnDFlow = () => {
   function onClear() {
     setNodes(initialNodes);
     setNodeData(null);
-    setFormFields([{ title: `Input Field 1`, value: '', required: false }]);
+    setFormFields([{ title: `Input Field 1`, value: 'Enter Your Email', required: false }]);
   }
 
   const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
@@ -656,7 +656,7 @@ const DnDFlow = () => {
       nodeElement.style.borderColor = "";
     }
     setNodeData(null);
-    setFormFields([{ title: `Input Field 1`, value: '', required: false }]);
+    setFormFields([{ title: `Input Field 1`, value: 'Enter Your Email', required: false }]);
     setEditedMessage(null);
     // setMessages([]);
   }
@@ -1019,7 +1019,7 @@ const DnDFlow = () => {
                         key={api.id}
                         value={api.id}
                       >
-                        {api.api_name}
+                        {api.name}
                       </option>
                     ))}
                   </select>
