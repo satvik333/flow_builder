@@ -1025,7 +1025,7 @@ const DnDFlow = () => {
                   </select>
                 </>
               )}
-              { nodeData.data.label !== "Api Caller node" &&
+              { nodeData.data.hasChild && nodeData.data.label !== "Api Caller node" &&
                 <>
                   <h2 style={{fontSize: '16px'}} className="mt-6 ml-2 flex items-start font-bold">
                     Select Flows:
