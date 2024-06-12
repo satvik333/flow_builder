@@ -152,7 +152,9 @@ const DnDFlow = () => {
           if (attribute === "CancelIcon") {
             const nodeId = parentElement.closest(".react-flow__node")?.dataset.id;
             if (nodeId) {
-              removeNode(nodeId);
+              setTimeout(() => {
+                removeNode(nodeId);
+              }, 200);
             }
           }
         }
@@ -161,7 +163,9 @@ const DnDFlow = () => {
       if (attribute === "CancelIcon" ) {
         const nodeId = clickedElement.closest(".react-flow__node")?.dataset.id;
         if (nodeId) {
-          removeNode(nodeId);
+          setTimeout(() => {
+            removeNode(nodeId);
+          }, 200)
         }
       } else if (attribute === "KeyboardArrowDownIcon") {
         const nodeId = clickedElement.closest(".react-flow__node")?.dataset.id;
@@ -301,7 +305,6 @@ const DnDFlow = () => {
 
     setNodes((prevNodes) => {
       const filteredNodes = prevNodes.filter((node) => node.id !== idToRemove);
-      
       if (
         sourceNodeId &&
         (descendantNodes === 1 || descendantNodes === 0)
@@ -596,7 +599,7 @@ const DnDFlow = () => {
       }
       
       setLoading(false); 
-    }, 500);
+    }, 300);
   }, [setNodeData, setEditedMessage, setActionName, setActionType, setSelectedApi, setAllApis, setFormFields]);
 
   useEffect(() => {
