@@ -294,14 +294,14 @@ const DnDFlow = () => {
     let descendantNodes = 0;
 
     edges.forEach((edge) => {
-      if (edge.source === sourceNodeId) {
+      if (edge?.source === sourceNodeId) {
         descendantNodes += 1;
       }
     })
 
     setNodes((prevNodes) => {
       const filteredNodes = prevNodes.filter((node) => node.id !== idToRemove);
-
+      
       if (
         sourceNodeId &&
         (descendantNodes === 1 || descendantNodes === 0)
@@ -808,7 +808,7 @@ const DnDFlow = () => {
       <ReactFlowProvider>
         <div className="flow-sec">
           {loading && <div style={{width: "20vw"}}><span className="loader"></span></div>}
-          {!loading && nodeData && nodeData.data.label !== "Trigger" ? (
+          {!loading && (nodeData && nodeData.data.label !== "Trigger") ? (
             <aside>
               <div className="ml-1" style={{ display: "flex", alignItems: "center" }}>
                 <ArrowBackIcon
