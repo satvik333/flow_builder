@@ -128,7 +128,7 @@ const DnDFlow = () => {
       let clientId = "1234";
       try {
         const flows = await getFlowsByClient(clientId);
-        setAllFlows(prev => [...prev, ...flows.result]);
+        setAllFlows(prev => [...flows.result]);
       } catch (error) {
         console.error("Error fetching flows:", error);
       }
@@ -473,7 +473,7 @@ const DnDFlow = () => {
 
       alert("Check Flow Name before Save");
 
-      //saveFlow(flow);
+      saveFlow(flow);
     }
   }, [reactFlowInstance]);
 
@@ -803,7 +803,7 @@ const DnDFlow = () => {
     <div className="dndflow" style={{ width: "100%", height: "100vh" }}>
       <ReactFlowProvider>
         <div className="flow-sec">
-          {loading && <div style={{width: "20vw"}}><span class="loader"></span></div>}
+          {loading && <div style={{width: "20vw"}}><span className="loader"></span></div>}
           {!loading && nodeData && nodeData.data.label !== "Trigger" ? (
             <aside>
               <div className="ml-1" style={{ display: "flex", alignItems: "center" }}>
@@ -849,7 +849,7 @@ const DnDFlow = () => {
                           options: ['tiny', 'small', 'default', 'big', 'huge'],
                         },
                         ckfinder: {
-                          uploadUrl: 'http://localhost:8080/api-handler/upload-image',
+                          uploadUrl: 'http://localhost:3002/api-handler/upload-image',
                         },
                       }}
                     />
@@ -1025,7 +1025,7 @@ const DnDFlow = () => {
                   </select>
                 </>
               )}
-              { nodeData.data.hasChild && nodeData.data.label !== "Api Caller node" &&
+              { !nodeData.data.hasChild && nodeData.data.label !== "Api Caller node" &&
                 <>
                   <h2 style={{fontSize: '16px'}} className="mt-6 ml-2 flex items-start font-bold">
                     Select Flows:

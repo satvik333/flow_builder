@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-let baseUrl = 'http://localhost:8080';
+let baseUrl = 'http://localhost:3002';
 
 async function saveFlow(flow) {
   try {
@@ -38,6 +38,7 @@ async function saveFlow(flow) {
     };
 
     const response = await axios.post(`${baseUrl}/save-flow`, transformedFlow);
+    alert("Successfully Saved");
     return response.data;
   } catch (error) {
     console.error('Error while saving flow', error);
