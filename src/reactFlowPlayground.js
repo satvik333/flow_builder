@@ -138,6 +138,9 @@ const DnDFlow = () => {
   }, []);
 
   useEffect(() => {
+
+    if (!selectedOption) setCurrentFlow({nodes: nodes, edges: edges});
+
     const handleClick = (event) => {
       const clickedElement = event.target;
       let attribute = clickedElement.getAttribute("data-testid");
@@ -288,16 +291,20 @@ const DnDFlow = () => {
       .filter((edge) => edge?.target === idToRemove)
       .map((edge) => edge?.source)[0]; 
 
-    const descendantNodes = sourceNodeId
-      ? getDescendantNodes(sourceNodeId)
-      : [];
+    let descendantNodes = 0;
+
+    edges.forEach((edge) => {
+      if (edge.source === sourceNodeId) {
+        descendantNodes += 1;
+      }
+    })
 
     setNodes((prevNodes) => {
       const filteredNodes = prevNodes.filter((node) => node.id !== idToRemove);
 
       if (
         sourceNodeId &&
-        (descendantNodes.length === 0 || descendantNodes.length === 1)
+        (descendantNodes === 1 || descendantNodes === 0)
       ) {
         return filteredNodes.map((node) =>
           node.id === sourceNodeId
@@ -727,9 +734,6 @@ const DnDFlow = () => {
     });
   };
 
-  useEffect(() => {
-    if (!selectedOption) setCurrentFlow({nodes: nodes, edges: edges});
-  }, [nodes])
   
   function handleApiChange(event) {
     const selectedApi = allApis.find((api) => api.id === Number(event.target.value));
@@ -1038,6 +1042,9 @@ const DnDFlow = () => {
                   >
                     <option style={{ color: "white" }} value="" disabled>
                       Select a Flow
+                    </option>
+                    <option style={{ color: "white" }} value="none">
+                      None
                     </option>
                     {allFlows?.map((option, index) => (
                       <option
