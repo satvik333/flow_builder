@@ -100,13 +100,14 @@ const DnDFlow = () => {
       if (!sourceNode) {
         return;
       }
-
+  
       if (
         sourceNode.data.label !== "Options node" &&
         sourceNode.data.hasChild === true
-      )
+      ) {
         return;
-
+      }
+  
       setNodes((prevNodes) =>
         prevNodes.map((node) =>
           node.id === sourceNode.id
@@ -114,14 +115,20 @@ const DnDFlow = () => {
             : node
         )
       );
-
-      setEdges((eds) => {
-        const newEdges = addEdge(params, eds);
-        return newEdges;
-      });
+  
+      setEdges((edges) => [
+        ...edges,
+        {
+          id: `reactflow__edge-${params.source}-${params.target}`,
+          source: params.source,
+          sourceHandle: params.sourceHandle,
+          target: params.target,
+          targetHandle: params.targetHandle,
+        },
+      ]);
     },
     [setEdges, nodes, connectingNodeId, setNodes]
-  );
+  );  
 
   useEffect(() => {
     const fetchFlows = async () => {
