@@ -274,7 +274,7 @@ const DnDFlow = () => {
     });
 
     edges?.forEach((edge) => {
-      dagreGraph.setEdge(edge.source, edge.target);
+      dagreGraph.setEdge(edge?.source, edge?.target);
     });
 
     dagre.layout(dagreGraph);
