@@ -16,6 +16,18 @@
   .input-field {
     background-color: black;
   }
+
+  .input-field:focus {
+    border: 1px solid;
+    border-image: conic-gradient(
+      from -160deg at 50% 50%,
+      #e92a67 0deg,
+      #a853ba 120deg,
+      #2a8af6 240deg,
+      #e92a67 360deg
+    ) 1;
+    font-weight: 600;
+  }
   
   .ck-editor__editable_inline {
     color: black;

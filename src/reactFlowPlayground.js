@@ -159,9 +159,7 @@ const DnDFlow = () => {
           if (attribute === "CancelIcon") {
             const nodeId = parentElement.closest(".react-flow__node")?.dataset.id;
             if (nodeId) {
-              setTimeout(() => {
-                removeNode(nodeId);
-              }, 200);
+              removeNode(nodeId);
             }
           }
         }
@@ -170,9 +168,7 @@ const DnDFlow = () => {
       if (attribute === "CancelIcon" ) {
         const nodeId = clickedElement.closest(".react-flow__node")?.dataset.id;
         if (nodeId) {
-          setTimeout(() => {
-            removeNode(nodeId);
-          }, 200)
+          removeNode(nodeId);
         }
       } else if (attribute === "KeyboardArrowDownIcon") {
         const nodeId = clickedElement.closest(".react-flow__node")?.dataset.id;
@@ -295,18 +291,17 @@ const DnDFlow = () => {
   };
 
   const removeNode = (idToRemove) => {
-    setNodeData(null);
     setFormFields([{ title: `Input Field 1`, value: 'Enter Your Email', required: false }]);
 
     const sourceNodeId = edges
       .filter((edge) => edge?.target === idToRemove)
-      .map((edge) => edge?.source)[0]; 
-    
+      .map((edge) => edge?.source)[0];
+      
     setNodes((prevNodes) => {
       const filteredNodes = prevNodes.filter((node) => node.id !== idToRemove);
       if (sourceNodeId) {
         return filteredNodes.map((node) =>
-          node.id === sourceNodeId
+          (node.id === sourceNodeId)
             ? { ...node, data: { ...node.data, hasChild: false } }
             : node
         );
@@ -314,6 +309,9 @@ const DnDFlow = () => {
 
       return filteredNodes;
     });
+    setTimeout(() => {
+      setNodeData(null);
+    }, 700);
   };
 
   const onDragOver = useCallback((event) => {
@@ -595,7 +593,7 @@ const DnDFlow = () => {
       }
       
       setLoading(false); 
-    }, 300);
+    }, 800);
   }, [setNodeData, setEditedMessage, setActionName, setActionType, setSelectedApi, setAllApis, setFormFields]);
 
   useEffect(() => {
@@ -723,9 +721,8 @@ const DnDFlow = () => {
           });
         };
 
-        let lastCurrentNode = currentFlow.nodes[currentFlow.nodes.length - 1];
 
-        newEdges.push({source: lastCurrentNode.id, target: nodes[1].id, id: Date.now()});
+        newEdges.push({source: nodeData.id, target: nodes[1].id, id: Date.now()});
 
         setNodes(uniqueById([...currentFlow.nodes, ...nodes]));
         setEdges(uniqueById([...currentFlow.edges, ...newEdges]));
@@ -1072,12 +1069,12 @@ const DnDFlow = () => {
                     paddingLeft: "1rem",
                     width: "19vw",
                   }}
-                  className="pl-2 input-field mt-2 mb-6 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg"
+                  className="pl-2 input-field mt-2 mb-2 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg"
                   type="text"
                   value={flowKey}
                   onChange={onFlowChange}
                 />
-                <div className="pl-10 pr-10 flex justify-between mt-10 mb-2">
+                <div className="pl-10 pr-10 flex justify-between mb-8">
                   <button
                     className="px-10 py-2 action-btns text-white rounded-md"
                     onClick={onClear}
