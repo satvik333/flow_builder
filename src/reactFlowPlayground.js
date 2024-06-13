@@ -301,21 +301,10 @@ const DnDFlow = () => {
     const sourceNodeId = edges
       .filter((edge) => edge?.target === idToRemove)
       .map((edge) => edge?.source)[0]; 
-
-    let descendantNodes = 0;
-
-    edges.forEach((edge) => {
-      if (edge?.source === sourceNodeId) {
-        descendantNodes += 1;
-      }
-    })
-
+    
     setNodes((prevNodes) => {
       const filteredNodes = prevNodes.filter((node) => node.id !== idToRemove);
-      if (
-        sourceNodeId &&
-        (descendantNodes === 1 || descendantNodes === 0)
-      ) {
+      if (sourceNodeId) {
         return filteredNodes.map((node) =>
           node.id === sourceNodeId
             ? { ...node, data: { ...node.data, hasChild: false } }
