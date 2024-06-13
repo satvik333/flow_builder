@@ -14,13 +14,11 @@ import "reactflow/dist/style.css";
 import dagre from "dagre";
 import AddCommentIcon from "@mui/icons-material/AddComment";
 import Sidebar from "./Sidebar";
-import Modal from "./modal";
 import "./react-flow.css";
 import "reactflow/dist/base.css";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import CustomNode from "./CustomNode";
-import SettingsSuggestIcon from "@mui/icons-material/SettingsSuggest";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { convert } from "html-to-text";
@@ -36,14 +34,11 @@ import {
 const dagreGraph = new dagre.graphlib.Graph();
 dagreGraph.setDefaultEdgeLabel(() => ({}));
 
-const nodeWidth = 172;
-const nodeHeight = 36;
 
 const nodeTypes = {
   custom: CustomNode,
 };
 
-let id = 0;
 const getId = () => `dndnode_${Date.now()}`;
 
 const DnDFlow = () => {
