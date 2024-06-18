@@ -876,11 +876,11 @@ const DnDFlow = () => {
                           <h3 className="mr-4" style={{ display: 'block', marginBottom: '5px' }}>{field.title}:<span style={{marginLeft: '53%'}}>Required</span></h3>
                           <label>{index+1}.</label>
                           <input
-                            className="input-field ml-2"
+                            className="ml-2"
                             type="text"
                             value={field.value}
                             onChange={(event) => handleFormChange(index, event)}
-                            style={{ padding: '5px', fontSize: '14px', borderRadius: "5px", border: '2px solid whitesmoke' }}
+                            style={{ padding: '5px', fontSize: '14px', borderRadius: "5px", backgroundColor: 'black', border: '2px solid whitesmoke' }}
                           />
                           <input
                             type="checkbox"
@@ -1055,7 +1055,7 @@ const DnDFlow = () => {
             <>
               <Sidebar />
               <div>
-                <h1 className="flex items-start font-bold text-lg">
+                <h1 className="flex mt-8 items-start font-bold text-lg">
                   Flow Title:
                 </h1>
                 <input
@@ -1064,7 +1064,7 @@ const DnDFlow = () => {
                     paddingLeft: "1rem",
                     width: "19vw",
                   }}
-                  className="pl-2 input-field mt-2 mb-2 py-3 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg"
+                  className="pl-2 input-field mt-2 mb-2 py-1 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg"
                   type="text"
                   value={flowKey}
                   onChange={onFlowChange}
