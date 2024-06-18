@@ -859,28 +859,28 @@ const DnDFlow = () => {
               }
               { nodeData.data.label === "Create Form node" &&
                 <>
-                  <div className="form-row">
+                  <div className="form-row flex items-center justify-between">
                     <h1
-                      className="font-bold mt-2 ml-2 mb-4 flex items-start"
+                      className="font-bold mt-2 ml-2 mb-4"
                       style={{ fontSize: "15px" }}
                     >
-                      Form Input Fields :
+                      Form Input Fields:
                     </h1>
-                    <button className="mb-2" onClick={addField} style={{ padding: '5px', fontSize: '14px', backgroundColor: "blue", borderRadius: "5px", marginLeft: '35%' }}>
-                        + Add New
+                    <button className="mb-2 add-new-btn" onClick={addField}>
+                      + Add New
                     </button>
                   </div>
                   <div className="custom-scrollbar ml-2 mr-4" style={{ height: '20%', width: '86%',overflowY: 'auto', border: '1px solid #ccc', padding: '10px' }}>
                     {formFields?.map((field, index) => (
                         <div key={index} style={{ marginBottom: '15px' }}>
-                          <h3 className="mr-4" style={{ display: 'block', marginBottom: '5px' }}>{field.title}:<span style={{marginLeft: '53%'}}>Required</span></h3>
+                          <h3 style={{ display: 'block', marginBottom: '5px' }}>{field.title}:<span style={{marginLeft: '30%'}}>Required</span></h3>
                           <label>{index+1}.</label>
                           <input
                             className="ml-2"
                             type="text"
                             value={field.value}
                             onChange={(event) => handleFormChange(index, event)}
-                            style={{ padding: '5px', fontSize: '14px', borderRadius: "5px", backgroundColor: 'black', border: '2px solid whitesmoke' }}
+                            style={{ width: '160px', padding: '5px', fontSize: '14px', borderRadius: "5px", backgroundColor: 'black', border: '1px solid whitesmoke' }}
                           />
                           <input
                             type="checkbox"
@@ -1055,7 +1055,7 @@ const DnDFlow = () => {
             <>
               <Sidebar />
               <div>
-                <h1 style={{marginTop: '45px'}} className="flex items-start font-bold text-lg">
+                <h1 style={{marginTop: '17px'}} className="flex items-start font-bold text-lg">
                   Flow Title:
                 </h1>
                 <input

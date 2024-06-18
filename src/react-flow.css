@@ -50,7 +50,7 @@
   .dndflow aside {
       width: 23vw;
       margin-left: 10%;
-      height: 68vh;
+      height: 100%;
   }
 }
 
@@ -338,10 +338,6 @@
   font-weight: 600;
 }
 
-.form-row {
-  display: flex;
-}
-
 .loader {
   width: 48px;
   height: 48px;
@@ -398,4 +394,23 @@
       transform: rotate(-360deg);
   }
 }
+
+
+.form-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.add-new-btn {
+  padding: 0.5rem 0.5rem;
+  background-color: blue;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 13%;
+}
+
 
