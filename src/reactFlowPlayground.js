@@ -1055,7 +1055,7 @@ const DnDFlow = () => {
             <>
               <Sidebar />
               <div>
-                <h1 className="flex mt-8 items-start font-bold text-lg">
+                <h1 style={{marginTop: '45px'}} className="flex items-start font-bold text-lg">
                   Flow Title:
                 </h1>
                 <input
@@ -1064,12 +1064,12 @@ const DnDFlow = () => {
                     paddingLeft: "1rem",
                     width: "19vw",
                   }}
-                  className="pl-2 input-field mt-2 mb-2 py-1 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg"
+                  className="pl-2 input-field mt-2 py-1 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg"
                   type="text"
                   value={flowKey}
                   onChange={onFlowChange}
                 />
-                <div className="pl-10 pr-10 flex justify-between mb-8">
+                <div className="pl-10 pr-10 flex justify-between">
                   <button
                     className="px-10 py-2 action-btns text-white rounded-md"
                     onClick={onClear}
@@ -1124,10 +1124,10 @@ const DnDFlow = () => {
           >
             <Panel position="top">
               <select
-                className="input-field py-1 px-2 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg"
+                className="input-field py-1 px-2 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
                 value={selectedLayout}
                 onChange={handleLayoutChange}
-                style={{ marginLeft: '64vw' }}
+                style={{ marginLeft: '61vw' }}
               >
                 <option style={{ color: "white" }} value="" disabled>
                   Layout
