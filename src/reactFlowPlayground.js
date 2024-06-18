@@ -1029,7 +1029,7 @@ const DnDFlow = () => {
                     className="pl-2 mt-2 ml-2 input-field mr-10 mb-6 py-2 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
                     value={selectedOption}
                     onChange={handleChange}
-                    style={{ width: "85%", fontSize: '15px' }}
+                    style={{ width: "86.5%", fontSize: '15px' }}
                   >
                     <option style={{ color: "white" }} value="" disabled>
                       Select a Flow
