@@ -803,11 +803,11 @@ const DnDFlow = () => {
             <aside>
               <div className="ml-1" style={{ display: "flex", alignItems: "center" }}>
                 <ArrowBackIcon
-                  fontSize="large"
+                  fontSize="medium"
                   style={{ cursor: "pointer", color: "whitesmoke" }}
                   onClick={resetNodeData}
                 />
-                <h1 className="ml-4 font-bold" style={{ fontSize: "25px" }}>
+                <h1 className="ml-4 font-bold" style={{ fontSize: "20px" }}>
                   Properties.
                 </h1>
               </div>
@@ -820,7 +820,7 @@ const DnDFlow = () => {
                   >
                     Message Body:
                   </h1>
-                  <div className="ckeditor-dark-mode ml-2 mr-12">
+                  <div className="ckeditor-dark-mode ml-2">
                   <CKEditor
                       editor={ClassicEditor}
                       data={editedMessage}
@@ -900,28 +900,28 @@ const DnDFlow = () => {
                 </>
               }
               <h1
-                className="font-bold mt-6 ml-2 flex items-start"
+                className="font-bold mt-2 ml-2 flex items-start"
                 style={{ fontSize: "15px" }}
               >
                 Action Name:
               </h1>
               <input
                 style={{ textAlign: "left", paddingLeft: "1rem", fontSize: '15px', width: '87%' }}
-                className="input-field mr-10 mt-2 mb-6 py-1 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
+                className="input-field mr-10 mt-2 ml-2 mb-6 py-1 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
                 type="text"
                 value={actionName}
                 placeholder="Action Name"
                 onChange={onActionNameChange}
               />
               <h1
-                className="font-bold mt-2 ml-2 flex items-start"
+                className="font-bold ml-2 flex items-start"
                 style={{ fontSize: "15px" }}
               >
                 Action Type:
               </h1>
               <input
                 style={{ textAlign: "left", paddingLeft: "1rem", fontSize: '15px', width: '87%' }}
-                className="input-field mr-10 mt-2 mb-6 py-1 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
+                className="input-field mr-10 mt-2 ml-2 mb-6 py-1 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
                 type="text"
                 value={actionType}
                 onChange={onActionTypeChange}
@@ -929,16 +929,16 @@ const DnDFlow = () => {
               />
               {nodeData.data.label !== "End Of Flow node" && (
                 <>
-                  <div style={{ width: "100%", fontSize: "18px" }}>
+                  <div style={{ width: "100%", fontSize: "17px" }}>
                     {nodeData.data.label === "Options node" && (
                       <>
                         <h1
-                          className="font-bold ml-2 mt-2 flex items-start"
-                          style={{ fontSize: "17px" }}
+                          className="font-bold ml-2 flex items-start"
+                          style={{ fontSize: "15px" }}
                         >
                           Type:
                         </h1>
-                        <div className="mt-2 ml-2 flex" style={{marginRight: '70%'}}>
+                        <div className="mt-2 ml-4 flex" style={{marginRight: '70%'}}>
                           <div className="flex">
                             <input
                               type="radio"
@@ -965,12 +965,12 @@ const DnDFlow = () => {
                           </div>
                         </div>
                         <h1
-                          className="font-bold mt-6 ml-2 flex items-start"
-                          style={{ fontSize: "15px" }}
+                          className="font-bold mt-2 ml-2 flex items-start"
+                          style={{ fontSize: "14px" }}
                         >
                           Enter the Number of Nodes:
                         </h1>
-                        <div className="ml-2 flex items-center mt-2 mb-6">
+                        <div className="ml-3 flex items-center mt-2 mb-6">
                           <input
                             style={{
                               textAlign: "left",
@@ -996,11 +996,11 @@ const DnDFlow = () => {
               )}
               {nodeData.data.label === "Api Caller node" && (
                 <>
-                  <h5 style={{fontSize: '16px'}} className="mt-6  ml-2 flex items-start font-bold">
+                  <h5 style={{fontSize: '15px'}} className="mt-6  ml-2 flex items-start font-bold">
                     Select API:
                   </h5>
                   <select
-                    className="pl-2 mt-2 input-field mr-10 mb-6 py-2 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
+                    className="pl-2 mt-2 ml-2 input-field mr-10 mb-6 py-2 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
                     value={selectedApi.id || ''}
                     onChange={handleApiChange}
                     style={{ width: "87%", fontSize: '15px' }}
@@ -1022,14 +1022,14 @@ const DnDFlow = () => {
               )}
               { !nodeData.data.hasChild && nodeData.data.label !== "Api Caller node" &&
                 <>
-                  <h2 style={{fontSize: '16px'}} className="mt-6 ml-2 flex items-start font-bold">
+                  <h2 style={{fontSize: '14px'}} className="ml-2 flex items-start font-bold">
                     Select Flows:
                   </h2>
                   <select
-                    className="pl-2 mt-2 input-field mr-10 mb-6 py-2 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
+                    className="pl-2 mt-2 ml-2 input-field mr-10 mb-6 py-2 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
                     value={selectedOption}
                     onChange={handleChange}
-                    style={{ width: "87%", fontSize: '15px' }}
+                    style={{ width: "85%", fontSize: '15px' }}
                   >
                     <option style={{ color: "white" }} value="" disabled>
                       Select a Flow

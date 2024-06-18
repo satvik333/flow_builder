@@ -262,8 +262,8 @@
 }
 
 .large-radio {
-  width: 13px;
-  height: 13px;
+  width: 11px;
+  height: 11px;
   transform: scale(1.5);
   margin-top: 5px;
 }
@@ -276,7 +276,7 @@
 }
 
 .ck-content {
-  height: 20vh;
+  height: 13vh;
   overflow-y: auto;
 }
 
@@ -411,6 +411,10 @@
   border-radius: 4px;
   cursor: pointer;
   margin-right: 13%;
+}
+
+.ckeditor-dark-mode {
+  width: 87%;
 }
 
 
