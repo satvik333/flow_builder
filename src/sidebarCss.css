@@ -49,6 +49,14 @@
   text-align: left; 
 }
 
+.sub-txt {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%;  
+  margin-left: 67px;
+}
+
 .dndflow aside .description {
   margin-bottom: 20px;
   font-size: 30px;
