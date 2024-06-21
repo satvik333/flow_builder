@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-let baseUrl = 'http://localhost:8080/api';
+let baseUrl = 'http://34.123.234.76/api';
 
 async function saveFlow(flow) {
   try {
