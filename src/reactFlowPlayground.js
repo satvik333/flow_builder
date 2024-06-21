@@ -844,7 +844,7 @@ const DnDFlow = () => {
                           options: ['tiny', 'small', 'default', 'big', 'huge'],
                         },
                         ckfinder: {
-                          uploadUrl: 'http://localhost:3002/api-handler/upload-image',
+                          uploadUrl: 'http://localhost:8080/api/api-handler/upload-image',
                         },
                       }}
                     />
