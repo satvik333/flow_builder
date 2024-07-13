@@ -64,10 +64,7 @@ const DnDFlow = () => {
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [nodeData, setNodeData] = useState(null);
   const [editedMessage, setEditedMessage] = useState(null);
-  const [flowKey, setFlowKey] = useState(() => {
-    const today = Date.now();
-    return `flow_${today}`;
-  });
+  const [flowKey, setFlowKey] = useState('');
   const [actionName, setActionName] = useState("");
   const [actionType, setActionType] = useState("");
   const [dataLabel, setDataLabel] = useState(null);
@@ -81,7 +78,7 @@ const DnDFlow = () => {
   const [currentFlow, setCurrentFlow] = useState(null);
   const [selectedRadioOption, setSelectedRadioOption] = useState('menu');
   const [selectedLayout, setSelectedLayout] = useState("");
-  const [formFields, setFormFields] = useState([{ title: `Input Field 1`, value: 'Enter Your Email', required: false }]);
+  const [formFields, setFormFields] = useState([{ title: `Input Field 1`, value: 'Email', required: false }]);
   const [loading, setLoading] = useState(false);
 
   const { screenToFlowPosition } = useReactFlow();
@@ -130,7 +127,7 @@ const DnDFlow = () => {
       let clientId = "1234";
       try {
         const flows = await getFlowsByClient(clientId);
-        setAllFlows(prev => [...flows.result]);
+        setAllFlows(prev => [...flows?.result]);
       } catch (error) {
         console.error("Error fetching flows:", error);
       }
@@ -801,26 +798,26 @@ const DnDFlow = () => {
           {loading && <div style={{width: "20vw"}}><span className="loader"></span></div>}
           {!loading && (nodeData && nodeData.data.label !== "Trigger") ? (
             <aside>
-              <div className="ml-1" style={{ display: "flex", alignItems: "center" }}>
+              <div style={{ display: "flex", alignItems: "center" }}>
                 <ArrowBackIcon
-                  fontSize="medium"
-                  style={{ cursor: "pointer", color: "whitesmoke" }}
+                  fontSize="small"
+                  style={{ cursor: "pointer", color: "whitesmoke", marginLeft: '17%' }}
                   onClick={resetNodeData}
                 />
-                <h1 className="ml-4 font-bold" style={{ fontSize: "20px" }}>
-                  Properties.
+                <h1 className="ml-2 font-bold" style={{ fontSize: "16px" }}>
+                  Properties
                 </h1>
               </div>
               <hr className="divider" />
               { nodeData.data.label !== "Create Form node" &&
                 <>
                   <h1
-                    className="font-bold mb-1 mt-4 ml-2 flex items-start"
-                    style={{ fontSize: "15px" }}
+                    className="font-bold mb-1 mt-4 flex items-start"
+                    style={{ fontSize: "12px", marginLeft: '18%' }}
                   >
                     Message Body:
                   </h1>
-                  <div className="ckeditor-dark-mode ml-2">
+                  <div className="ckeditor">
                   <CKEditor
                       editor={ClassicEditor}
                       data={editedMessage}
@@ -850,7 +847,7 @@ const DnDFlow = () => {
                     />
                   </div>
                   <button
-                    className="px-10 mt-3 mr-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                    className="px-4 mt-3 mr-4 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600"
                     onClick={onUpdate}
                   >
                     Update
@@ -861,67 +858,67 @@ const DnDFlow = () => {
                 <>
                   <div className="form-row flex items-center justify-between">
                     <h1
-                      className="font-bold mt-2 ml-2 mb-4"
-                      style={{ fontSize: "15px" }}
+                      className="font-bold mt-2 mb-4"
+                      style={{ fontSize: "12px", marginLeft: '18%' }}
                     >
                       Form Input Fields:
                     </h1>
                     <button className="mb-2 add-new-btn" onClick={addField}>
-                      + Add New
+                      + Add
                     </button>
                   </div>
-                  <div className="custom-scrollbar ml-2 mr-4" style={{ height: '20%', width: '86%',overflowY: 'auto', border: '1px solid #ccc', padding: '10px' }}>
+                  <div className="custom-scrollbar" style={{ minHeight: '10px', maxHeight: '300px', width: '58%'}}>
                     {formFields?.map((field, index) => (
+                      index < 5 ? (
                         <div key={index} style={{ marginBottom: '15px' }}>
-                          <h3 style={{ display: 'block', marginBottom: '5px' }}>{field.title}:<span style={{marginLeft: '30%'}}>Required</span></h3>
-                          <label>{index+1}.</label>
+                          <p style={{ display: 'block', marginBottom: '5px', marginRight: '25px' }}>{field.title}:<span style={{marginLeft: '32px'}}>Required</span></p>
                           <input
-                            className="ml-2"
                             type="text"
                             value={field.value}
                             onChange={(event) => handleFormChange(index, event)}
-                            style={{ width: '160px', padding: '5px', fontSize: '14px', borderRadius: "5px", backgroundColor: 'black', border: '1px solid whitesmoke' }}
+                            style={{ width: '105px', padding: '5px', fontSize: '10px', borderRadius: "3px", backgroundColor: 'black', border: '1px solid whitesmoke' }}
                           />
                           <input
                             type="checkbox"
                             checked={field.required}
                             onChange={() => handleCheckBox(index)}
-                            className="ml-6 large-checkbox"
+                            className="ml-4 small-checkbox"
                           />
                           <DeleteIcon
-                            fontSize="medium"
-                            className="ml-1 mb-1"
+                            fontSize="small"
+                            className="ml-4 mb-2"
                             style={{ color: '#f56565', cursor: 'pointer' }}
                             onClick={() => removeInputField(index)}
                           />
-                      </div>
-                      ))}
+                        </div>
+                      ) : null
+                    ))}
                   </div>
                 </>
               }
               <h1
-                className="font-bold mt-2 ml-2 flex items-start"
-                style={{ fontSize: "15px" }}
+                className="font-bold mt-2 flex items-start"
+                style={{ fontSize: "12px", marginLeft: '18%' }}
               >
                 Action Name:
               </h1>
               <input
-                style={{ textAlign: "left", paddingLeft: "1rem", fontSize: '15px', width: '87%' }}
-                className="input-field mr-10 mt-2 ml-2 mb-6 py-1 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
+                style={{ textAlign: "left", paddingLeft: "0.5rem", fontSize: '12px', width: '57%' }}
+                className="input-field mr-10 mt-2 ml-4 mb-6 py-1 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
                 type="text"
                 value={actionName}
                 placeholder="Action Name"
                 onChange={onActionNameChange}
               />
               <h1
-                className="font-bold ml-2 flex items-start"
-                style={{ fontSize: "15px" }}
+                className="font-bold flex items-start"
+                style={{ fontSize: "12px", marginLeft: '18%' }}
               >
                 Action Type:
               </h1>
               <input
-                style={{ textAlign: "left", paddingLeft: "1rem", fontSize: '15px', width: '87%' }}
-                className="input-field mr-10 mt-2 ml-2 mb-6 py-1 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
+                style={{ textAlign: "left", paddingLeft: "0.5rem", fontSize: '12px', width: '57%' }}
+                className="input-field mr-10 mt-2 ml-4 mb-6 py-1 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
                 type="text"
                 value={actionType}
                 onChange={onActionTypeChange}
@@ -929,16 +926,16 @@ const DnDFlow = () => {
               />
               {nodeData.data.label !== "End Of Flow node" && (
                 <>
-                  <div style={{ width: "100%", fontSize: "17px" }}>
+                  <div style={{ width: "100%", fontSize: "12px" }}>
                     {nodeData.data.label === "Options node" && (
                       <>
                         <h1
-                          className="font-bold ml-2 flex items-start"
-                          style={{ fontSize: "15px" }}
+                          className="font-bold flex items-start"
+                          style={{ fontSize: "12px", marginLeft: '18%' }}
                         >
                           Type:
                         </h1>
-                        <div className="mt-2 ml-4 flex" style={{marginRight: '70%'}}>
+                        <div className="mt-2 flex" style={{marginLeft: '18%'}}>
                           <div className="flex">
                             <input
                               type="radio"
@@ -964,9 +961,9 @@ const DnDFlow = () => {
                             <label className="ml-2" htmlFor="option2">Buttons</label>
                           </div>
                         </div>
-                        <h1
-                          className="font-bold mt-2 ml-2 flex items-start"
-                          style={{ fontSize: "14px" }}
+                        {/* <h1
+                          className="font-bold mt-3 flex items-start"
+                          style={{ fontSize: "12px", marginLeft: '18%' }}
                         >
                           Enter the Number of Nodes:
                         </h1>
@@ -975,8 +972,8 @@ const DnDFlow = () => {
                             style={{
                               textAlign: "left",
                               paddingLeft: "1rem",
-                              width: "80%",
-                              fontSize: '16px'
+                              width: "57%",
+                              fontSize: '12px'
                             }}
                             className="input-field py-1 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
                             type="text"
@@ -988,7 +985,7 @@ const DnDFlow = () => {
                             className="ml-2"
                             onClick={handleIconClick}
                           />
-                        </div>
+                        </div> */}
                       </>
                     )}
                   </div>
@@ -1022,14 +1019,14 @@ const DnDFlow = () => {
               )}
               { !nodeData.data.hasChild && nodeData.data.label !== "Api Caller node" &&
                 <>
-                  <h2 style={{fontSize: '14px'}} className="ml-2 flex items-start font-bold">
+                  <h2 style={{fontSize: '12px', marginLeft: '18%'}} className="ml-2  mt-4 flex items-start font-bold">
                     Select Flows:
                   </h2>
                   <select
-                    className="pl-2 mt-2 ml-2 input-field mr-10 mb-6 py-2 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
+                    className="pl-2 mt-2 ml-4 input-field mr-10 mb-6 py-1 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
                     value={selectedOption}
                     onChange={handleChange}
-                    style={{ width: "86.5%", fontSize: '15px' }}
+                    style={{ width: "57%", fontSize: '12px' }}
                   >
                     <option style={{ color: "white" }} value="" disabled>
                       Select a Flow
@@ -1055,30 +1052,31 @@ const DnDFlow = () => {
             <>
               <Sidebar />
               <div>
-                <h1 style={{marginTop: '17px'}} className="flex items-start font-bold text-lg">
+                <h1 style={{marginTop: '17px', marginLeft: '32px'}} className="flex items-start font-bold text-sm">
                   Flow Title:
                 </h1>
                 <input
                   style={{
                     textAlign: "left",
                     paddingLeft: "1rem",
-                    width: "19vw",
+                    width: "73%",
                   }}
-                  className="pl-2 input-field mt-2 py-1 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-lg"
+                  className="pl-2 input-field mt-2 py-1 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-sm"
                   type="text"
                   value={flowKey}
                   onChange={onFlowChange}
+                  placeholder="Enter the flow Name"
                 />
                 <div className="pl-10 pr-10 flex justify-between">
                   <button
-                    className="px-10 py-2 action-btns text-white rounded-md"
+                    className="action-btns text-white rounded-md"
                     onClick={onClear}
                   >
                     CLEAR
                   </button>
                   {selectedOption.length == 0 && (
                     <button
-                      className="px-10 py-2 action-btns ml-6 text-white rounded-md"
+                      className="action-btns ml-6 text-white rounded-md"
                       onClick={onSave}
                     >
                       SAVE
@@ -1086,7 +1084,7 @@ const DnDFlow = () => {
                   )}
                   {selectedOption.length !== 0 && (
                     <button
-                      className="px-10 py-2 action-btns ml-6 text-white rounded-md"
+                      className="action-btns ml-6 text-white rounded-md"
                       onClick={onUpdateFlow}
                     >
                       UPDATE

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-let baseUrl = 'http://34.123.234.76/api';
+let baseUrl = 'https://api.codebrewery.codes/api';
 
 async function saveFlow(flow) {
   try {

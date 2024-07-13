@@ -281,23 +281,27 @@
 }
 
 .custom-scrollbar {
-  scrollbar-width: thin;
+  scrollbar-width: 0.5px;
   scrollbar-color: grey;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 5px;
+  margin-left: 60px;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
   width: 3px;
-  height: 5px;
+  height: 3px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
   background: #f1f1f1;
-  border-radius: 10px;
+  border-radius: 2px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background: grey;
-  border-radius: 10px;
+  border-radius: 2px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
@@ -309,7 +313,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: 2px solid;
+  border: 1px solid;
   border-image: conic-gradient(
       from -160deg at 50% 50%,
       #e92a67 0deg,
@@ -323,11 +327,13 @@
   margin-top: 40px;
   background-color: black;
   color: whitesmoke;
-  width: 6vw;
+  width: 5vw;
+  padding: 5px;
+  font-size: 12px;
 }
 
 .action-btns:hover {
-  border: 4px solid;
+  border: 2px solid;
   border-image: conic-gradient(
       from -160deg at 50% 50%,
       #e92a67 0deg,
@@ -335,7 +341,7 @@
       #2a8af6 240deg,
       #e92a67 360deg
   ) 1;
-  font-weight: 600;
+  font-weight: 400;
 }
 
 .loader {
@@ -404,17 +410,19 @@
 }
 
 .add-new-btn {
-  padding: 0.5rem 0.5rem;
+  padding: 3px;
   background-color: blue;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 3px;
+  font-size: 12px;
   cursor: pointer;
-  margin-right: 13%;
+  margin-right: 25%;
 }
 
-.ckeditor-dark-mode {
-  width: 87%;
+.ckeditor {
+  width: 57%;
+  margin-left: 18%;
 }
 
 
