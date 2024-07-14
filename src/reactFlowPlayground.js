@@ -459,19 +459,39 @@ const DnDFlow = () => {
     ]
   );
 
-  const onSave = useCallback(() => {
+  // const onSave = useCallback(() => {
+  //   if (reactFlowInstance) {
+  //     if (!flowKey) {
+  //       alert("Please Add Flow Name before you Save");
+  //       return; 
+  //     }
+
+  //     let flow = reactFlowInstance.toObject();
+  //     flow.flowName = flowKey;
+  //     flow.clientId = "1234";
+
+  //     convertFlowToDecisionTreeFlow(flow);
+
+  //     saveFlow(flow);
+  //   }
+  // }, [reactFlowInstance]);
+
+  function onSave() {
     if (reactFlowInstance) {
+      if (!flowKey) {
+        alert("Please Add Flow Name before you Save");
+        return; 
+      }
+
       let flow = reactFlowInstance.toObject();
       flow.flowName = flowKey;
       flow.clientId = "1234";
 
       convertFlowToDecisionTreeFlow(flow);
 
-      alert("Check Flow Name before Save");
-
       saveFlow(flow);
     }
-  }, [reactFlowInstance]);
+  };
 
   function convertFlowToDecisionTreeFlow(flowData) {
     let decisionTree = {};
@@ -657,7 +677,7 @@ const DnDFlow = () => {
     // setMessages([]);
   }
 
-  const onFlowChange = (event) => {
+  function onFlowChange(event) {
     setFlowKey(event.target.value);
   };
 
@@ -993,14 +1013,14 @@ const DnDFlow = () => {
               )}
               {nodeData.data.label === "Api Caller node" && (
                 <>
-                  <h5 style={{fontSize: '15px'}} className="mt-6  ml-2 flex items-start font-bold">
+                  <h5 style={{fontSize: '12px', marginLeft: '60px'}} className="mt-6 flex items-start font-bold">
                     Select API:
                   </h5>
                   <select
-                    className="pl-2 mt-2 ml-2 input-field mr-10 mb-6 py-2 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
+                    className="pl-2 mt-2 ml-4 input-field mr-10 mb-6 py-1 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
                     value={selectedApi.id || ''}
                     onChange={handleApiChange}
-                    style={{ width: "87%", fontSize: '15px' }}
+                    style={{ width: "57%", fontSize: '12px' }}
                   >
                     <option style={{ color: "white" }} value="" disabled>
                       Select an API
@@ -1125,7 +1145,7 @@ const DnDFlow = () => {
                 className="input-field py-1 px-2 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
                 value={selectedLayout}
                 onChange={handleLayoutChange}
-                style={{ marginLeft: '61vw' }}
+                style={{ marginLeft: '61vw', fontSize: '12px' }}
               >
                 <option style={{ color: "white" }} value="" disabled>
                   Layout
