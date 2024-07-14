@@ -78,6 +78,7 @@ const DnDFlow = () => {
   const [currentFlow, setCurrentFlow] = useState(null);
   const [selectedRadioOption, setSelectedRadioOption] = useState('menu');
   const [selectedLayout, setSelectedLayout] = useState("");
+  const [mode, setMode] = useState('');
   const [formFields, setFormFields] = useState([{ title: `Input Field 1`, value: 'Email', required: false }]);
   const [loading, setLoading] = useState(false);
 
@@ -283,7 +284,7 @@ const DnDFlow = () => {
   };
 
   const removeNode = (idToRemove) => {
-    setFormFields([{ title: `Input Field 1`, value: 'Enter Your Email', required: false }]);
+    setFormFields([{ title: `Input Field 1`, value: 'Email', required: false }]);
 
     const sourceNodeId = edges
       .filter((edge) => edge?.target === idToRemove)
@@ -771,13 +772,20 @@ const DnDFlow = () => {
 
   const addField = () => {
     setFormFields((prevFormFields) => {
-        const arrayFormFields = Array.isArray(prevFormFields) ? prevFormFields : [];
-        return [
-            ...arrayFormFields,
-            { title: `Input Field ${arrayFormFields.length + 1}`, value: '', required: false }
-        ];
+      const arrayFormFields = Array.isArray(prevFormFields) ? prevFormFields : [];
+  
+      const hasEmptyValue = arrayFormFields.some((field) => field.value === '');
+      if (hasEmptyValue) {
+        alert('Please add the input field value');
+        return arrayFormFields; 
+      }
+  
+      return [
+        ...arrayFormFields,
+        { title: `Input Field ${arrayFormFields.length + 1}`, value: '', required: false }
+      ];
     });
-  };
+  };  
 
   const handleFormChange = (index, event) => {
     const newFields = [...formFields];
@@ -810,6 +818,9 @@ const DnDFlow = () => {
     }
   };
 
+  function handleModeChange(event) {
+    setMode(event.target.value);
+  }
 
   return (
     <div className="dndflow" style={{ width: "100%", height: "100vh" }}>
@@ -1140,12 +1151,12 @@ const DnDFlow = () => {
             proOptions={{ hideAttribution: true }}
             snapToGrid={true}
           >
-            <Panel position="top">
+            <Panel position="top" style={{marginLeft:'73%'}}>
               <select
                 className="input-field py-1 px-2 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
                 value={selectedLayout}
                 onChange={handleLayoutChange}
-                style={{ marginLeft: '61vw', fontSize: '12px' }}
+                style={{ fontSize: '12px' }}
               >
                 <option style={{ color: "white" }} value="" disabled>
                   Layout
@@ -1155,6 +1166,24 @@ const DnDFlow = () => {
                 </option>
                 <option style={{ color: "white" }} value="horizontalLR">
                   Horizontal
+                </option>
+              </select>
+            </Panel>
+            <Panel position="top" style={{marginLeft:'81%'}}>
+              <select
+                className="input-field py-1 px-2 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
+                value={mode}
+                onChange={handleModeChange}
+                style={{ fontSize: '12px' }}
+              >
+                <option style={{ color: "white" }} value="" disabled>
+                  Modes
+                </option>
+                <option style={{ color: "white" }} value="dark">
+                  Dark Mode
+                </option>
+                <option style={{ color: "white" }} value="light">
+                  Light Mode
                 </option>
               </select>
             </Panel>
