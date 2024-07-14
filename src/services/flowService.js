@@ -37,7 +37,11 @@ async function saveFlow(flow) {
       active_flag: flow.activeFlag || 1,
     };
 
-    const response = await axios.post(`${baseUrl}/save-flow`, transformedFlow);
+    const response = await axios.post(
+                                    `${baseUrl}/save-flow`, 
+                                    transformedFlow,
+                                    { headers: { 'authorization': 'MTQwNzVjMjcxODlkOWYzNTMyMmIxNDlkYTM0N2MyMjA2ODVmNzM0NGUyNGM5OTJhM2IxZTMwNmVhZTJjOGQyZA==', 'Content-Type': 'application/json' } }
+                                  );
     alert("Successfully Saved");
     return response.data;
   } catch (error) {
@@ -80,7 +84,11 @@ async function updateFlow(flow) {
       },
     };
 
-    const response = await axios.post(`${baseUrl}/update-flow`, transformedFlow);
+    const response = await axios.post(
+                                      `${baseUrl}/update-flow`, 
+                                      transformedFlow,
+                                      { headers: { 'authorization': 'ZmQ1MDljZjk4ZDU2NjZkZDAxNTM5ZjhiMzFmMThkMzQxMGU0MjU5NmU2YzFlMjRkZDkzZDAzOTdlZmNjMjRlOA==', 'Content-Type': 'application/json' } }
+                                    );
     return response.data;
   } catch (error) {
     console.error('Error while updating flow', error);
