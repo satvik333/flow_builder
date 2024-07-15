@@ -836,10 +836,10 @@ const DnDFlow = () => {
               <div style={{ display: "flex", alignItems: "center" }}>
                 <ArrowBackIcon
                   fontSize="small"
-                  style={{ cursor: "pointer", color: "whitesmoke", marginLeft: '17%' }}
+                  style={{ cursor: "pointer", color: isLightMode() ? '#333' : 'whitesmoke', marginLeft: '17%' }}
                   onClick={resetNodeData}
                 />
-                <h1 className="ml-2 font-bold" style={{ fontSize: "16px" }}>
+                <h1 className="ml-2 font-bold" style={{ fontSize: "16px", color: isLightMode() && '#333' }}>
                   Properties
                 </h1>
               </div>
@@ -848,7 +848,7 @@ const DnDFlow = () => {
                 <>
                   <h1
                     className="font-bold mb-1 mt-4 flex items-start"
-                    style={{ fontSize: "12px", marginLeft: '18%' }}
+                    style={{ fontSize: "12px", marginLeft: '18%', color: isLightMode() && '#333' }}
                   >
                     Message Body:
                   </h1>
@@ -894,7 +894,7 @@ const DnDFlow = () => {
                   <div className="form-row flex items-center justify-between">
                     <h1
                       className="font-bold mt-2 mb-4"
-                      style={{ fontSize: "12px", marginLeft: '18%' }}
+                      style={{ fontSize: "12px", marginLeft: '18%', color: isLightMode() && '#333' }}
                     >
                       Form Input Fields:
                     </h1>
@@ -906,12 +906,12 @@ const DnDFlow = () => {
                     {formFields?.map((field, index) => (
                       index < 5 ? (
                         <div key={index} style={{ marginBottom: '15px' }}>
-                          <p style={{ display: 'block', marginBottom: '5px', marginRight: '25px' }}>{field.title}:<span style={{marginLeft: '32px'}}>Required</span></p>
+                          <p style={{ color: isLightMode() && '#333', display: 'block', marginBottom: '5px', marginRight: '25px' }}>{field.title}:<span style={{marginLeft: '32px'}}>Required</span></p>
                           <input
                             type="text"
                             value={field.value}
                             onChange={(event) => handleFormChange(index, event)}
-                            style={{ width: '105px', padding: '5px', fontSize: '10px', borderRadius: "3px", backgroundColor: 'black', border: '1px solid whitesmoke' }}
+                            style={{ color: isLightMode() && '#333', width: '105px', padding: '5px', fontSize: '10px', borderRadius: "3px", backgroundColor: isLightMode() ? 'white' : 'black', border: isLightMode() ? '1px solid #333' : '1px solid whitesmoke' }}
                           />
                           <input
                             type="checkbox"
@@ -922,7 +922,7 @@ const DnDFlow = () => {
                           <DeleteIcon
                             fontSize="small"
                             className="ml-4 mb-2"
-                            style={{ color: '#f56565', cursor: 'pointer' }}
+                            style={{ color: 'red', cursor: 'pointer' }}
                             onClick={() => removeInputField(index)}
                           />
                         </div>
@@ -933,13 +933,13 @@ const DnDFlow = () => {
               }
               <h1
                 className="font-bold mt-2 flex items-start"
-                style={{ fontSize: "12px", marginLeft: '18%' }}
+                style={{ fontSize: "12px", marginLeft: '18%', color: isLightMode() && '#333' }}
               >
                 Action Name:
               </h1>
               <input
                 style={{ textAlign: "left", paddingLeft: "0.5rem", fontSize: '12px', width: '57%' }}
-                className="input-field mr-10 mt-2 ml-4 mb-6 py-1 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
+                className={`${isLightMode() ? "input-field-light" : ""} input-field mr-10 mt-2 ml-4 mb-6 py-1 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500`}
                 type="text"
                 value={actionName}
                 placeholder="Action Name"
@@ -947,13 +947,13 @@ const DnDFlow = () => {
               />
               <h1
                 className="font-bold flex items-start"
-                style={{ fontSize: "12px", marginLeft: '18%' }}
+                style={{ fontSize: "12px", marginLeft: '18%', color: isLightMode() && '#333' }}
               >
                 Action Type:
               </h1>
               <input
                 style={{ textAlign: "left", paddingLeft: "0.5rem", fontSize: '12px', width: '57%' }}
-                className="input-field mr-10 mt-2 ml-4 mb-6 py-1 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
+                className={`${isLightMode() ? "input-field-light" : ""} input-field mr-10 mt-2 ml-4 mb-6 py-1 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500`}
                 type="text"
                 value={actionType}
                 onChange={onActionTypeChange}
@@ -966,7 +966,7 @@ const DnDFlow = () => {
                       <>
                         <h1
                           className="font-bold flex items-start"
-                          style={{ fontSize: "12px", marginLeft: '18%' }}
+                          style={{ fontSize: "12px", marginLeft: '18%', color: isLightMode() && '#333' }}
                         >
                           Type:
                         </h1>
@@ -981,7 +981,7 @@ const DnDFlow = () => {
                               onChange={handleRadioChange}
                               className="large-radio"
                             />
-                            <label className="ml-2" htmlFor="option1">Menu</label>
+                            <label className="ml-2" style={{color: isLightMode() && '#333'}} htmlFor="option1">Menu</label>
                           </div>
                           <div className="ml-8 flex">
                             <input
@@ -993,7 +993,7 @@ const DnDFlow = () => {
                               onChange={handleRadioChange}
                               className="large-radio"
                             />
-                            <label className="ml-2" htmlFor="option2">Buttons</label>
+                            <label className="ml-2" style={{color: isLightMode() && '#333'}} htmlFor="option2">Buttons</label>
                           </div>
                         </div>
                         {/* <h1
@@ -1028,21 +1028,21 @@ const DnDFlow = () => {
               )}
               {nodeData.data.label === "Api Caller node" && (
                 <>
-                  <h5 style={{fontSize: '12px', marginLeft: '60px'}} className="mt-6 flex items-start font-bold">
+                  <h5 style={{fontSize: '12px', marginLeft: '60px', color: isLightMode() && '#333'}} className="mt-6 flex items-start font-bold">
                     Select API:
                   </h5>
                   <select
-                    className="pl-2 mt-2 ml-4 input-field mr-10 mb-6 py-1 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
+                    className={`${isLightMode() ? "input-field-light" : ""} pl-2 mt-2 ml-4 input-field mr-10 mb-6 py-1 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500`}
                     value={selectedApi.id || ''}
                     onChange={handleApiChange}
                     style={{ width: "57%", fontSize: '12px' }}
                   >
-                    <option style={{ color: "white" }} value="" disabled>
+                    <option style={{ color: isLightMode() ? "#333" : "white" }} value="" disabled>
                       Select an API
                     </option>
                     {allApis?.map((api) => (
                       <option
-                        style={{ color: "white" }}
+                        style={{ color: isLightMode() ? "#333" : "white" }}
                         key={api.id}
                         value={api.id}
                       >
@@ -1054,24 +1054,24 @@ const DnDFlow = () => {
               )}
               { !nodeData.data.hasChild && nodeData.data.label !== "Api Caller node" &&
                 <>
-                  <h2 style={{fontSize: '12px', marginLeft: '18%'}} className="ml-2  mt-4 flex items-start font-bold">
+                  <h2 style={{fontSize: '12px', marginLeft: '18%', color: isLightMode() && '#333'}} className="ml-2  mt-4 flex items-start font-bold">
                     Select Flows:
                   </h2>
                   <select
-                    className="pl-2 mt-2 ml-4 input-field mr-10 mb-6 py-1 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
+                    className={`${isLightMode() ? "input-field-light" : ""} 'pl-2 mt-2 ml-4 input-field mr-10 mb-6 py-1 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500`}
                     value={selectedOption}
                     onChange={handleChange}
                     style={{ width: "57%", fontSize: '12px' }}
                   >
-                    <option style={{ color: "white" }} value="" disabled>
+                    <option style={{ color: isLightMode() ? "#333" : "white" }} value="" disabled>
                       Select a Flow
                     </option>
-                    <option style={{ color: "white" }} value="none">
+                    <option style={{ color: isLightMode() ? "#333" : "white" }} value="none">
                       None
                     </option>
                     {allFlows?.map((option, index) => (
                       <option
-                        style={{ color: "white" }}
+                        style={{ color: isLightMode() ? "#333" : "white" }}
                         key={index}
                         value={option.flow_name}
                       >
