@@ -78,7 +78,7 @@ const DnDFlow = () => {
   const [currentFlow, setCurrentFlow] = useState(null);
   const [selectedRadioOption, setSelectedRadioOption] = useState('menu');
   const [selectedLayout, setSelectedLayout] = useState("");
-  const [mode, setMode] = useState('');
+  const [mode, setMode] = useState('dark');
   const [formFields, setFormFields] = useState([{ title: `Input Field 1`, value: 'Email', required: false }]);
   const [loading, setLoading] = useState(false);
 
@@ -822,8 +822,12 @@ const DnDFlow = () => {
     setMode(event.target.value);
   }
 
+  function isLightMode() {
+    return mode === 'light';
+  }
+
   return (
-    <div className="dndflow" style={{ width: "100%", height: "100vh" }}>
+    <div className={`${isLightMode() ? "dndflow-light dndflow" : "dndflow"}`} style={{ width: "100%", height: "100vh" }}>
       <ReactFlowProvider>
         <div className="flow-sec">
           {loading && <div style={{width: "20vw"}}><span className="loader"></span></div>}
@@ -1081,9 +1085,9 @@ const DnDFlow = () => {
           ) : (
             !loading &&
             <>
-              <Sidebar />
+              <Sidebar mode={mode} />
               <div>
-                <h1 style={{marginTop: '17px', marginLeft: '32px'}} className="flex items-start font-bold text-sm">
+                <h1 style={{marginTop: '17px', marginLeft: '32px', color: isLightMode() ? '#333' : '' }} className="flex items-start font-bold text-sm">
                   Flow Title:
                 </h1>
                 <input
@@ -1091,6 +1095,10 @@ const DnDFlow = () => {
                     textAlign: "left",
                     paddingLeft: "1rem",
                     width: "73%",
+                    color: isLightMode() ? '#333' : '',
+                    backgroundColor: isLightMode() ? 'white' : '' ,
+                    fontSize: '12px',
+                    borderColor: isLightMode() ? 'black' : '',
                   }}
                   className="pl-2 input-field mt-2 py-1 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500 text-sm"
                   type="text"
@@ -1100,14 +1108,14 @@ const DnDFlow = () => {
                 />
                 <div className="pl-10 pr-10 flex justify-between">
                   <button
-                    className="action-btns text-white rounded-md"
+                    className={`${isLightMode() ? "action-btns action-btns-light rounded-md" : "action-btns text-white rounded-md"}`}
                     onClick={onClear}
                   >
                     CLEAR
                   </button>
                   {selectedOption.length == 0 && (
                     <button
-                      className="action-btns ml-6 text-white rounded-md"
+                      className={`${isLightMode() ? "action-btns ml-6 action-btns-light rounded-md" : "action-btns text-white ml-6 rounded-md"}`}
                       onClick={onSave}
                     >
                       SAVE
@@ -1115,7 +1123,7 @@ const DnDFlow = () => {
                   )}
                   {selectedOption.length !== 0 && (
                     <button
-                      className="action-btns ml-6 text-white rounded-md"
+                      className={`${isLightMode() ? "action-btns ml-6 action-btns-light rounded-md" : "action-btns text-white ml-6 rounded-md"}`}
                       onClick={onUpdateFlow}
                     >
                       UPDATE
@@ -1127,7 +1135,7 @@ const DnDFlow = () => {
           )}
         </div>
         <div
-          className="reactflow-wrapper"
+          className={`${isLightMode() ? "reactflow-wrapper reactflow-wrapper-light" : "reactflow-wrapper"}`}
           ref={reactFlowWrapper}
           style={{ width: "100%", height: "100%" }}
         >

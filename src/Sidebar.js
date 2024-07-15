@@ -6,14 +6,14 @@ import ApiIcon from '@mui/icons-material/Api';
 import DynamicFormIcon from '@mui/icons-material/DynamicForm';
 import './sidebarCss.css';
 
-const Sidebar = () => {
+const Sidebar = ({ mode }) => {
   const onDragStart = (event, nodeType) => {
     event.dataTransfer.setData('application/reactflow', nodeType);
     event.dataTransfer.effectAllowed = 'move';
   };
 
   return (
-    <aside>
+    <aside className={mode === 'light' ? 'light-mode' : 'dark-mode'}>
       <div className="description">Widget Library</div>
       <div className="dndnode" onDragStart={(event) => onDragStart(event, 'Message')} draggable>
         <div>
