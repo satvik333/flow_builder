@@ -30,7 +30,7 @@ function CustomNode({ data }) {
 
   return (
     <div style={{ width: `${dynamicWidth}px` }} className="flex items-center wrapper gradient relative">
-      <div className="flex items-center bg-black inner body shadow-md rounded-md border-2 border-stone-400 relative">
+      <div style={{backgroundColor: data.mode === 'light' && 'white', color: data.mode === 'light' && '#333'}} className="flex items-center bg-black inner body shadow-md rounded-md border-2 border-stone-400 relative">
         <div className="flex items-center">
           <div
             style={{ color: '#7B3F00' }}
@@ -46,7 +46,7 @@ function CustomNode({ data }) {
               <CancelIcon
                 fontSize="large"
                 className="pb-2"
-                style={{ color: '#f56565' }}
+                style={{ color: 'red' }}
                 data-testid="CancelIcon"
               />
             </div>

@@ -42,6 +42,8 @@ const nodeTypes = {
 const getId = () => `dndnode_${Date.now()}`;
 
 const DnDFlow = () => {
+  const [mode, setMode] = useState('dark');
+
   const initialNodes = [
     {
       id: "1",
@@ -52,6 +54,7 @@ const DnDFlow = () => {
         id: "1",
         direction: "TB",
         hasChild: false,
+        mode: mode
       },
       position: { x: 0, y: 0 },
     },
@@ -78,7 +81,6 @@ const DnDFlow = () => {
   const [currentFlow, setCurrentFlow] = useState(null);
   const [selectedRadioOption, setSelectedRadioOption] = useState('menu');
   const [selectedLayout, setSelectedLayout] = useState("");
-  const [mode, setMode] = useState('dark');
   const [formFields, setFormFields] = useState([{ title: `Input Field 1`, value: 'Email', required: false }]);
   const [loading, setLoading] = useState(false);
 
@@ -344,6 +346,7 @@ const DnDFlow = () => {
           message: "Text",
           noOfNodes: noOfNodes,
           hasChild: false,
+          mode: mode
         },
         type: "custom",
       };
@@ -425,6 +428,7 @@ const DnDFlow = () => {
               message: "Text",
               noOfNodes: noOfNodes,
               hasChild: false,
+              mode: mode
             },
             origin: [0.5, 0.0],
             type: "custom",
@@ -662,6 +666,21 @@ const DnDFlow = () => {
       });
     }
   }, [editedMessage, nodeData, noOfNodes, actionName, actionType, selectedApi, selectedRadioOption, formFields]);
+
+  useEffect(() => {
+    setNodes((prevNodes) => {
+      const updatedNodes = prevNodes.map((node) => {
+        return {
+          ...node,
+          data: {
+            ...node.data, 
+            mode: mode
+          },
+        };
+      });
+      return updatedNodes;
+    });
+  }, [mode, nodes]);
 
   function resetNodeData() {
     const lastNumber = nodeData?.id?.match(/\d+$/)[0];
