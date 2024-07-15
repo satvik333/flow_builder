@@ -1161,41 +1161,41 @@ const DnDFlow = () => {
           >
             <Panel position="top" style={{marginLeft:'73%'}}>
               <select
-                className="input-field py-1 px-2 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
+                className={`${isLightMode() ? "input-field-light" : ""} input-field py-1 px-2 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500`}
                 value={selectedLayout}
                 onChange={handleLayoutChange}
                 style={{ fontSize: '12px' }}
               >
-                <option style={{ color: "white" }} value="" disabled>
+                <option style={{ color: isLightMode() ? "#333" : "white" }} value="" disabled>
                   Layout
                 </option>
-                <option style={{ color: "white" }} value="verticalTB">
+                <option style={{ color: isLightMode() ? "#333" : "white" }} value="verticalTB">
                   Vertical
                 </option>
-                <option style={{ color: "white" }} value="horizontalLR">
+                <option style={{ color: isLightMode() ? "#333" : "white" }} value="horizontalLR">
                   Horizontal
                 </option>
               </select>
             </Panel>
             <Panel position="top" style={{marginLeft:'81%'}}>
               <select
-                className="input-field py-1 px-2 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
+                className={`${isLightMode() ? "input-field-light" : ""} input-field py-1 px-2 border rounded-md border-gray-300 focus:outline-none focus:border-indigo-500`}
                 value={mode}
                 onChange={handleModeChange}
                 style={{ fontSize: '12px' }}
               >
-                <option style={{ color: "white" }} value="" disabled>
+                <option style={{ color: isLightMode() ? "#333" : "white" }} value="" disabled>
                   Modes
                 </option>
-                <option style={{ color: "white" }} value="dark">
+                <option style={{ color: isLightMode() ? "#333" : "white" }} value="dark">
                   Dark Mode
                 </option>
-                <option style={{ color: "white" }} value="light">
+                <option style={{ color: isLightMode() ? "#333" : "white" }} value="light">
                   Light Mode
                 </option>
               </select>
             </Panel>
-            <DownloadButton />
+            <DownloadButton mode={ mode } />
             <Background />
             <Controls showInteractive={false} />
             <svg>

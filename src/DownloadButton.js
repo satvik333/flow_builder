@@ -13,7 +13,7 @@ function downloadImage(dataUrl) {
 const imageWidth = 1920;
 const imageHeight = 1080;
 
-function DownloadButton() {
+function DownloadButton( { mode }) {
   const onClick = () => {
     const reactFlowWrapper = document.querySelector('.react-flow');
     
@@ -30,7 +30,7 @@ function DownloadButton() {
 
   return (
     <Panel position="top-right">
-      <button className="download-btn" onClick={onClick}>
+      <button style={{color: mode === 'light' ? 'black' : ''}} className="download-btn" onClick={onClick}>
         Download Image
       </button>
     </Panel>
