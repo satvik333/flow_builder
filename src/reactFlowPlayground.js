@@ -490,10 +490,10 @@ const DnDFlow = () => {
 
       let flow = reactFlowInstance.toObject();
       flow.flowName = flowKey;
-      flow.clientId = "1234";
 
-      convertFlowToDecisionTreeFlow(flow);
-
+      let flow_json = convertFlowToDecisionTreeFlow(flow);
+      flow.flow_json = flow_json;
+      
       saveFlow(flow);
     }
   };
@@ -536,17 +536,17 @@ const DnDFlow = () => {
       }
     }
     console.log(decisionTree, "descion treeeee");
-    // return decisionTree
+    return decisionTree;
   }
 
   const onUpdateFlow = useCallback(() => {
     if (reactFlowInstance) {
       let flow = reactFlowInstance.toObject();
       flow.flowName = flowKey;
-      flow.clientId = "1234";
       flow.id = selectedId;
 
-      //convertFlowToDecisionTreeFlow(flow);
+      let flow_json = convertFlowToDecisionTreeFlow(flow);
+      flow.flow_json = flow_json;
 
       updateFlow(flow);
     }

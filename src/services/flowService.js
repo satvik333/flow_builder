@@ -7,7 +7,8 @@ async function saveFlow(flow) {
     const transformedFlow = {
       clientId: flow.clientId,
       flow_name: flow.flowName,
-      flow_json: {
+      flow_json: flow_json,
+      react_flow_json: {
         nodes: flow.nodes.map(node => ({
           id: node.id,
           type: node.type,
@@ -40,7 +41,10 @@ async function saveFlow(flow) {
     const response = await axios.post(
                                     `${baseUrl}/save-flow`, 
                                     transformedFlow,
-                                    { headers: { 'authorization': 'MTQwNzVjMjcxODlkOWYzNTMyMmIxNDlkYTM0N2MyMjA2ODVmNzM0NGUyNGM5OTJhM2IxZTMwNmVhZTJjOGQyZA==', 'Content-Type': 'application/json' } }
+                                    { headers: { 
+                                      'authorization': 'MTQwNzVjMjcxODlkOWYzNTMyMmIxNDlkYTM0N2MyMjA2ODVmNzM0NGUyNGM5OTJhM2IxZTMwNmVhZTJjOGQyZA==', 'Content-Type': 'application/json',
+                                      "subDomain": window.location.href.split('/')[2].split(".")[0]
+                                    } }
                                   );
     alert("Successfully Saved");
     return response.data;
@@ -55,7 +59,8 @@ async function updateFlow(flow) {
     const transformedFlow = {
       id: flow.id,
       flow_name: flow.flowName,
-      flow_json: {
+      flow_json: flow_json,
+      react_flow_json: {
         nodes: flow.nodes.map(node => ({
           id: node.id,
           type: node.type,
@@ -82,12 +87,16 @@ async function updateFlow(flow) {
           type: edge.type,
         })),
       },
+      subDomain: window.location.href.split('/')[2].split(".")[0]
     };
 
     const response = await axios.post(
                                       `${baseUrl}/update-flow`, 
                                       transformedFlow,
-                                      { headers: { 'authorization': 'ZmQ1MDljZjk4ZDU2NjZkZDAxNTM5ZjhiMzFmMThkMzQxMGU0MjU5NmU2YzFlMjRkZDkzZDAzOTdlZmNjMjRlOA==', 'Content-Type': 'application/json' } }
+                                      { headers: { 
+                                        'authorization': 'ZmQ1MDljZjk4ZDU2NjZkZDAxNTM5ZjhiMzFmMThkMzQxMGU0MjU5NmU2YzFlMjRkZDkzZDAzOTdlZmNjMjRlOA==', 'Content-Type': 'application/json',
+                                        "subDomain": window.location.href.split('/')[2].split(".")[0]
+                                      } }
                                     );
     return response.data;
   } catch (error) {
