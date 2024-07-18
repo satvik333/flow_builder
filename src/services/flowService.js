@@ -7,7 +7,7 @@ async function saveFlow(flow) {
     const transformedFlow = {
       clientId: flow.clientId,
       flow_name: flow.flowName,
-      flow_json: flow_json,
+      flow_json: flow.flow_json,
       react_flow_json: {
         nodes: flow.nodes.map(node => ({
           id: node.id,
@@ -59,7 +59,7 @@ async function updateFlow(flow) {
     const transformedFlow = {
       id: flow.id,
       flow_name: flow.flowName,
-      flow_json: flow_json,
+      flow_json: flow.flow_json,
       react_flow_json: {
         nodes: flow.nodes.map(node => ({
           id: node.id,
