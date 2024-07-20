@@ -1,0 +1,27 @@
+pipelines:
+  branches:
+    master:
+      - step:
+          name: Deploy to Production
+          script:
+            - pipe: atlassian/ssh-run:0.2.5
+              variables:
+                SSH_USER: 'ubuntu'
+                SERVER: $SERVER_IP_ADDRESS  # Use an environment variable for the IP
+                #SSH_KEY: $SSH_PRIVATE_KEY  # Use an environment variable for the key
+                COMMAND: |
+                  echo "Navigating to flow_builder directory..."
+                  cd /var/www/html/flow_builder || { echo "Failed to navigate to flow_builder directory"; exit 1; }
+                  echo "Pulling latest changes from master branch..."
+                  git pull origin master || { echo "Git pull failed!"; exit 1; }
+                  echo "Navigating to db_handler directory..."
+                  cd /var/www/html/flow_builder || { echo "Failed to navigate to db_handler directory"; exit 1; }
+                  echo "Removing old build directory..."
+                  rm -rf build
+                  echo "Installing npm dependencies..."
+                  npm install || { echo "npm install failed!"; exit 1; } # Use --production for deployment
+                  echo "Running npm build..."
+                  npm run build || { echo "npm run build failed!"; exit 1; }
+                  echo "Restarting nginx service..."
+                  sudo systemctl restart nginx || { echo "Failed to restart nginx"; exit 1; }
+                  echo "Deployment completed successfully."
